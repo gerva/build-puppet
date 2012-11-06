@@ -10,7 +10,6 @@
 # TODO: you still have to set up ssh keys!
 # TODO: determine num_masters from json (bug 647374)
 class buildmaster::install {
-    include secrets
     include buildmaster::queue
     include buildmaster::settings
     $master_user = $buildmaster::settings::master_user

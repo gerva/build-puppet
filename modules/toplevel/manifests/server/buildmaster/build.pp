@@ -1,6 +1,4 @@
-class buildmaster::build {
-    http_port => 8001,
-    master_type => "build",
-    basedir => "build1",
-    buildslaves_template => 'BuildSlaves-build.py.erb',
+# toplevel class for running a buildmaster type 'build'
+class toplevel::server::buildmaster::build inherits toplevel::server::buildmaster {
+    include ::buildmaster::build
 }

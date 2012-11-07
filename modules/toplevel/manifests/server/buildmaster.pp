@@ -1,6 +1,6 @@
 # buildbot master
 
-class toplevel::buildmaster inherits toplevel::server {
+class toplevel::server::buildmaster inherits toplevel::server {
     include ::buildmaster
 }
 

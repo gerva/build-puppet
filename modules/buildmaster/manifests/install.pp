@@ -17,9 +17,10 @@ class buildmaster::install {
     $master_user_uid = $buildmaster::settings::master_user_uid
     $master_group_gid = $buildmaster::settings::master_group_gid
     $master_basedir = $buildmaster::settings::master_basedir
-    if $num_masters == '' {
-        fail("you must set num_masters")
-    }
+
+#   if $num_masters == '' {
+#        fail("you must set num_masters")
+#    }
     package {
         "python26":
             ensure => latest;

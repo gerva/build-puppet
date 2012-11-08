@@ -38,19 +38,19 @@ class buildmaster::install {
             require => File["/etc/init.d/buildbot"],
             enable => true;
     }
-    user {
-        $master_user:
-            require => Group[$master_group],
-            ensure => "present",
-            name => $master_user,
-            uid => $master_user_uid,
-            gid => $master_group_gid,
-            comment => "Client Builder",
-            managehome => true,
-            home => "/home/$master_user",
-            shell => "/bin/bash",
-            password => $secrets::cltbld_password;
-    }
+    #user {
+    #    $master_user:
+    #        require => Group[$master_group],
+    #        ensure => "present",
+    #        name => $master_user,
+    #        uid => $master_user_uid,
+    #        gid => $master_group_gid,
+    #        comment => "Client Builder",
+    #        managehome => true,
+    #        home => "/home/$master_user",
+    #        shell => "/bin/bash",
+    #        password => $secrets::cltbld_password;
+    #}
 
     $plugins_dir = $nagios::service::plugins_dir
     $nagios_etcdir = $nagios::service::etcdir

@@ -91,8 +91,8 @@ class buildmaster::install {
             mode => 644,
             owner => "root",
             group => "root";
-        "/tools":
-            ensure => "directory";
+        #"/tools":
+        #    ensure => "directory";
     }
     exec {
         "clone-configs":

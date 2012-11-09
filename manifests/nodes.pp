@@ -4,7 +4,7 @@ node /bld-centos6-hp-\d+.build.scl1.mozilla.com/ {
 
 node "relabs07.build.mtv1.mozilla.com" {
     $num_masters = 1
-    include toplevel::server::buildmaster::build
+    include toplevel::buildmaster::build
 }
 
 node "relabs08.build.mtv1.mozilla.com" {

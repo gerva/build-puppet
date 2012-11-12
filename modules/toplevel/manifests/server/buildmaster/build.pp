@@ -1,4 +1,4 @@
 # toplevel class for running a buildmaster type 'build'
-class toplevel::buildmaster::build inherits toplevel::buildmaster {
+class toplevel::buildmaster::server::build inherits toplevel::server::buildmaster {
     include ::buildmaster::build
 }

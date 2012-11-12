@@ -85,13 +85,13 @@ class buildmaster::queue {
             mode => 600,
             owner => $master_user,
             group => $master_group;
-        "$nagios_etcdir/nrpe.d/pulse_publisher.cfg":
-            content => template("buildmaster/pulse_publisher.cfg.erb"),
-            notify => Service["nrpe"],
-            require => Class["nagios"],
-            mode => 644,
-            owner => "root",
-            group => "root";
+    #    "$nagios_etcdir/nrpe.d/pulse_publisher.cfg":
+    #        content => template("buildmaster/pulse_publisher.cfg.erb"),
+    #        notify => Service["nrpe"],
+    #        require => Class["nagios"],
+    #        mode => 644,
+    #        owner => "root",
+    #        group => "root";
     }
     service {
         "command_runner":

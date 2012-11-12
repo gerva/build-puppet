@@ -1,8 +1,7 @@
 # buildbot master
 
-class toplevel::buildmaster inherits toplevel::base {
-    include ::nrpe
-    #include nrpe::check::buildbot
+class toplevel::server::buildmaster inherits toplevel::server {
+
     include packages::mercurial
     include buildmaster
 }

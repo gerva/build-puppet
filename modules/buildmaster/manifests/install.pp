@@ -52,14 +52,6 @@ class buildmaster::install {
         #    owner => $master_user,
         #    group => $master_group,
         #    ensure => directory;
-        "/builds":
-            ensure => directory,
-            owner => $master_user,
-            group => $master_group;
-        $master_basedir:
-            ensure => directory,
-            owner => $master_user,
-            group => $master_group;
         "/etc/default/buildbot.d/":
             owner => "root",
             group => "root",

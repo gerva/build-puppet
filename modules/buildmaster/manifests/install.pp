@@ -12,8 +12,7 @@
 class buildmaster::install {
     include nrpe::base
     include users::builder
-    include dirs::tools
-    include dirs::builds
+    include dirs::buildmaster
     include packages::mercurial
     include buildmaster::queue
     include buildmaster::settings
@@ -45,36 +44,6 @@ class buildmaster::install {
             enable => true;
     }
 
-    file {
-        # already declared in ssh/manifest/userconfig.pp
-        #"/home/$master_user/.ssh":
-        #    mode => 700,
-        #    owner => $master_user,
-        #    group => $master_group,
-        #    ensure => directory;
-        "/etc/default/buildbot.d/":
-            owner => "root",
-            group => "root",
-            mode => 755,
-            ensure => directory;
-        "/etc/init.d/buildbot":
-            source => "puppet:///modules/buildmaster/buildbot.initd",
-            mode => 755,
-            owner => "root",
-            group => "root";
-        "/root/.my.cnf":
-            content => template("buildmaster/my.cnf.erb"),
-            mode => 600,
-            owner => "root",
-            group => "root";
-        "/etc/nagios/nrpe.d/buildbot.cfg":
-            content => template("buildmaster/buildbot.cfg.erb"),
-            notify => Class["nrpe::service"],
-            require => Package["nrpe"],
-            mode => 644,
-            owner => "root",
-            group => "root";
-    }
     exec {
         "clone-configs":
             creates => "$master_basedir/buildbot-configs",

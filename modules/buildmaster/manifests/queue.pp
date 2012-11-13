@@ -42,8 +42,6 @@ class buildmaster::queue {
             user => $master_user;
     }
 
-    $plugins_dir = $nagios::service::plugins_dir
-    $nagios_etcdir = $nagios::service::etcdir
     file {
         "/etc/init.d/command_runner":
             content => template("buildmaster/command_runner.initd.erb"),
@@ -58,7 +56,7 @@ class buildmaster::queue {
             mode => 755,
             owner => "root",
             group => "root";
-    #    "$nagios_etcdir/nrpe.d/command_runner.cfg":
+    #    "/etc/nagios/nrpe.d/command_runner.cfg":
     #        content => template("buildmaster/command_runner.cfg.erb"),
     #        notify => Service["nrpe"],
     #        require => Class["nagios"],

@@ -11,6 +11,9 @@
 # TODO: determine num_masters from json (bug 647374)
 class buildmaster::install {
     include nrpe::base
+    include users::builder
+    include dirs::tools
+    include dirs::builds
     include packages::mercurial
     include buildmaster::queue
     include buildmaster::settings
@@ -41,19 +44,6 @@ class buildmaster::install {
             require => File["/etc/init.d/buildbot"],
             enable => true;
     }
-    #user {
-    #    $master_user:
-    #        require => Group[$master_group],
-    #        ensure => "present",
-    #        name => $master_user,
-    #        uid => $master_user_uid,
-    #        gid => $master_group_gid,
-    #        comment => "Client Builder",
-    #        managehome => true,
-    #        home => "/home/$master_user",
-    #        shell => "/bin/bash",
-    #        password => $secrets::cltbld_password;
-    #}
 
     file {
         # already declared in ssh/manifest/userconfig.pp

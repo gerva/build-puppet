@@ -5,4 +5,5 @@ class buildmaster::settings {
     $master_group_gid = 500
     $master_basedir = "/builds/buildbot"
     $master_queue_venv = "${master_basedir}/queue"
+    $plugins_dir = $nrpe::settings::plugin_dir
 }

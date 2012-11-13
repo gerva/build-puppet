@@ -10,6 +10,7 @@
 # TODO: you still have to set up ssh keys!
 # TODO: determine num_masters from json (bug 647374)
 class buildmaster::install {
+    include nrpe::base
     include packages::mercurial
     include buildmaster::queue
     include buildmaster::settings
@@ -53,8 +54,6 @@ class buildmaster::install {
     #        password => $secrets::cltbld_password;
     #}
 
-    $plugins_dir = $nagios::service::plugins_dir
-    $nagios_etcdir = $nagios::service::etcdir
     file {
         # already declared in ssh/manifest/userconfig.pp
         #"/home/$master_user/.ssh":
@@ -85,15 +84,15 @@ class buildmaster::install {
             mode => 600,
             owner => "root",
             group => "root";
-    #    "${nagios_etcdir}/nrpe.d/buildbot.cfg":
-    #        content => template("buildmaster/buildbot.cfg.erb"),
-    #        notify => Service["nrpe"],
-    #        require => Class["nagios"],
-    #        mode => 644,
-    #        owner => "root",
-    #        group => "root";
-        #"/tools":
-        #    ensure => "directory";
+        "/etc/nagios/nrpe.d/buildbot.cfg":
+            content => template("buildmaster/buildbot.cfg.erb"),
+            notify => Class["nrpe::service"],
+            require => Package["nrpe"],
+            mode => 644,
+            owner => "root",
+            group => "root";
+        "/tools":
+            ensure => "directory";
     }
     exec {
         "clone-configs":

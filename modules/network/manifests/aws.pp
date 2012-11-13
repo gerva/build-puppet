@@ -7,11 +7,8 @@ class network::aws {
         "puppet":
             ensure => present,
             ip => $serverip;
-        "hg.mozilla.org":
-            ensure => present,
-            ip => "10.22.74.30";
-        "ntp.build.mozilla.org":
-            ensure => present,
-            ip => "10.12.48.11";
+        # Bug 810948, can be removed once all slaves get the hosts removed
+        ["hg.mozilla.org", "ntp.build.mozilla.org"]:
+            ensure => absent;
     }
 }

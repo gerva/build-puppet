@@ -7,7 +7,6 @@ class buildmaster::queue {
     $master_user = $buildmaster::settings::master_user
     $master_group = $buildmaster::settings::master_group
     $master_queue_venv = $buildmaster::settings::master_queue_venv
-    $plugins_dir = $buildmaster::settings::plugins_dir
     python::virtualenv {
         $master_queue_venv:
             user => $master_user,

@@ -12,16 +12,10 @@
 class buildmaster::install {
     include nrpe::base
     include users::builder
-    include dirs::buildmaster
+    include dirs::builds::buildmaster
     include packages::mercurial
-    include buildmaster::queue
     include buildmaster::settings
-    $master_user = $buildmaster::settings::master_user
-    $master_group = $buildmaster::settings::master_group
-    $master_user_uid = $buildmaster::settings::master_user_uid
-    $master_group_gid = $buildmaster::settings::master_group_gid
-    $master_basedir = $buildmaster::settings::master_basedir
-    $plugins_dir = $buildmaster::settings::plugins_dir
+    include buildmaster::queue
 
    if $num_masters == '' {
         fail("you must set num_masters")

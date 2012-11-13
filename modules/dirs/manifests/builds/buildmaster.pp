@@ -3,6 +3,7 @@ class dirs::builds::buildmaster {
     include dirs::tools
     include users::builder
     include config
+    include buildmaster::settings
 
     file {
         "/etc/default/buildbot.d/":

@@ -5,7 +5,7 @@ class dirs::builds::buildmaster {
     include config
     include buildmaster::settings
 
-    $plugin_dir = buildmaster::settings::plugins_dir
+    $plugins_dir = buildmaster::settings::plugins_dir
 
     file {
         "/etc/default/buildbot.d/":

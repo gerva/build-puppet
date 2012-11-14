@@ -26,9 +26,13 @@ class buildmaster::install {
     case $::operatingsystem {
         CentOS: {
             package {
-               "mysql-devel":
+                "python27":
                     ensure => latest;
-               "gcc":
+                "python27-virtualenv"
+                    ensure => latest;
+                "mysql-devel":
+                    ensure => latest;
+                "gcc":
                     ensure => latest;
             }
         }

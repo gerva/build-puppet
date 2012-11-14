@@ -15,7 +15,7 @@ class buildmaster::install {
     include dirs::builds::buildmaster
     include packages::mercurial
     include buildmaster::settings
-    incluse buildmaster::virtualenv
+    include buildmaster::virtualenv
     include buildmaster::queue
 
    if $num_masters == '' {

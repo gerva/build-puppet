@@ -14,8 +14,6 @@ class buildmaster::install {
     include users::builder
     include dirs::builds::buildmaster
     include packages::mercurial
-    include packages::mozilla::git
-    include packages::mozilla::python
     include buildmaster::settings
     include buildmaster::virtualenv
     include buildmaster::queue
@@ -26,6 +24,8 @@ class buildmaster::install {
     case $::operatingsystem {
         CentOS: {
             package {
+                "git":
+                    ensure => latest;
                 "python27":
                     ensure => latest;
                 "python27-virtualenv":

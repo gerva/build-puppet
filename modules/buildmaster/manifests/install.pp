@@ -30,6 +30,7 @@ class buildmaster::install {
                     ensure => latest;
                "gcc":
                     ensure => latest;
+            }
         }
         default: {
             fail("cannot install on $operatingsystem")

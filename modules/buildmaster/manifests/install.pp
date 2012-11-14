@@ -28,7 +28,7 @@ class buildmaster::install {
             package {
                 "python27":
                     ensure => latest;
-                "python27-virtualenv"
+                "python27-virtualenv":
                     ensure => latest;
                 "mysql-devel":
                     ensure => latest;

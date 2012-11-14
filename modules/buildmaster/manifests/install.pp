@@ -14,6 +14,8 @@ class buildmaster::install {
     include users::builder
     include dirs::builds::buildmaster
     include packages::mercurial
+    include packages::mozilla::git
+    include packages::mozilla::python
     include buildmaster::settings
     include buildmaster::virtualenv
     include buildmaster::queue
@@ -21,18 +23,19 @@ class buildmaster::install {
    if $num_masters == '' {
         fail("you must set num_masters")
     }
-    package {
-        "python26":
-            ensure => latest;
-        "python26-virtualenv":
-            ensure => latest;
-        "mysql-devel":
-            ensure => latest;
-        "git":
-            ensure => latest;
-        "gcc":
-            ensure => latest;
+    case $::operatingsystem {
+        CentOS: {
+            package {
+               "mysql-devel":
+                    ensure => latest;
+               "gcc":
+                    ensure => latest;
+        }
+        default: {
+            fail("cannot install on $operatingsystem")
+        }
     }
+
     service {
         "buildbot":
             require => File["/etc/init.d/buildbot"],
@@ -41,9 +44,9 @@ class buildmaster::install {
 
     exec {
         "clone-configs":
-            creates => "$master_basedir/buildbot-configs",
+            creates => "$buildmaster::settings::master_basedir/buildbot-configs",
             command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/buildbot-configs",
-            user => $master_user,
-            cwd => $master_basedir;
+            user => "$config::builder_username",
+            cwd => "$buildmaster::settings::master_basedir";
     }
 }

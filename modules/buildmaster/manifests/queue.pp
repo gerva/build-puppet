@@ -2,28 +2,13 @@
 # sets up queue processors for pulse, commands, etc.
 
 class buildmaster::queue {
+    include config
     include buildmaster::settings
+    include buildmaster::virtualenv
     $master_basedir = $buildmaster::settings::master_basedir
     $master_user = $buildmaster::settings::master_user
     $master_group = $buildmaster::settings::master_group
     $master_queue_venv = $buildmaster::settings::master_queue_venv
-    python::virtualenv {
-        $master_queue_venv:
-            user => $master_user,
-            group => $master_group,
-            python => "/usr/bin/python2.6",
-            packages => [
-                "simplejson",
-                "buildbot==0.8.4-pre-moz1",
-                "Twisted==10.1.0",
-                "zope.interface==3.6.1",
-                "mozillapulse==.4",
-                "carrot==0.10.7",
-                "amqplib==0.6.1",
-                "anyjson==0.3",
-                "pytz==2011d",
-            ],
-    }
     exec {
         # Clone/install tools
         "clone-tools":
@@ -33,13 +18,13 @@ class buildmaster::queue {
                        ],
             creates => "$master_queue_venv/tools",
             command => "/usr/bin/hg clone http://hg.mozilla.org/build/tools $master_queue_venv/tools",
-            user => $master_user;
+            user => config::builder_username;
         "install-tools":
             require => Exec["clone-tools"],
             creates => "$master_queue_venv/lib/python2.6/site-packages/buildtools.egg-link",
             command => "$master_queue_venv/bin/python setup.py develop",
             cwd => "$master_queue_venv/tools",
-            user => $master_user;
+            user => config::builder_username;
     }
 
     file {
@@ -49,8 +34,8 @@ class buildmaster::queue {
             mode => 755,
             owner => "root",
             group => "root";
-        "${master_queue_venv}/run_command_runner.sh":
-            require => Python::Virtualenv[$master_queue_venv],
+        "$buildmaster::settings::master_queue_venv/run_command_runner.sh":
+            require => Python::Virtualenv["$buildmaster::settings::master_queue_venv"],
             content => template("buildmaster/run_command_runner.sh.erb"),
             notify => Service["command_runner"],
             mode => 755,
@@ -70,15 +55,15 @@ class buildmaster::queue {
             mode => 755,
             owner => "root",
             group => "root";
-        "${master_queue_venv}/run_pulse_publisher.sh":
-            require => Python::Virtualenv[$master_queue_venv],
+        "$buildmaster::settings::master_queue_venv/run_pulse_publisher.sh":
+            require => Python::Virtualenv["$buildmaster::settings::master_queue_venv"],
             content => template("buildmaster/run_pulse_publisher.sh.erb"),
             notify => Service["pulse_publisher"],
             mode => 755,
             owner => "root",
             group => "root";
-        "${master_queue_venv}/passwords.py":
-            require => Python::Virtualenv[$master_queue_venv],
+        "$buildmaster::settings::master_queue_venv/passwords.py":
+            require => Python::Virtualenv["$buildmaster::settings::master_queue_venv"],
             content => template("buildmaster/passwords.py.erb"),
             mode => 600,
             owner => $master_user,
@@ -95,9 +80,9 @@ class buildmaster::queue {
         "command_runner":
             hasstatus => true,
             require => [
-                Python::Virtualenv[$master_queue_venv],
+                Python::Virtualenv["$buildmaster::settings::master_queue_venv"],
                 File["/etc/init.d/command_runner"],
-                File["${master_queue_venv}/run_command_runner.sh"],
+                File["$buildmaster::settings::master_queue_venv/run_command_runner.sh"],
                 Exec["install-tools"],
                 ],
             enable => true,
@@ -105,7 +90,7 @@ class buildmaster::queue {
         "pulse_publisher":
             hasstatus => true,
             require => [
-                Python::Virtualenv[$master_queue_venv],
+                Python::Virtualenv["$buildmaster::settings::master_queue_venv"],
                 File["/etc/init.d/pulse_publisher"],
                 File["${master_queue_venv}/run_pulse_publisher.sh"],
                 Exec["install-tools"],

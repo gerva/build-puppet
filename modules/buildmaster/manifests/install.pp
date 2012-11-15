@@ -14,6 +14,8 @@ class buildmaster::install {
     include users::builder
     include dirs::builds::buildmaster
     include packages::mercurial
+    include packages::mozilla::python27
+    include packages::mozilla::py27_virtualenv
     include buildmaster::settings
     include buildmaster::virtualenv
     include buildmaster::queue
@@ -25,10 +27,6 @@ class buildmaster::install {
         CentOS: {
             package {
                 "git":
-                    ensure => latest;
-                "python27":
-                    ensure => latest;
-                "python27-virtualenv":
                     ensure => latest;
                 "mysql-devel":
                     ensure => latest;
@@ -49,9 +47,9 @@ class buildmaster::install {
 
     exec {
         "clone-configs":
-            creates => "$buildmaster::settings::master_basedir/buildbot-configs",
+            creates => "$users::builder::home/buildbot-configs",
             command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/buildbot-configs",
-            user => "$config::builder_username",
-            cwd => "$buildmaster::settings::master_basedir";
+            user => "$users::buider::username",
+            cwd => "$users::builder::home";
     }
 }

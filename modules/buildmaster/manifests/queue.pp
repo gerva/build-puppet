@@ -91,7 +91,7 @@ class buildmaster::queue {
             require => [
                 Python::Virtualenv["$queue_venv_dir"],
                 File["/etc/init.d/pulse_publisher"],
-                File["${master_queue_venv}/run_pulse_publisher.sh"],
+                File["$queue_venv_dir/run_pulse_publisher.sh"],
                 Exec["install-tools"],
                 ],
             enable => true,

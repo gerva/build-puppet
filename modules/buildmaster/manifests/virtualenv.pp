@@ -1,5 +1,6 @@
 class buildmaster::virtualenv {
     include buildmaster::settings
+    include packages::mozilla::python27
 
     python::virtualenv {
         "$buildmaster::settings::master_queue_venv":

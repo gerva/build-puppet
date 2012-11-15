@@ -16,7 +16,6 @@ class buildmaster::install {
     include packages::mercurial
     include packages::mozilla::python27
     include packages::mozilla::py27_virtualenv
-    include buildmaster::settings
     include buildmaster::virtualenv
     include buildmaster::queue
 

@@ -4,7 +4,6 @@
 class buildmaster::queue {
     include config
     include users::builder
-    include buildmaster::settings
     include buildmaster::virtualenv
 
     $queue_venv_dir = "$users::builder::home/queue"

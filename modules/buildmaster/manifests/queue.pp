@@ -8,16 +8,17 @@ class buildmaster::queue {
 
     $queue_venv_dir = "$users::builder::home/queue"
 
+
     exec {
         # Clone/install tools
         "clone-tools":
-            require => [
-                        Package["mercurial"],
-                        Python::Virtualenv[$queue_venv_dir],
-                       ],
             creates => "$queue_venv_dir/tools",
-            command => "/usr/bin/hg clone http://hg.mozilla.org/build/tools $queue_venv_dir/tools",
-            user => $users::builder::username;
+            command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/tools",
+            user => "$users::buider::username",
+            cwd => "$queue_venv_dir";
+    }
+    exec {
+        # install tools
         "install-tools":
             require => Exec["clone-tools"],
             creates => "$queue_venv_dir/lib/python2.7/site-packages/buildtools.egg-link",
@@ -34,7 +35,7 @@ class buildmaster::queue {
             owner => "root",
             group => "root";
         "$queue_venv_dir/run_command_runner.sh":
-            require => Python::Virtualenv["$queue_venv_dir"],
+            #require => Python::Virtualenv["$queue_venv_dir"],
             content => template("buildmaster/run_command_runner.sh.erb"),
             notify => Service["command_runner"],
             mode => 755,
@@ -54,14 +55,14 @@ class buildmaster::queue {
             owner => "root",
             group => "root";
         "$queue_venv_dir/run_pulse_publisher.sh":
-            require => Python::Virtualenv["$queue_venv_dir"],
+            #require => Python::Virtualenv["$queue_venv_dir"],
             content => template("buildmaster/run_pulse_publisher.sh.erb"),
             notify => Service["pulse_publisher"],
             mode => 755,
             owner => "root",
             group => "root";
         "$queue_venv_dir/passwords.py":
-            require => Python::Virtualenv["$queue_venv_dir"],
+            #require => Python::Virtualenv["$queue_venv_dir"],
             content => template("buildmaster/passwords.py.erb"),
             mode => 600,
             owner => $users::builder::username,
@@ -78,7 +79,7 @@ class buildmaster::queue {
         "command_runner":
             hasstatus => true,
             require => [
-                Python::Virtualenv["$queue_venv_dir"],
+                #Python::Virtualenv["$queue_venv_dir"],
                 File["/etc/init.d/command_runner"],
                 File["$queue_venv_dir/run_command_runner.sh"],
                 Exec["install-tools"],
@@ -88,7 +89,7 @@ class buildmaster::queue {
         "pulse_publisher":
             hasstatus => true,
             require => [
-                Python::Virtualenv["$queue_venv_dir"],
+                #Python::Virtualenv["$queue_venv_dir"],
                 File["/etc/init.d/pulse_publisher"],
                 File["$queue_venv_dir/run_pulse_publisher.sh"],
                 Exec["install-tools"],

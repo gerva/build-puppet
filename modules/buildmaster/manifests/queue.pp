@@ -2,19 +2,19 @@
 # sets up queue processors for pulse, commands, etc.
 
 class buildmaster::queue {
-    include config
-    include users::builder
+    include buildmaster::settings
     include buildmaster::virtualenv
 
-    $queue_venv_dir = "$users::builder::home/queue"
-
+    $buildmaster_user = "$buildmaster::settings::buildmaster_user"
+    $buildmaster_group = "$buildmaster::settings::buildmaster_group"
+    $queue_venv_dir = "$queue_venv_dir"
 
     exec {
         # Clone/install tools
         "clone-tools":
             creates => "$queue_venv_dir/tools",
             command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/tools",
-            user => "$users::buider::username",
+            user => "$buildmaster_user",
             cwd => "$queue_venv_dir";
     }
     exec {
@@ -24,7 +24,7 @@ class buildmaster::queue {
             creates => "$queue_venv_dir/lib/python2.7/site-packages/buildtools.egg-link",
             command => "$queue_venv_dir/bin/python setup.py develop",
             cwd => "$queue_venv_dir/tools",
-            user => $users::builder::username;
+            user => $buildmaster_user;
     }
 
     file {
@@ -65,8 +65,8 @@ class buildmaster::queue {
             #require => Python::Virtualenv["$queue_venv_dir"],
             content => template("buildmaster/passwords.py.erb"),
             mode => 600,
-            owner => $users::builder::username,
-            group => $users::builder::group;
+            owner => $buildmaster_user,
+            group => $buildmaster_group;
         "/etc/init.d/nrpe.d/pulse_publisher.cfg":
             content => template("buildmaster/pulse_publisher.cfg.erb"),
             notify => Class["nrpe::service"],

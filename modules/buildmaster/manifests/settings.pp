@@ -1,4 +1,8 @@
 class buildmaster::settings {
-    $master_basedir = "/builds/buildbot"
-    $master_queue_venv = "${master_basedir}/queue"
+    include users::builder
+
+    $buildmaster_user = $users::builder::username;
+    $buildmaster_group = $users::builder::group
+    $buildmaster_home = $users::builder::home
+    $queue_venv_dir = "$build_home/queue"
 }

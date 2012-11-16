@@ -22,8 +22,8 @@ DESC="command runner"
 
 USER=cltbld
 
-DAEMON=<%= scope.lookupvar('buildmaster::queue::queue_venv_dir') %>/run_command_runner.sh
-PIDFILE=<%= scope.lookupvar('buildmaster::queue::queue_venv_dir') %>/command_runner.pid
+DAEMON=<%= scope.lookupvar('buildmaster::settings::queue_venv_dir') %>/run_command_runner.sh
+PIDFILE=<%= scope.lookupvar('buildmaster::settings::queue_venv_dir') %>/command_runner.pid
 
 test -x ${DAEMON} || exit 0
 

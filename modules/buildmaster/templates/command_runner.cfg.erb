@@ -1,4 +1,4 @@
 ####  This file under configuration management control
 ####  DO NOT EDIT MANUALLY
 command[check_commandrunner]=<%= scope.lookupvar('nrpe::base::plugins_dir') %>/check_procs -c 1:1 -a command_runner.py
-command[check_commandqueue]=<%= scope.lookupvar('buildmaster::queue::queue_venv_dir') %>/bin/python <%= scope.lookupvar('buildmaster::queue::queue_venv_dir') %>/tools/buildbot-helpers/check_queuedir.py /dev/shm/queue/commands
+command[check_commandqueue]=<%= scope.lookupvar('buildmaster::settings::queue_venv_dir') %>/bin/python <%= scope.lookupvar('buildmaster::settings::queue_venv_dir') %>/tools/buildbot-helpers/check_queuedir.py /dev/shm/queue/commands

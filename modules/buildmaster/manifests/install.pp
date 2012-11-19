@@ -20,7 +20,7 @@ class buildmaster::install {
     include buildmaster::virtualenv
     include buildmaster::queue
 
-   if $num_masters == '' {
+    if $num_masters == '' {
         fail("you must set num_masters")
     }
     case $::operatingsystem {
@@ -51,5 +51,52 @@ class buildmaster::install {
             command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/buildbot-configs",
             user => "$buildmaster::settings::username",
             cwd => "$buildmaster::settings::username";
+    }
+    file {
+        "/home/$master_user/.ssh":
+            mode => 700,
+            owner => $master_user,
+            user => "$buildmaster::settings::username",
+            group => "$buildmaster::settings::username",
+            ensure => directory;
+        "/builds":
+            ensure => directory,
+            user => "$buildmaster::settings::username",
+            group => "$buildmaster::settings::username",
+        $master_basedir:
+            ensure => directory,
+            user => "$buildmaster::settings::username",
+            group => "$buildmaster::settings::username",
+        "/etc/default/buildbot.d/":
+            owner => "root",
+            group => "root",
+            mode => 755,
+            ensure => directory;
+        "/etc/init.d/buildbot":
+            source => "puppet:///modules/buildmaster/buildbot.initd",
+            mode => 755,
+            owner => "root",
+            group => "root";
+        "/root/.my.cnf":
+            content => template("buildmaster/my.cnf.erb"),
+            mode => 600,
+            owner => "root",
+            group => "root";
+        #"${nagios_etcdir}/nrpe.d/buildbot.cfg":
+        #    content => template("buildmaster/buildbot.cfg.erb"),
+        #    notify => Service["nrpe"],
+        #    require => Class["nagios"],
+        #    mode => 644,
+        #    owner => "root",
+        #    group => "root";
+        "/tools":
+            ensure => "directory";
+    }
+    exec {
+        "clone-configs":
+            creates => "$master_basedir/buildbot-configs",
+            command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/buildbot-configs",
+            user => $master_user,
+            cwd => $master_basedir;
     }
 }

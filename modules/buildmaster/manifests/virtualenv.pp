@@ -1,5 +1,5 @@
 class buildmaster::virtualenv {
-    include $buildmaster::settings
+    include buildmaster::settings
     include packages::mozilla::python27
 
     python::virtualenv {

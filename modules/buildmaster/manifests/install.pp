@@ -58,12 +58,12 @@ class buildmaster::install {
             user => $users::builder::username;
     }
     file {
-        "/home/$master_user/.ssh":
-            mode => 700,
-            owner => $master_user,
-            user => "$buildmaster::settings::username",
-            group => "$buildmaster::settings::username",
-            ensure => directory;
+        #"/home/$master_user/.ssh":
+        #   mode => 700,
+        #   owner => $master_user,
+        #   user => "$buildmaster::settings::username",
+        #   group => "$buildmaster::settings::username",
+        #   ensure => directory;
         "/builds":
             user => "$buildmaster::settings::username",
             group => "$buildmaster::settings::username",

@@ -1,8 +1,9 @@
 class buildmaster::virtualenv {
+    include $buildmaster::settings
     include packages::mozilla::python27
 
     python::virtualenv {
-        "$buildmaster::queue::queue_venv_dir":
+        "$buildmaster::settings::queue_venv_dir":
             python => "/tools/python27/bin/python2.7",
             require => Class['packages::mozilla::python27'],
             packages => [

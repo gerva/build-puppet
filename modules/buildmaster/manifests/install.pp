@@ -63,7 +63,7 @@ class buildmaster::install {
             ensure => directory,
             user => "$buildmaster::settings::username",
             group => "$buildmaster::settings::username",
-        $master_basedir:
+        "$buildmaster::settings::master_basedir":
             ensure => directory,
             user => "$buildmaster::settings::username",
             group => "$buildmaster::settings::username",

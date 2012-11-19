@@ -5,4 +5,5 @@ class buildmaster::settings {
     $buildmaster_group = $users::builder::group
     $buildmaster_home = $users::builder::home
     $queue_venv_dir = "$build_home/queue"
+    $master_basedir = "/builds/buildbot"
 }

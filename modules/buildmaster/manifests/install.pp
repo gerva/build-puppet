@@ -60,13 +60,13 @@ class buildmaster::install {
             group => "$buildmaster::settings::username",
             ensure => directory;
         "/builds":
-            ensure => directory,
             user => "$buildmaster::settings::username",
             group => "$buildmaster::settings::username",
+            ensure => directory;
         "$buildmaster::settings::master_basedir":
-            ensure => directory,
             user => "$buildmaster::settings::username",
             group => "$buildmaster::settings::username",
+            ensure => directory;
         "/etc/default/buildbot.d/":
             owner => "root",
             group => "root",

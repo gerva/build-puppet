@@ -7,7 +7,7 @@ class buildmaster::queue {
 
     $buildmaster_user = "$buildmaster::settings::buildmaster_user"
     $buildmaster_group = "$buildmaster::settings::buildmaster_group"
-    $queue_venv_dir = "$queue_venv_dir"
+    $queue_venv_dir = "$buildmaster::settings::queue_venv_dir"
 
     exec {
         # Clone/install tools

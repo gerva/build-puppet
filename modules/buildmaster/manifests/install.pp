@@ -67,8 +67,6 @@ class buildmaster::install {
             user => "$buildmaster::settings::username",
             group => "$buildmaster::settings::username",
             ensure => directory;
-        "/tools":
-            ensure => "directory";
     }
     exec {
         "clone-configs":

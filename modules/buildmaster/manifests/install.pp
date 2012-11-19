@@ -67,28 +67,6 @@ class buildmaster::install {
             user => "$buildmaster::settings::username",
             group => "$buildmaster::settings::username",
             ensure => directory;
-        "/etc/default/buildbot.d/":
-            owner => "root",
-            group => "root",
-            mode => 755,
-            ensure => directory;
-        "/etc/init.d/buildbot":
-            source => "puppet:///modules/buildmaster/buildbot.initd",
-            mode => 755,
-            owner => "root",
-            group => "root";
-        "/root/.my.cnf":
-            content => template("buildmaster/my.cnf.erb"),
-            mode => 600,
-            owner => "root",
-            group => "root";
-        #"${nagios_etcdir}/nrpe.d/buildbot.cfg":
-        #    content => template("buildmaster/buildbot.cfg.erb"),
-        #    notify => Service["nrpe"],
-        #    require => Class["nagios"],
-        #    mode => 644,
-        #    owner => "root",
-        #    group => "root";
         "/tools":
             ensure => "directory";
     }

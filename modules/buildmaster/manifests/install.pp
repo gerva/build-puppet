@@ -16,6 +16,7 @@ class buildmaster::install {
     include packages::mercurial
     include packages::mozilla::python27
     include packages::mozilla::py27_virtualenv
+    include packages::mozilla::py27_mercurial
     include buildmaster::settings
     include buildmaster::virtualenv
     include buildmaster::queue
@@ -47,10 +48,13 @@ class buildmaster::install {
 
     exec {
         "clone-configs":
+            require => [
+                Class['packages::mozilla::py27_mercurial'],
+                File['/builds/tools'],
+            ],
             creates => "$buildmaster::settings::home/buildbot-configs",
-            command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/buildbot-configs",
-            user => "$buildmaster::settings::username",
-            cwd => "$buildmaster::settings::username";
+            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot-configs"
+            user => $users::builder::username;
     }
     file {
         "/home/$master_user/.ssh":

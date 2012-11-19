@@ -68,11 +68,4 @@ class buildmaster::install {
             group => "$buildmaster::settings::username",
             ensure => directory;
     }
-    exec {
-        "clone-configs":
-            creates => "$master_basedir/buildbot-configs",
-            command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/buildbot-configs",
-            user => $master_user,
-            cwd => $master_basedir;
-    }
 }

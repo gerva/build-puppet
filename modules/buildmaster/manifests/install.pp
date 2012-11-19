@@ -53,7 +53,8 @@ class buildmaster::install {
                 File['/builds/tools'],
             ],
             creates => "$buildmaster::settings::home/buildbot-configs",
-            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot-configs",
+            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot-configs .",
+            cwd => "$buildmaster::settings::home/buildbot-configs",
             user => $users::builder::username;
     }
     file {

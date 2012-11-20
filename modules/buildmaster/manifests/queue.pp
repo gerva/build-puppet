@@ -5,8 +5,6 @@ class buildmaster::queue {
     include buildmaster::settings
     include buildmaster::virtualenv
 
-    $buildmaster_user = "$buildmaster::settings::buildmaster_user"
-    $buildmaster_group = "$buildmaster::settings::buildmaster_group"
     $queue_venv_dir = "$buildmaster::settings::queue_venv_dir"
 
     exec {
@@ -65,8 +63,8 @@ class buildmaster::queue {
             #require => Python::Virtualenv["$queue_venv_dir"],
             content => template("buildmaster/passwords.py.erb"),
             mode => 600,
-            owner => $buildmaster_user,
-            group => $buildmaster_group;
+            owner => $user::builder::username,
+            group => $user::builder::username,
         "/etc/init.d/nrpe.d/pulse_publisher.cfg":
             content => template("buildmaster/pulse_publisher.cfg.erb"),
             notify => Class["nrpe::service"],

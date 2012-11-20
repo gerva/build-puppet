@@ -19,6 +19,7 @@ class buildmaster::install {
     include packages::mozilla::py27_mercurial
     include buildmaster::settings
     include buildmaster::virtualenv
+    include buildmaster::repos
     include buildmaster::queue
 
     if $num_masters == '' {
@@ -46,31 +47,10 @@ class buildmaster::install {
             enable => true;
     }
 
-    exec {
-        "clone-configs":
-            require => [
-                Class['packages::mozilla::py27_mercurial'],
-                File['/builds/tools'],
-            ],
-            creates => "$buildmaster::settings::home/buildbot-configs",
-            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot-configs .",
-            cwd => "$buildmaster::settings::home/buildbot-configs",
-            user => $users::builder::username;
-    }
     file {
-        #"/home/$master_user/.ssh":
-        #   mode => 700,
-        #   owner => $master_user,
-        #   user => "$buildmaster::settings::username",
-        #   group => "$buildmaster::settings::username",
-        #   ensure => directory;
-        "/builds":
-            user => "$buildmaster::settings::username",
-            group => "$buildmaster::settings::username",
-            ensure => directory;
         "$buildmaster::settings::master_basedir":
-            user => "$buildmaster::settings::username",
-            group => "$buildmaster::settings::username",
+            user => "$users::builder::username",
+            group => "$users::builder::username",
             ensure => directory;
     }
 }

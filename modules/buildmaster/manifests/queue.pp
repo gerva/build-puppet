@@ -64,7 +64,7 @@ class buildmaster::queue {
             content => template("buildmaster/passwords.py.erb"),
             mode => 600,
             owner => $user::builder::username,
-            group => $user::builder::username,
+            group => $user::builder::username;
         "/etc/init.d/nrpe.d/pulse_publisher.cfg":
             content => template("buildmaster/pulse_publisher.cfg.erb"),
             notify => Class["nrpe::service"],

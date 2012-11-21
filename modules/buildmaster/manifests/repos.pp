@@ -23,15 +23,15 @@ class buildmaster::repos {
             require => [
                 Class['packages::mozilla::py27_mercurial'],
             ],
-            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/tools ${queue_venv_dir}/tools",
+            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/tools ${buildmaster::settings::queue_venv_dir}/tools",
             user => "$buildmaster_user";
         "clone-configs":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
                 File['/builds/tools'],
             ],
-            creates => "$users::builder::home/buildbot-configs",
-            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot-configs ${users::builder::home}/buildbot-configs",
+            creates => "${buildmaster::settings::queue_venv_dir}/buildbot-configs",
+            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot-configs ${buildmaster::settings::queue_venv_dir}/buildbot-configs",
             user => "$users::builder::username";
     }
 
@@ -39,9 +39,9 @@ class buildmaster::repos {
         # install tools
         "install-tools":
             require => Exec["clone-tools"],
-            creates => "${queue_venv_dir}/lib/python2.7/site-packages/buildtools.egg-link",
-            command => "${queue_venv_dir}/bin/python setup.py develop",
-            cwd => "${queue_venv_dir}/tools",
+            creates => "${buildmaster::settings::queue_venv_dir}/lib/python2.7/site-packages/buildtools.egg-link",
+            command => "${buildmaster::settings::queue_venv_dir}/bin/python setup.py develop",
+            cwd => "${buildmaster::settings::queue_venv_dir}/tools",
             user => $users::buildmaster::username;
     }
 }

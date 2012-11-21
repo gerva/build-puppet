@@ -49,7 +49,7 @@ class buildmaster::install {
 
     file {
         "$buildmaster::settings::master_basedir":
-            user => "$users::builder::username",
+            owner => "$users::builder::username",
             group => "$users::builder::username",
             ensure => directory;
     }

@@ -24,8 +24,8 @@ class buildmaster::repos {
                 File['/builds/tools'],
             ],
             creates => "$users::builder::home/buildbot-configs",
-            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot-configs .",
-            cwd => "$users::builder::home/buildbot-configs",
+            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot-configs ${users::builder::home}/buildbot-configs",
+            cwd => "${users::builder::home}",
             user => "$users::builder::username";
     }
 }

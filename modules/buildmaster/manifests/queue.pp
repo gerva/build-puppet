@@ -7,23 +7,6 @@ class buildmaster::queue {
 
     $queue_venv_dir = "$buildmaster::settings::queue_venv_dir"
 
-    exec {
-        # Clone/install tools
-        "clone-tools":
-            creates => "${queue_venv_dir}/tools",
-            command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/tools",
-            user => "$buildmaster_user",
-            cwd => "$queue_venv_dir";
-    }
-    exec {
-        # install tools
-        "install-tools":
-            require => Exec["clone-tools"],
-            creates => "${queue_venv_dir}/lib/python2.7/site-packages/buildtools.egg-link",
-            command => "${queue_venv_dir}/bin/python setup.py develop",
-            cwd => "${queue_venv_dir}/tools",
-            user => $users::buildmaster::username;
-    }
 
     file {
         "/etc/init.d/command_runner":

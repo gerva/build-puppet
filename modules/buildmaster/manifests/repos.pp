@@ -9,6 +9,14 @@ class buildmaster::repos {
     include packages::mozilla::py27_mercurial
     include buildmaster::settings
 
+    file {
+        "/builds/tools":
+            owner => $users::builder::username,
+            group => $users::builder::group,
+            ensure => directory,
+            mode => 0755;
+    }
+
     exec {
         "clone-configs":
             require => [

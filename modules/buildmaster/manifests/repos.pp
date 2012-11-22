@@ -22,7 +22,7 @@ class buildmaster::repos {
         "clone-tools":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
-                File['${buildmaster::settings::queue_venv_dir}'],
+                File["${buildmaster::settings::queue_venv_dir}"],
             ],
             creates => "${buildmaster::settings::queue_venv_dir}/buildbot-configs",
             command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/tools ${buildmaster::settings::queue_venv_dir}/tools",
@@ -30,7 +30,7 @@ class buildmaster::repos {
         "clone-configs":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
-                File['${buildmaster::settings::queue_venv_dir}'],
+                File["${buildmaster::settings::queue_venv_dir}"],
             ],
             creates => "${buildmaster::settings::queue_venv_dir}/buildbot-configs",
             command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot-configs ${buildmaster::settings::queue_venv_dir}/buildbot-configs",

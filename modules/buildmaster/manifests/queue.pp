@@ -3,7 +3,7 @@
 
 class buildmaster::queue {
     include buildmaster::settings
-    include buildmaster::virtualenv
+#    include buildmaster::virtualenv
 
     $queue_venv_dir = "$buildmaster::settings::queue_venv_dir"
 

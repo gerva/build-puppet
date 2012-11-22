@@ -10,7 +10,7 @@ class buildmaster::repos {
     include buildmaster::settings
 
     file {
-        "/builds/tools":
+        "${buildmaster::settings::queue_venv_dir}":
             owner => $users::builder::username,
             group => $users::builder::group,
             ensure => directory,
@@ -22,13 +22,15 @@ class buildmaster::repos {
         "clone-tools":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
+                File['${buildmaster::settings::queue_venv_dir}'],
             ],
+            creates => "${buildmaster::settings::queue_venv_dir}/buildbot-configs",
             command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/tools ${buildmaster::settings::queue_venv_dir}/tools",
             user => "$buildmaster_user";
         "clone-configs":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
-                File['/builds/tools'],
+                File['${buildmaster::settings::queue_venv_dir}'],
             ],
             creates => "${buildmaster::settings::queue_venv_dir}/buildbot-configs",
             command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot-configs ${buildmaster::settings::queue_venv_dir}/buildbot-configs",

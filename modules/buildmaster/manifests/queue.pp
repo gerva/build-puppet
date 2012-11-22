@@ -13,45 +13,33 @@ class buildmaster::queue {
             content => template("buildmaster/command_runner.initd.erb"),
             notify => Service["command_runner"],
             mode => 755,
-            owner => "root",
-            group => "root";
         "${queue_venv_dir}/run_command_runner.sh":
             content => template("buildmaster/run_command_runner.sh.erb"),
             notify => Service["command_runner"],
             mode => 755,
-            owner => "root",
-            group => "root";
         "/etc/nagios/nrpe.d/command_runner.cfg":
             content => template("buildmaster/command_runner.cfg.erb"),
             notify => Class["nrpe::service"],
             require => Package["nrpe"],
             mode => 644,
-            owner => "root",
-            group => "root";
         "/etc/init.d/pulse_publisher":
             content => template("buildmaster/pulse_publisher.initd.erb"),
             notify => Service["pulse_publisher"],
             mode => 755,
-            owner => "root",
-            group => "root";
         "${queue_venv_dir}/run_pulse_publisher.sh":
             content => template("buildmaster/run_pulse_publisher.sh.erb"),
             notify => Service["pulse_publisher"],
             mode => 755,
-            owner => "root",
-            group => "root";
         "${queue_venv_dir}/passwords.py":
             content => template("buildmaster/passwords.py.erb"),
             mode => 600,
             owner => $user::builder::username,
             group => $user::builder::username;
-        "/etc/init.d/nrpe.d/pulse_publisher.cfg":
+        "/etc/nrpe.d/pulse_publisher.cfg":
             content => template("buildmaster/pulse_publisher.cfg.erb"),
             notify => Class["nrpe::service"],
             require => Package["nrpe"],
             mode => 644,
-            owner => "root",
-            group => "root";
     }
     service {
         "command_runner":

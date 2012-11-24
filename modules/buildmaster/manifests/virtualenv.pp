@@ -27,7 +27,7 @@ class buildmaster::virtualenv {
                 "http://pypi.python.org/packages/source/J/Jinja2/Jinja2-2.5.5.tar.gz#md5=83b20c1eeb31f49d8e6392efae91b7d5",
                 "http://pypi.python.org/packages/source/M/MySQL-python/MySQL-python-1.2.3.tar.gz#md5=215eddb6d853f6f4be5b4afc4154292f",
                 "http://pypi.python.org/packages/source/S/SQLAlchemy/SQLAlchemy-0.6.4.tar.gz#md5=f1e553e73ca989c162ea039b55bd93f5",
-                "http://puppetagain.pub.build.mozilla.org/data/python/packages/buildbot-slave-0.8.4-pre-moz2.tar.gz"
+                "http://puppetagain.pub.build.mozilla.org/data/python/packages/buildbot-slave-0.8.4-pre-moz2.tar.gz",
                 "http://pypi.python.org/packages/source/T/Twisted/Twisted-10.1.0.tar.bz2#md5=04cca97506e830074cffc1965297da3f",
                 "http://pypi.python.org/packages/source/z/zope.interface/zope.interface-3.6.1.tar.gz#md5=7a895181b8d10be4a7e9a3afa13cd3be",
                 "http://hg.mozilla.org/users/clegnitto_mozilla.com/mozillapulse/archive/ad95569a089e.tar.bz2",

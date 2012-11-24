@@ -40,7 +40,7 @@ class buildmaster::virtualenv {
                 "http://pypi.python.org/packages/source/p/pyasn1/pyasn1-0.0.11a.tar.gz#md5=a99ff02b24a98614f34ba196208d9cac",
                 "http://pypi.python.org/packages/source/p/pycrypto/pycrypto-2.3.tar.gz#md5=2b811cfbfc342d83ee614097effb8101",
                 "http://pypi.python.org/packages/source/p/pytz/pytz-2012h.tar.gz#md5=d4cce6b41401d561b62107eeedd4a936",
-                "http://pypi.python.org/packages/source/w/wsgiref/wsgiref-0.1.2.zip#md5=29b146e6ebd0f9fb119fe321f7bcf6cb",
+                "http://pypi.python.org/packages/source/w/wsgiref/wsgiref-0.1.2.zip#md5=29b146e6ebd0f9fb119fe321f7bcf6cb";
             ],
     }
 }

@@ -19,7 +19,7 @@ class buildmaster::install {
     include packages::mozilla::py27_mercurial
     include buildmaster::settings
     # disabling for now virtualen
-    #include buildmaster::virtualenv
+    include buildmaster::virtualenv
     include buildmaster::repos
     include buildmaster::queue
 

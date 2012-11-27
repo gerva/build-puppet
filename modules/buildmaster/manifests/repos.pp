@@ -40,9 +40,10 @@ class buildmaster::repos {
     exec {
         # install tools
         "install-tools":
+            include packages::mozilla::python27
             require => Exec["clone-tools"],
             creates => "${buildmaster::settings::queue_venv_dir}/lib/python2.7/site-packages/buildtools.egg-link",
-            command => "${buildmaster::settings::queue_venv_dir}/bin/python setup.py develop",
+            command => "/tool/python27/bin/python setup.py develop",
             cwd => "${buildmaster::settings::queue_venv_dir}/tools",
             user => $users::buildmaster::username;
     }

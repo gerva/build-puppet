@@ -19,7 +19,7 @@ class buildmaster::repos {
 
     exec {
         # Clone buildbot
-        "clone-buildbot"
+        "clone-buildbot":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
                 File["${buildmaster::settings::queue_venv_dir}"],

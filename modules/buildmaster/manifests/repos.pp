@@ -25,7 +25,7 @@ class buildmaster::repos {
                 File["${buildmaster::settings::queue_venv_dir}"],
             ],
             creates => "${buildmaster::settings::queue_venv_dir}/buildbot",
-            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/build ${buildmaster::settings::queue_venv_dir}/buildbot",
+            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot ${buildmaster::settings::queue_venv_dir}/buildbot",
             user => "$users::builder::username";
         # Clone/install tools and buildbot-configs
         "clone-tools":

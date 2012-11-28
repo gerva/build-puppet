@@ -24,8 +24,8 @@ class buildmaster::repos {
                 Class['packages::mozilla::py27_mercurial'],
                 File["${buildmaster::settings::queue_venv_dir}"],
             ],
-            creates => "${buildmaster::settings::queue_venv_dir}/buildbot",
-            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot ${buildmaster::settings::queue_venv_dir}/buildbot",
+            creates => "${buildmaster::settings::master_basedir}/buildbot",
+            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/buildbot ${buildmaster::settings::master_basedir}/buildbot",
             user => "$users::builder::username";
         # Clone/install tools and buildbot-configs
         "clone-tools":
@@ -46,6 +46,8 @@ class buildmaster::repos {
             user => "$users::builder::username";
     }
 
+    $master_name='build1'
+    $full_master_dir="${buildmaster::settings::master_basedir}/$master_name"
     exec {
         # install tools
         "install-tools":
@@ -57,22 +59,22 @@ class buildmaster::repos {
     }
 
     exec {
-        "setup-$basedir":
+        "setup-buildbot":
             require => [
-                Exec["clone-configs"],
+                Exec["clone-buildbot"],
         ],
-            command => "/bin/bash -c '\$HG pull -u && make -f Makefile.setup all BASEDIR=$full_master_dir MASTER_NAME=$master_name'",
+            command => "make -f Makefile.setup all BASEDIR=${buildmaster::settings::master_basedir} MASTER_NAME=build'",
             creates => "$full_master_dir/master",
-            user => $master_user,
             user => $users::buildmaster::username;
             environment => [
                 "HG=/tools/python27-mercurial/bin/hg",
                 "VIRTUALENV=/usr/bin/virtualenv-2.7",
                 "PYTHON=/usr/local/bin/virtualenv",
-                "PIP_DOWNLOAD_CACHE=$master_basedir/pip_cache",
-                "PIP_FLAGS=--no-deps --no-index --find-links=$python_package_dir",
-                "MASTERS_JSON=http://hg.mozilla.org/build/tools/raw-file/default/buildfarm/maintenance/production-masters.json",
+                "PIP_DOWNLOAD_CACHE=${buildmaster::settings::master_basedir}/pip_cache",
+                "PIP_FLAGS=--no-deps --no-index #--find-links=$python_package_dir",
+                "MASTERS_JSON=http://hg.mozilla.org/build/tools/raw-file/default/buildfarm/maintenance/production-masters.json-wrongonpurpose",
             ],
+            # --find_links is disabled for now
             cwd => "$master_basedir/buildbot-configs";
     }
 }

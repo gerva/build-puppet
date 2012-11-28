@@ -55,4 +55,24 @@ class buildmaster::repos {
             cwd => "${buildmaster::settings::queue_venv_dir}/tools",
             user => $users::buildmaster::username;
     }
+
+    exec {
+        "setup-$basedir":
+            require => [
+                Exec["clone-configs"],
+        ],
+            command => "/bin/bash -c '\$HG pull -u && make -f Makefile.setup all BASEDIR=$full_master_dir MASTER_NAME=$master_name'",
+            creates => "$full_master_dir/master",
+            user => $master_user,
+            user => $users::buildmaster::username;
+            environment => [
+                "HG=/tools/python27-mercurial/bin/hg",
+                "VIRTUALENV=/usr/bin/virtualenv-2.6",
+                "PYTHON=/tools/python27/bin/python2.7",
+                "PIP_DOWNLOAD_CACHE=$master_basedir/pip_cache",
+                "PIP_FLAGS=--no-deps --no-index --find-links=$python_package_dir",
+                "MASTERS_JSON=http://hg.mozilla.org/build/tools/raw-file/default/buildfarm/maintenance/production-masters.json",
+            ],
+            cwd => "$master_basedir/buildbot-configs";
+    }
 }

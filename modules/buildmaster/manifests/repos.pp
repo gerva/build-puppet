@@ -65,7 +65,7 @@ class buildmaster::repos {
         ],
             command => "make -f Makefile.setup all BASEDIR=${buildmaster::settings::master_basedir} MASTER_NAME=build'",
             creates => "$full_master_dir/master",
-            user => $users::buildmaster::username;
+            user => $users::buildmaster::username,
             environment => [
                 "HG=/tools/python27-mercurial/bin/hg",
                 "VIRTUALENV=/usr/bin/virtualenv-2.7",

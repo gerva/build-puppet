@@ -67,8 +67,8 @@ class buildmaster::repos {
             user => $users::buildmaster::username;
             environment => [
                 "HG=/tools/python27-mercurial/bin/hg",
-                "VIRTUALENV=/usr/bin/virtualenv-2.6",
-                "PYTHON=/tools/python27/bin/python2.7",
+                "VIRTUALENV=/usr/bin/virtualenv-2.7",
+                "PYTHON=/usr/local/bin/virtualenv",
                 "PIP_DOWNLOAD_CACHE=$master_basedir/pip_cache",
                 "PIP_FLAGS=--no-deps --no-index --find-links=$python_package_dir",
                 "MASTERS_JSON=http://hg.mozilla.org/build/tools/raw-file/default/buildfarm/maintenance/production-masters.json",

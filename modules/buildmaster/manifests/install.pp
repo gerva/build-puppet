@@ -15,6 +15,7 @@ class buildmaster::install {
     include dirs::builds::buildmaster
     include packages::make
     include packages::mercurial
+    include packages::mysql-devel
     include packages::mozilla::python27
     include packages::mozilla::py27_virtualenv
     include packages::mozilla::py27_mercurial
@@ -22,11 +23,6 @@ class buildmaster::install {
     include buildmaster::virtualenv
     include buildmaster::repos
     include buildmaster::queue
-
-    anchor {
-        'buildmaster::install::begin': ;
-        'buildmaster::install::end': ;
-    }
 
 
     if $num_masters == '' {

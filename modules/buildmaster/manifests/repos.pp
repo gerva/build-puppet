@@ -16,8 +16,6 @@ class buildmaster::repos {
             package {
                 "git":
                     ensure => latest;
-                "mysql-devel":
-                    ensure => latest;
                 "gcc":
                     ensure => latest;
             } -> Anchor['buildmaster::install::end']

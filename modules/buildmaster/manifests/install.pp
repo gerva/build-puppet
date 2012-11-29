@@ -13,6 +13,7 @@ class buildmaster::install {
     include nrpe::base
     include users::builder
     include dirs::builds::buildmaster
+    include packages::make
     include packages::mercurial
     include packages::mozilla::python27
     include packages::mozilla::py27_virtualenv

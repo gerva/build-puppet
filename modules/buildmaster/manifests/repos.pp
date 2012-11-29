@@ -20,8 +20,6 @@ class buildmaster::repos {
                     ensure => latest;
                 "gcc":
                     ensure => latest;
-                "make":
-                    ensure => latest;
             } -> Anchor['buildmaster::install::end']
         }
         default: {

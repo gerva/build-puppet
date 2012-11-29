@@ -6,7 +6,6 @@ class packages::make {
                     ensure => latest;
             }
         }
-
         default: {
             fail("cannot install on $operatingsystem")
         }

@@ -65,7 +65,7 @@ class buildmaster::repos {
             require => [
                 Exec["clone-buildbot"],
         ],
-            command => "make -f Makefile.setup all BASEDIR=${full_master_dir} MASTER_NAME=$master_name'",
+            command => "make -f Makefile.setup all BASEDIR=${full_master_dir} MASTER_NAME=$master_name",
             creates => "${full_master_dir}/master",
             user => $users::buildmaster::username,
             environment => [

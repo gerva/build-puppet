@@ -1,27 +1,8 @@
 # buildmaster repo class
 # creates the souce code repoitories
 class buildmaster::repos {
-    include users::builder
-    include dirs::tools
-    include dirs::builds
-    include dirs::builds::buildmaster
-    include packages::mozilla::python27
-    include packages::mozilla::py27_mercurial
     include buildmaster::settings
 
-
-    case $::operatingsystem {
-        CentOS: {
-	    Anchor['buildmaster::install::begin'] ->
-            package {
-                "gcc":
-                    ensure => latest;
-            } -> Anchor['buildmaster::install::end']
-        }
-        default: {
-            fail("cannot install on $operatingsystem")
-        }
-    }
 
     $master_name='build'
     $full_master_dir="${buildmaster::settings::master_basedir}/$master_name"

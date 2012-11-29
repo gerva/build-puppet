@@ -14,8 +14,6 @@ class buildmaster::repos {
         CentOS: {
 	    Anchor['buildmaster::install::begin'] ->
             package {
-                "git":
-                    ensure => latest;
                 "gcc":
                     ensure => latest;
             } -> Anchor['buildmaster::install::end']

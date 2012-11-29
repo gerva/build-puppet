@@ -1,11 +1,20 @@
 [database]
-engine = mysql+pymysql://<%= scope.lookupvar('::config::secrets::mozpool_db_username') %>:<%= scope.lookupvar('::config::secrets::mozpool_db_password') %>@<%= scope.lookupvar('::config::secrets::mozpool_db_hostname') %>/<%= scope.lookupvar('::config::secrets::mozpool_db_database') %>
+engine = mysql+pymysql://<%= scope.lookupvar('::mozpool::settings::db_username') %>:<%= scope.lookupvar('::mozpool::settings::db_password') %>@<%= scope.lookupvar('::mozpool::settings::db_hostname') %>/<%= scope.lookupvar('::mozpool::settings::db_database') %>
 
 [inventory]
 url = <%= scope.lookupvar('::config::secrets::mozpool_inventory_url') %>
 username = <%= scope.lookupvar('::config::secrets::mozpool_inventory_username') %>
 password = <%= scope.lookupvar('::config::secrets::mozpool_inventory_password') %>
 filter = hostname__startswith=panda-
+
+<%# ignore servers not in the cluster (staging or production) %>
+<% if scope.lookupvar('mozpool_staging') -%>
+# this is staging, so exclude devices on production imaging servers
+ignore_devices_on_servers_re = (mobile-services|mobile-imaging-(00[2-9]|010)).*
+<% else -%>
+# this is prod, so ignore devices on the staging servers
+ignore_devices_on_servers_re = mobile-imaging-001.*
+<% end -%>
 
 [server]
 fqdn = <%= scope.lookupvar('::fqdn') %>
@@ -15,3 +24,7 @@ fqdn = <%= scope.lookupvar('::fqdn') %>
 tftp_root = /var/lib/tftpboot
 # The path where boot images are stored.
 image_store = /var/lib/tftpboot/pxelinux.cfg
+
+[mozpool]
+# this should correspond to a row in the pxe_configs table
+b2g_pxe_config = panda-b2g.1

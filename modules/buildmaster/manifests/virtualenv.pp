@@ -2,10 +2,17 @@ class buildmaster::virtualenv {
     include buildmaster::settings
     include packages::mozilla::python27
 
+    # master_type can be one of the following:
+    # build, scheduler, tests  try
+    # hardcoding build for now.
+    $my_build_master_type='build'
+
     python::virtualenv {
-        "${buildmaster::settings::queue_venv_dir}/build":
+        "${buildmaster::settings::queue_venv_dir}/${my_build_master_type}":
             python => "/tools/python27/bin/python2.7",
             require => Class['packages::mozilla::python27'],
+            user => $users::builder::username,
+            group => $users::builder::group,
             packages => [
             "Jinja2==2.5.5",
             "MySQL-python==1.2.3",

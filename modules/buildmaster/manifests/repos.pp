@@ -9,6 +9,26 @@ class buildmaster::repos {
     include packages::mozilla::py27_mercurial
     include buildmaster::settings
 
+
+    case $::operatingsystem {
+        CentOS: {
+	    Anchor['buildmaster::install::begin'] ->
+            package {
+                "git":
+                    ensure => latest;
+                "mysql-devel":
+                    ensure => latest;
+                "gcc":
+                    ensure => latest;
+                "make":
+                    ensure => latest;
+            } -> Anchor['buildmaster::install::end']
+        }
+        default: {
+            fail("cannot install on $operatingsystem")
+        }
+    }
+
     $master_name='build'
     $full_master_dir="${buildmaster::settings::master_basedir}/$master_name"
 

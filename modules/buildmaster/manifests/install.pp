@@ -17,29 +17,14 @@ class buildmaster::install {
     include packages::mozilla::python27
     include packages::mozilla::py27_virtualenv
     include packages::mozilla::py27_mercurial
+    include buildmaster::dependencies
     include buildmaster::settings
-    # disabling for now virtualen
     include buildmaster::virtualenv
     include buildmaster::repos
     include buildmaster::queue
 
     if $num_masters == '' {
         fail("you must set num_masters")
-    }
-    case $::operatingsystem {
-        CentOS: {
-            package {
-                "git":
-                    ensure => latest;
-                "mysql-devel":
-                    ensure => latest;
-                "gcc":
-                    ensure => latest;
-            }
-        }
-        default: {
-            fail("cannot install on $operatingsystem")
-        }
     }
 
     service {

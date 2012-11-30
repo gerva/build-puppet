@@ -43,4 +43,21 @@ class buildmaster::install {
             group => "$users::builder::username",
             ensure => directory;
     }
+
+    $master_name='build'
+    $full_master_dir="${buildmaster::settings::master_basedir}/$master_name"
+
+    file {
+        "${full_master_dir}":
+            owner => $users::builder::username,
+            group => $users::builder::group,
+            ensure => directory,
+            mode => 0755;
+    }
+
+    exec {
+        "make-buildbot":
+            command => "/usr/bin/make --help",
+            user => $users::buildmaster::username,
+    }
 }

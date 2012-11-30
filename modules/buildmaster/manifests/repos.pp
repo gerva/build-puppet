@@ -54,20 +54,4 @@ class buildmaster::repos {
     #        cwd => "${buildmaster::settings::queue_venv_dir}/tools",
     #        user => $users::buildmaster::username;
     #}
-
-    exec {
-        "setup-buildbot":
-            require => [
-                Exec["clone-buildbot"],
-        ],
-            command => "make -f Makefile.setup all BASEDIR=${full_master_dir} MASTER_NAME=$master_name",
-            creates => "${full_master_dir}/master",
-            user => $users::buildmaster::username,
-            environment => [
-                "PYTHON=${buildmaster::s}/build/bin/virtualenv",
-                #"MASTERS_JSON=http://hg.mozilla.org/build/tools/raw-file/default/buildfarm/maintenance/production-masters.json-wrongonpurpose",
-            ],
-            # --find_links is disabled for now
-            cwd => "${buildmaster::settings::master_basedir}/buildbot-configs";
-    }
 }

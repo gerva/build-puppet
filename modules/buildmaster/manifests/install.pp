@@ -39,8 +39,9 @@ class buildmaster::install {
 
     exec {
         "make-buildbot":
-            command => "/usr/bin/make --help; echo ${http_port}",
+            command => "/usr/bin/make -f Makefile.setup all BASEDIR=$master_dir MASTER_NAME=$master_name",
             user => $users::buildmaster::username,
+            cwd => $buildbot_configs_dir,
             environment => [
              "VIRTUALENV=${virutalenv_dir}",
              "PTYHON=${virtualenv_dir}/bin/python"

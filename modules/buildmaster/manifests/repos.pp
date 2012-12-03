@@ -5,12 +5,10 @@ class buildmaster::repos {
 
 
     file {
-        "${buildmaster::settings::master_basedir}":
-            owner => $users::builder::username,
-            group => $users::builder::group,
-            ensure => directory,
-            mode => 0755;
-        "${full_master_dir}":
+        [ "${master_dir}",
+          "${master_dir}/${master_name}",
+          "${master_dir}/${master_name}/${master_type}",
+        ]:
             owner => $users::builder::username,
             group => $users::builder::group,
             ensure => directory,
@@ -23,27 +21,27 @@ class buildmaster::repos {
         "clone-buildbot":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
-                File["${full_master_dir}"],
+                File["${master_dir}/${master_name}/${master_type}"],
             ],
-            creates => "${full_master_dir}/buildbot",
-            command => "/tools/python27-mercurial/bin/hg clone ${hg_repo}/buildbot ${full_master_dir}/buildbot",
+            creates => "${buildbot_dir}",
+            command => "/tools/python27-mercurial/bin/hg clone ${hg_repo}/buildbot ${buildbot_dir}",
             user => "$users::builder::username";
         # Clone/install tools and buildbot-configs
         "clone-tools":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
-                File["${full_master_dir}"],
+                File["${master_dir}/${master_name}/${master_type}"],
             ],
-            creates => "${full_master_dir}/tools",
-            command => "/tools/python27-mercurial/bin/hg clone ${hg_repo}/tools ${full_master_dir}/tools",
+            creates => "${tools_dir}",
+            command => "/tools/python27-mercurial/bin/hg clone ${hg_repo}/tools ${tools_dir}",
             user => "$users::builder::username";
         "clone-configs":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
-                File["${full_master_dir}"],
+                File["${master_dir}/${master_name}/${master_type}"],
             ],
-            creates => "${full_master_dir}/buildbot-configs",
-            command => "/tools/python27-mercurial/bin/hg clone ${hg_repo}/buildbot-configs ${full_master_dir}/buildbot-configs",
+            creates => "${buildbot_configs_dir}",
+            command => "/tools/python27-mercurial/bin/hg clone ${hg_repo}/buildbot-configs ${buildbot_configs_dir}",
             user => "$users::builder::username";
     }
 

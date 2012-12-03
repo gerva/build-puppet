@@ -37,21 +37,6 @@ class buildmaster::install {
             enable => true;
     }
 
-    file {
-        "$buildmaster::settings::master_basedir":
-            owner => "$users::builder::username",
-            group => "$users::builder::username",
-            ensure => directory;
-    }
-
-    file {
-        "${full_master_dir}":
-            owner => $users::builder::username,
-            group => $users::builder::group,
-            ensure => directory,
-            mode => 0755;
-    }
-
     exec {
         "make-buildbot":
             command => "/usr/bin/make --help; echo ${http_port}",

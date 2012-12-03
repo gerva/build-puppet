@@ -4,9 +4,6 @@ class buildmaster::repos {
     include buildmaster::settings
 
 
-    $master_name='build'
-    $full_master_dir="${buildmaster::settings::master_basedir}/$master_name"
-
     file {
         "${full_master_dir}":
             owner => $users::builder::username,

@@ -3,17 +3,13 @@
 
 class buildmaster::queue {
     include buildmaster::settings
-#    include buildmaster::virtualenv
-
-    $queue_venv_dir = "$buildmaster::settings::queue_venv_dir"
-
 
     file {
         "/etc/init.d/command_runner":
             content => template("buildmaster/command_runner.initd.erb"),
             notify => Service["command_runner"],
             mode => 755;
-        "${queue_venv_dir}/run_command_runner.sh":
+        "${buildmaster::settings::queue_dir}/run_command_runner.sh":
             content => template("buildmaster/run_command_runner.sh.erb"),
             notify => Service["command_runner"],
             mode => 755;
@@ -26,11 +22,11 @@ class buildmaster::queue {
             content => template("buildmaster/pulse_publisher.initd.erb"),
             notify => Service["pulse_publisher"],
             mode => 755;
-        "${queue_venv_dir}/run_pulse_publisher.sh":
+        "${buildmaster::settings::queue_dir}/run_pulse_publisher.sh":
             content => template("buildmaster/run_pulse_publisher.sh.erb"),
             notify => Service["pulse_publisher"],
             mode => 755;
-        "${queue_venv_dir}/passwords.py":
+        "${buildmaster::settings::queue_dir}/passwords.py":
             content => template("buildmaster/passwords.py.erb"),
             mode => 600,
             owner => $user::builder::username,
@@ -46,7 +42,7 @@ class buildmaster::queue {
             hasstatus => true,
             require => [
                 File["/etc/init.d/command_runner"],
-                File["${queue_venv_dir}/run_command_runner.sh"],
+                File["${buildmaster::settings::queue_dir}/run_command_runner.sh"],
                 ],
             enable => true,
             ensure => running;
@@ -54,7 +50,7 @@ class buildmaster::queue {
             hasstatus => true,
             require => [
                 File["/etc/init.d/pulse_publisher"],
-                File["${queue_venv_dir}/run_pulse_publisher.sh"],
+                File["${buildmaster::settings::queue_dir}/run_pulse_publisher.sh"],
                 ],
             enable => true,
             ensure => running;

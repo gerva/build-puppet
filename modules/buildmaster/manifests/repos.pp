@@ -5,6 +5,11 @@ class buildmaster::repos {
 
 
     file {
+        "${buildmaster::settings::master_basedir}":
+            owner => $users::builder::username,
+            group => $users::builder::group,
+            ensure => directory,
+            mode => 0755;
         "${full_master_dir}":
             owner => $users::builder::username,
             group => $users::builder::group,

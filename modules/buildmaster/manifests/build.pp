@@ -10,5 +10,6 @@ class buildmaster::build {
     $tools_dir = "${master_basedir}/${master_name}/${master_type}/tools"
     $buildbot_configs_dir ="${master_basedir}/${master_name}/${master_type}/buildbot-configs"
     $buildslaves_template = 'BuildSlaves-build.py.erb'
+    include buildmaster::dirs
     include buildmaster::install
 }

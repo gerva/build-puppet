@@ -1,19 +1,6 @@
 # buildmaster repo class
 # creates the souce code repoitories
 class buildmaster::repos {
-    include buildmaster::settings
-
-
-    file {
-        [ "${master_dir}",
-          "${master_dir}/${master_name}",
-          "${master_dir}/${master_name}/${master_type}",
-        ]:
-            owner => $users::builder::username,
-            group => $users::builder::group,
-            ensure => directory,
-            mode => 0755;
-    }
 
     $hg_repo = "http://hg.mozilla.org/build/"
     exec {

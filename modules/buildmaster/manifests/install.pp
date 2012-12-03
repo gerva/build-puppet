@@ -44,9 +44,6 @@ class buildmaster::install {
             ensure => directory;
     }
 
-    $master_name='build'
-    $full_master_dir="${buildmaster::settings::master_basedir}/$master_name"
-
     file {
         "${full_master_dir}":
             owner => $users::builder::username,
@@ -57,7 +54,7 @@ class buildmaster::install {
 
     exec {
         "make-buildbot":
-            command => "/usr/bin/make --help",
+            command => "/usr/bin/make --help; echo ${http_port}",
             user => $users::buildmaster::username,
     }
 }

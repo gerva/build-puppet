@@ -7,7 +7,7 @@ class buildmaster::virtualenv {
     # hardcoding build for now.
 
     python::virtualenv {
-        "${buildmaster::settings::queue_dir}/${buildmaster_type}":
+        "${virtualenv_dir}":
             python => "/tools/python27/bin/python2.7",
             require => Class['packages::mozilla::python27'],
             user => $users::builder::username,

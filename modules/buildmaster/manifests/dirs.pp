@@ -4,7 +4,7 @@ class buildmaster::dirs {
         [ "${master_dir}",
           "${master_dir}/${master_name}",
           "${master_dir}/${master_name}/${master_type}",
-          "${virtualenv_dir}":
+          "${virtualenv_dir}",
           "${queue_dir}",
         ]:
             owner => $users::builder::username,

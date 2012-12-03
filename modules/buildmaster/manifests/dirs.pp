@@ -1,7 +1,8 @@
 class buildmaster::dirs {
 
     file {
-        [ "${master_dir}",
+        [ "${master_basedir}",
+          "${master_dir}",
           "${master_dir}/${master_name}",
           "${master_dir}/${master_name}/${master_type}",
           "${queue_dir}",

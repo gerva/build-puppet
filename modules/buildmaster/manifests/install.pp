@@ -41,5 +41,9 @@ class buildmaster::install {
         "make-buildbot":
             command => "/usr/bin/make --help; echo ${http_port}",
             user => $users::buildmaster::username,
+            environment => [
+             "VIRTUALENV=${virutalenv_dir}",
+             "PTYHON=${virtualenv_dir}/bin/python"
+            ],
     }
 }

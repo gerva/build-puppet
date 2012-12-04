@@ -1,12 +1,11 @@
 class buildmaster::dirs {
     import buildmaster::settings
     file {
-        [ "${master_basedir}",
-          "${master_dir}",
-          "${master_dir}/${master_name}",
-          "${master_dir}/${master_name}/${master_type}",
-          "${queue_dir}",
-        ]:
+        [ "${buildmaster::settings::master_root}",
+          "${buildmaster::settings::queue_dir}",
+          "${buildmaster::settings::master_basedir}",
+          "${buildmaster::settings::master_dir}",
+        ]
             owner => $users::builder::username,
             group => $users::builder::group,
             ensure => directory,

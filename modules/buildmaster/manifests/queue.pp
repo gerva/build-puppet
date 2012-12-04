@@ -1,7 +1,7 @@
 # buildmaster::buildmaster::settings::queue class
 # sets up buildmaster::settings::queue processors for pulse, commands, etc.
 
-class buildmaster::buildmaster::settings::queue {
+class buildmaster::queue {
     include buildmaster::settings
 
     file {

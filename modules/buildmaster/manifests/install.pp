@@ -49,5 +49,6 @@ class buildmaster::install {
              "VIRTUALENV=${buildmaster::settings::virutalenv_dir}",
              "PTYHON=${buildmaster::settings::virtualenv_dir}/bin/python"
             ],
+            requires => Class['buildmaster::virtualenv']
     }
 }

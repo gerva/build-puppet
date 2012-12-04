@@ -5,7 +5,7 @@ class buildmaster::dirs {
           "${buildmaster::settings::queue_dir}",
           "${buildmaster::settings::master_basedir}",
           "${buildmaster::settings::master_dir}",
-        ],
+        ]:
         owner => $users::builder::username,
         group => $users::builder::group,
         ensure => directory,

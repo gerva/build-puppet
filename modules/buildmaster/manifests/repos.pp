@@ -8,26 +8,23 @@ class buildmaster::repos {
         "clone-buildbot":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
-                File["${master_dir}/${master_name}/${master_type}"],
             ],
-            creates => "${buildbot_dir}",
+            creates => "${buildmaster::settings::buildbot_dir}",
             command => "/tools/python27-mercurial/bin/hg clone ${hg_repo}/buildbot ${buildbot_dir}",
             user => "$users::builder::username";
         # Clone/install tools and buildbot-configs
         "clone-tools":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
-                File["${master_dir}/${master_name}/${master_type}"],
             ],
-            creates => "${tools_dir}",
+            creates => "${buildmaster::settings::tools_dir}",
             command => "/tools/python27-mercurial/bin/hg clone ${hg_repo}/tools ${tools_dir}",
             user => "$users::builder::username";
         "clone-configs":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
-                File["${master_dir}/${master_name}/${master_type}"],
             ],
-            creates => "${buildbot_configs_dir}",
+            creates => "${buildmaster::settings::buildbot_configs_dir}",
             command => "/tools/python27-mercurial/bin/hg clone ${hg_repo}/buildbot-configs ${buildbot_configs_dir}",
             user => "$users::builder::username";
     }

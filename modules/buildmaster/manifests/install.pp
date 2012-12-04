@@ -39,12 +39,12 @@ class buildmaster::install {
 
     exec {
         "make-buildbot":
-            command => "/usr/bin/make -f Makefile.setup all BASEDIR=$master_dir MASTER_NAME=$master_name",
+            command => "/usr/bin/make -f Makefile.setup all BASEDIR=${buildmaster::settings::master_dir} MASTER_NAME=${buildmaster::settings::master_name}",
             user => $users::buildmaster::username,
-            cwd => $buildbot_configs_dir,
+            cwd => $buildmaster::settings::buildbot_configs_dir,
             environment => [
-             "VIRTUALENV=${virutalenv_dir}",
-             "PTYHON=${virtualenv_dir}/bin/python"
+             "VIRTUALENV=${buibuildmaster::settings::virutalenv_dir}",
+             "PTYHON=${buibuildmaster::settings::virtualenv_dir}/bin/python"
             ],
     }
 }

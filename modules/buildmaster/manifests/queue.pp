@@ -1,7 +1,7 @@
-# buildmaster::queue class
-# sets up queue processors for pulse, commands, etc.
+# buildmaster::buildmaster::settings::queue class
+# sets up buildmaster::settings::queue processors for pulse, commands, etc.
 
-class buildmaster::queue {
+class buildmaster::buildmaster::settings::queue {
     include buildmaster::settings
 
     file {
@@ -9,7 +9,7 @@ class buildmaster::queue {
             content => template("buildmaster/command_runner.initd.erb"),
             notify => Service["command_runner"],
             mode => 755;
-        "${queue_dir}/run_command_runner.sh":
+        "${buildmaster::settings::queue_dir}/run_command_runner.sh":
             content => template("buildmaster/run_command_runner.sh.erb"),
             notify => Service["command_runner"],
             mode => 755;
@@ -22,11 +22,11 @@ class buildmaster::queue {
             content => template("buildmaster/pulse_publisher.initd.erb"),
             notify => Service["pulse_publisher"],
             mode => 755;
-        "${queue_dir}/run_pulse_publisher.sh":
+        "${buildmaster::settings::queue_dir}/run_pulse_publisher.sh":
             content => template("buildmaster/run_pulse_publisher.sh.erb"),
             notify => Service["pulse_publisher"],
             mode => 755;
-        "${queue_dir}/passwords.py":
+        "${buildmaster::settings::queue_dir}/passwords.py":
             content => template("buildmaster/passwords.py.erb"),
             mode => 600,
             owner => $user::builder::username,
@@ -42,7 +42,7 @@ class buildmaster::queue {
             hasstatus => true,
             require => [
                 File["/etc/init.d/command_runner"],
-                File["${queue_dir}/run_command_runner.sh"],
+                File["${buildmaster::settings::queue_dir}/run_command_runner.sh"],
                 ],
             enable => true,
             ensure => running;
@@ -50,7 +50,7 @@ class buildmaster::queue {
             hasstatus => true,
             require => [
                 File["/etc/init.d/pulse_publisher"],
-                File["${queue_dir}/run_pulse_publisher.sh"],
+                File["${buildmaster::settings::queue_dir}/run_pulse_publisher.sh"],
                 ],
             enable => true,
             ensure => running;

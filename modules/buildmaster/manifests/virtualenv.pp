@@ -9,7 +9,7 @@ class buildmaster::virtualenv {
     python::virtualenv {
         "${buildmaster::settings::virtualenv_dir}":
             python => "/tools/python27/bin/python2.7",
-            require => Class['packages::mozilla::python27'], Class['buildmaster::dirs'], Class['buildmaster::repos'],
+            require => Class['packages::mozilla::python27', 'buildmaster::dirs', 'buildmaster::repos'],
             user => $users::builder::username,
             group => $users::builder::group,
             packages => [

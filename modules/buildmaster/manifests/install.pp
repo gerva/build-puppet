@@ -37,7 +37,7 @@ class buildmaster::install {
             enable => true;
     }
 
-    $test_ven="VIRTUALENV=${buibuildmaster::settings::virutalenv_dir}"
+    $test_ven="VIRTUALENV=${buildmaster::settings::virtualenv_dir}"
     $test_py="PTYHON=${buildmaster::settings::virtualenv_dir}/bin/python"
     exec {
         "make-buildbot":
@@ -45,7 +45,7 @@ class buildmaster::install {
             user => $users::buildmaster::username,
             cwd => $buildmaster::settings::buildbot_configs_dir,
             environment => [
-             "VIRTUALENV=${buibuildmaster::settings::virutalenv_dir}",
+             "VIRTUALENV=${buildmaster::settings::virutalenv_dir}",
              "PTYHON=${buildmaster::settings::virtualenv_dir}/bin/python"
             ],
     }

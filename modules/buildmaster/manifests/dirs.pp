@@ -1,5 +1,5 @@
 class buildmaster::dirs {
-
+    import buildmaster::settings
     file {
         [ "${master_basedir}",
           "${master_dir}",

@@ -37,9 +37,11 @@ class buildmaster::install {
             enable => true;
     }
 
+    $test_ven="VIRTUALENV=${buibuildmaster::settings::virutalenv_dir}"
+    $test_py="PTYHON=${buibuildmaster::settings::virtualenv_dir}/bin/python"
     exec {
         "make-buildbot":
-            command => "/usr/bin/make -f Makefile.setup all BASEDIR=${buildmaster::settings::master_dir} MASTER_NAME=${buildmaster::settings::master_name}",
+            command => "echo '$test_ven $test_py';/usr/bin/make -f Makefile.setup all BASEDIR=${buildmaster::settings::master_dir} MASTER_NAME=${buildmaster::settings::master_name}",
             user => $users::buildmaster::username,
             cwd => $buildmaster::settings::buildbot_configs_dir,
             environment => [

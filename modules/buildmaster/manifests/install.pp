@@ -28,7 +28,7 @@ class buildmaster::install {
     exec {
         "make-buildbot":
             require => Class['buildmaster::virtualenv'],
-            command => "/usr/bin/make --help","
+            command => "/usr/bin/make --help",
             user => $users::buildmaster::username,
     }
 }

@@ -2,8 +2,6 @@
 
 class toplevel::server::buildmaster inherits toplevel::server {
 
-    #include packages::mercurial
-    #include ::buildmaster
     include nrpe::base
     include users::builder
     include dirs::builds::buildmaster

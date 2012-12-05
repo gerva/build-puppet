@@ -1,17 +1,17 @@
 # buildmaster repo class
 # creates the souce code repoitories
-class buildmaster::repos {
+define buildmaster::repos($repo_name, $dst_dir) {
 
-    $hg_repo = "http://hg.mozilla.org/build/"
+    $hg_repo = "http://hg.mozilla.org/build/$repo_name"
     exec {
         # make will take care of checking out
         # buildbotcustom and tools
-        "clone-configs":
+        "clone-$repo_name":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
             ],
-            creates => "${buildmaster::settings::buildbot_configs_dir}",
-            command => "/tools/python27-mercurial/bin/hg clone ${hg_repo}/buildbot-configs ${buildmaster::settings::buildbot_configs_dir}",
+            #creates => "${buildmaster::settings::base_dir}",
+            command => "/tools/python27-mercurial/bin/hg clone $hg_repo $dst_dir",
             user => "$users::builder::username";
     }
 }

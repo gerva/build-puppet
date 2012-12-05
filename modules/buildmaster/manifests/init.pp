@@ -15,6 +15,7 @@ class buildmaster {
     include buildmaster::queue
     include buildmaster::settings
     $master_basedir = $buildmaster::settings::master_basedir
+    $clone_config_dir = $buildmaster::settings::master_basedir
     if $num_masters == '' {
         fail("you must set num_masters")
     }
@@ -27,10 +28,11 @@ class buildmaster {
     $plugins_dir = $nagios::service::plugins_dir
     $nagios_etcdir = $nagios::service::etcdir
     file {
-        "/builds":
-            ensure => directory,
-            owner => $users::builder::username,
-            group => $users::builder::group;
+        # already created by users::builder
+        #"/builds":
+        #    ensure => directory,
+        #    owner => $users::builder::username,
+        #    group => $users::builder::group;
         $master_basedir:
             ensure => directory,
             owner => $users::builder::username,
@@ -46,6 +48,7 @@ class buildmaster {
             mode => 600,
             owner => "root",
             group => "root";
+        # this has to be fixed
         "${nagios_etcdir}/nrpe.d/buildbot.cfg":
             content => template("buildmaster/buildbot.cfg.erb"),
             notify => Service["nrpe"],
@@ -56,11 +59,17 @@ class buildmaster {
         "/tools":
             ensure => "directory";
     }
-    exec {
-        "clone-configs":
-            creates => "$master_basedir/buildbot-configs",
-            command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/buildbot-configs",
-            user => $users::builder::username,
-            cwd => $master_basedir;
+
+    #todo fix it:
+    buildmaster::repo {
+        repo_name = 'buildbot-configs',
+        dst_name = '/tmp'
     }
+    #exec {
+    #    "clone-configs":
+    #        creates => "$master_basedir/buildbot-configs",
+    #        command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/buildbot-configs",
+    #        user => $users::builder::username,
+    #        cwd => $master_basedir;
+    #}
 }

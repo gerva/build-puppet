@@ -1,4 +1,4 @@
-class buildmaster::virtualenv {
+define buildmaster::virtualenv($virtualenv_dir) {
     include buildmaster::settings
     include packages::mozilla::python27
 
@@ -7,7 +7,7 @@ class buildmaster::virtualenv {
     # hardcoding build for now.
 
     python::virtualenv {
-        "${buildmaster::settings::virtualenv_dir}":
+        "${virtualenv_dir}":
             python => "/tools/python27/bin/python2.7",
             require => Class['buildmaster::repos'],
             user => $users::builder::username,

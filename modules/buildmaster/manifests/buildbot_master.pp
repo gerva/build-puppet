@@ -15,7 +15,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     include buildmaster
     $master_group = $users::builder::group
     $master_user = $users::builder::username
-    $master_basedir = $users::master_basedir
+    $master_basedir = $buildmaster::settings::master_root
 
     $master_name = $name
     $full_master_dir = "$master_basedir/$basedir"
@@ -25,20 +25,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     }
 
     # Different types of masters require different BuildSlaves.py files
-    case $master_type {
-        'build': {
-            $buildslaves_template = 'BuildSlaves-build.py.erb'
-        }
-        'try': {
-            $buildslaves_template = 'BuildSlaves-try.py.erb'
-        }
-        'tests': {
-            $buildslaves_template = 'BuildSlaves-tests.py.erb'
-        }
-        'scheduler': {
-            $buildslaves_template = 'BuildSlaves-scheduler.py.erb'
-        }
-    }
+    $buildslaves_template = "BuildSlaves-$master_type.py.erb"
 
     if ($buildslaves_template) {
         file {

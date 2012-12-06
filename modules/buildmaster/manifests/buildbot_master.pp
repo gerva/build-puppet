@@ -46,6 +46,9 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
         "$full_master_dir":
             ensure => "directory";
 
+        "$buildbot_configs_dir":
+            ensure => "directory";
+
         "$full_master_dir/master":
             ensure => "directory";
 

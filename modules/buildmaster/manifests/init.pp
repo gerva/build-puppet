@@ -14,6 +14,7 @@ class buildmaster {
     include secrets
     include buildmaster::queue
     include buildmaster::settings
+    include sysctl
     $master_basedir = $buildmaster::settings::master_basedir
     $clone_config_dir = $buildmaster::settings::master_basedir
     if $num_masters == '' {
@@ -23,7 +24,6 @@ class buildmaster {
         "buildbot":
             require => File["/etc/init.d/buildbot"],
             enable => true;
-    A
     }
     $plugins_dir = $nagios::service::plugins_dir
     $nagios_etcdir = $nagios::service::etcdir
@@ -59,9 +59,14 @@ class buildmaster {
         "/tools":
             ensure => "directory";
     }
+    sysctl::value {
+         "net.ipv4.tcp_keepalive_time":
+            value => "240"
+    }
 
     #todo fix it:
     buildmaster::repo {
+        "clone-buildbot"
         repo_name = 'buildbot-configs',
         dst_name = '/tmp'
     }

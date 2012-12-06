@@ -9,7 +9,6 @@ define buildmaster::virtualenv($virtualenv_dir) {
     python::virtualenv {
         "${virtualenv_dir}":
             python => "/tools/python27/bin/python2.7",
-            require => Class['buildmaster::repos'],
             user => $users::builder::username,
             group => $users::builder::group,
             packages => [

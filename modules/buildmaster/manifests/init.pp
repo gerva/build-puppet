@@ -15,7 +15,6 @@ class buildmaster {
     #include secrets
     include buildmaster::queue
     include buildmaster::settings
-    include sysctl
     $master_basedir = $buildmaster::settings::master_basedir
     $clone_config_dir = $buildmaster::settings::master_basedir
     if $num_masters == '' {
@@ -25,31 +24,6 @@ class buildmaster {
         "buildbot":
             require => File["/etc/init.d/buildbot"],
             enable => true;
-    }
-    $plugins_dir = $nagios::service::plugins_dir
-    $nagios_etcdir = $nagios::service::etcdir
-    file {
-        $master_basedir:
-            ensure => directory,
-            owner => $users::builder::username,
-            group => $users::builder::group;
-        "/etc/default/buildbot.d/":
-            ensure => directory,
-            mode => 755;
-        "/etc/init.d/buildbot":
-            source => "puppet:///modules/buildmaster/buildbot.initd",
-            mode => 755;
-        "/root/.my.cnf":
-            content => template("buildmaster/my.cnf.erb"),
-            mode => 600;
-        # this has to be fixed
-        "${nagios_etcdir}/nrpe.d/buildbot.cfg":
-            content => template("buildmaster/buildbot.cfg.erb"),
-            notify => Service["nrpe"],
-            require => Class["nagios"],
-            mode => 644;
-        "/tools":
-            ensure => "directory";
     }
     sysctl::value {
          "net.ipv4.tcp_keepalive_time":

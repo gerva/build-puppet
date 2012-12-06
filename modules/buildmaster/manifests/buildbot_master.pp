@@ -20,6 +20,10 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     $master_name = $name
     $full_master_dir = "$master_basedir/$basedir"
 
+    $virtualenv_dir = "${full_master_dir}/venv"
+    $python_executalbe = "${full_master_dir}/venv/bin/python"
+    $builbot_configs_dir ="${full_master_dir}/buildbot-configs"
+
     if $num_masters == '' {
         fail("you must set num_masters")
     }
@@ -67,22 +71,29 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             mode => 600,
             content => template("buildmaster/buildmaster-cron.erb");
     }
+
+    buildmaster::virtualenv {
+        "creating-virtulenv":
+            virtualenv_dir => $virtualenv_dir
+    }
+
+    buildmaster::repos {
+        "clone-buildbot-$master_type":
+        repo_name => 'buildbot-configs',
+        dst_dir => '/tmp'
+    }
+
     exec {
         "setup-$basedir":
-            require => [
-                Exec["clone-configs"],
-                ],
-            command => "/bin/bash -c '\$HG pull -u && make -f Makefile.setup all BASEDIR=$full_master_dir MASTER_NAME=$master_name'",
+            command => "/bin/bash -c && make -f Makefile.setup all BASEDIR=$full_master_dir MASTER_NAME=$master_name'",
             creates => "$full_master_dir/master",
             user => $master_user,
             logoutput => on_failure,
             environment => [
                 "HG=/usr/bin/hg",
                 "VIRTUALENV=/usr/bin/virtualenv-2.6",
-                "PYTHON=/usr/bin/python2.6",
-                "PIP_DOWNLOAD_CACHE=$master_basedir/pip_cache",
-                "PIP_FLAGS=--no-deps --no-index --find-links=$python_package_dir",
-                "MASTERS_JSON=http://hg.mozilla.org/build/tools/raw-file/default/buildfarm/maintenance/production-masters.json",
+                "PYTHON=${python_executalbe}",
+                #"MASTERS_JSON=http://hg.mozilla.org/build/tools/raw-file/default/buildfarm/maintenance/production-masters.json",
             ],
             cwd => "$master_basedir/buildbot-configs";
     }

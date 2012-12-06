@@ -31,11 +31,6 @@ class buildmaster {
     }
 
     #todo fix it:
-    buildmaster::repos {
-        "clone-buildbot":
-        repo_name => 'buildbot-configs',
-        dst_dir => '/tmp'
-    }
     #exec {
     #    "clone-configs":
     #        creates => "$master_basedir/buildbot-configs",

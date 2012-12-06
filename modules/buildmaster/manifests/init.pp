@@ -10,7 +10,8 @@
 # TODO: you still have to set up ssh keys!
 # TODO: determine num_masters from json (bug 647374)
 class buildmaster {
-    include releng::master
+    # TODO: port releng module
+    #include releng::master
     include secrets
     include buildmaster::queue
     include buildmaster::settings
@@ -28,11 +29,6 @@ class buildmaster {
     $plugins_dir = $nagios::service::plugins_dir
     $nagios_etcdir = $nagios::service::etcdir
     file {
-        # already created by users::builder
-        #"/builds":
-        #    ensure => directory,
-        #    owner => $users::builder::username,
-        #    group => $users::builder::group;
         $master_basedir:
             ensure => directory,
             owner => $users::builder::username,

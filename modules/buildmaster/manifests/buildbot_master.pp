@@ -22,7 +22,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
 
     $virtualenv_dir = "${full_master_dir}/venv"
     $python_executalbe = "${full_master_dir}/venv/bin/python"
-    $builbot_configs_dir ="${full_master_dir}/buildbot-configs"
+    $buildbot_configs_dir ="${full_master_dir}/buildbot-configs"
 
     if $num_masters == '' {
         fail("you must set num_masters")

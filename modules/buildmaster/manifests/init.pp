@@ -31,7 +31,7 @@ class buildmaster {
     }
 
     #todo fix it:
-    buildmaster::repo {
+    buildmaster::repos {
         "clone-buildbot":
         repo_name => 'buildbot-configs',
         dst_name => '/tmp'

@@ -12,7 +12,7 @@
 class buildmaster {
     # TODO: port releng module
     #include releng::master
-    include secrets
+    #include secrets
     include buildmaster::queue
     include buildmaster::settings
     include sysctl

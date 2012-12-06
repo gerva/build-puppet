@@ -5,6 +5,10 @@ class buildmaster::queue {
     include buildmaster::settings
 
     file {
+        "${buildmaster::settings::queue_dir}":
+            ensure => "directory",
+            owner => $user::builder::username,
+            group => $user::builder::username;
         "/etc/init.d/command_runner":
             content => template("buildmaster/command_runner.initd.erb"),
             notify => Service["command_runner"],

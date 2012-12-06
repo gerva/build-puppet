@@ -46,8 +46,8 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
         "$full_master_dir":
             ensure => "directory";
 
-        #"$buildbot_configs_dir":
-        #    ensure => "directory";
+        "$buildbot_configs_dir":
+            ensure => "directory";
 
         "$full_master_dir/master":
             ensure => "directory";
@@ -88,8 +88,8 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
 
     buildmaster::repos {
         "clone-buildbot-$master_type":
-        repo_name => 'buildbot-configs',
-        dst_dir => $builbot_configs_dir;
+            repo_name => 'buildbot-configs',
+            dst_dir => $buildbot_configs_dir;
     }
 
     exec {

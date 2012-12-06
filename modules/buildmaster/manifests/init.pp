@@ -38,24 +38,20 @@ class buildmaster {
             owner => $users::builder::username,
             group => $users::builder::group;
         "/etc/default/buildbot.d/":
-            mode => 755,
-            ensure => directory;
+            ensure => directory,
+            mode => 755;
         "/etc/init.d/buildbot":
             source => "puppet:///modules/buildmaster/buildbot.initd",
-            mode => 755,
+            mode => 755;
         "/root/.my.cnf":
             content => template("buildmaster/my.cnf.erb"),
-            mode => 600,
-            owner => "root",
-            group => "root";
+            mode => 600;
         # this has to be fixed
         "${nagios_etcdir}/nrpe.d/buildbot.cfg":
             content => template("buildmaster/buildbot.cfg.erb"),
             notify => Service["nrpe"],
             require => Class["nagios"],
-            mode => 644,
-            owner => "root",
-            group => "root";
+            mode => 644;
         "/tools":
             ensure => "directory";
     }

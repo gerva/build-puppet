@@ -43,6 +43,12 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     }
 
     file {
+        "$full_master_dir":
+            ensure => "directory";
+
+        "$full_master_dir/master":
+            ensure => "directory";
+
         "$full_master_dir/master/passwords.py":
             require => Exec["setup-$basedir"],
             owner => $master_user,

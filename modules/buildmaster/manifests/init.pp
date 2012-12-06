@@ -34,7 +34,7 @@ class buildmaster {
     buildmaster::repos {
         "clone-buildbot":
         repo_name => 'buildbot-configs',
-        dst_name => '/tmp'
+        dst_dir => '/tmp'
     }
     #exec {
     #    "clone-configs":

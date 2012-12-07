@@ -17,6 +17,11 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     $master_user = $users::builder::username
     $master_basedir = $buildmaster::settings::master_root
 
+    anchor {
+        'buildmaster::buildbot_master::$basedir::$master_type::$http_port::begin': ;
+        'buildmaster::buildbot_master::$basedir::$master_type::$http_port::end': ;
+    }
+
     $master_name = $name
     $full_master_dir = "$master_basedir/$basedir"
 
@@ -51,7 +56,9 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
 
         "$full_master_dir/master":
             ensure => "directory";
+    } -> Anchor['buildmaster::buildbot_master::$basedir::$master_type::$http_port::begin']
 
+    file {
         "$full_master_dir/master/passwords.py":
             require => Exec["setup-$basedir"],
             owner => $master_user,

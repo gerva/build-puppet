@@ -3,10 +3,6 @@
 define buildmaster::repos($repo_name, $dst_dir) {
 
     $hg_repo = "http://hg.mozilla.org/build/$repo_name"
-    file {
-        $dst_dir:
-            ensure => directory;
-    }
 
     exec {
         # make will take care of checking out

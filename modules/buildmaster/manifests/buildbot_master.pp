@@ -89,7 +89,9 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
 
     buildmaster::virtualenv {
         "creating-virtulenv":
-            virtualenv_dir => $virtualenv_dir
+            virtualenv_dir => $virtualenv_dir,
+            user => $master_user,
+            group => $master_group,
     } -> Anchor['buildmaster::buildbot_master::$basedir::$master_type::$http_port::end']
 
     buildmaster::repos {

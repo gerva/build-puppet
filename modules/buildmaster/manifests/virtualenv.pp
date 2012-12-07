@@ -1,7 +1,7 @@
-define buildmaster::virtualenv($virtualenv_dir) {
+define buildmaster::virtualenv($virtualenv_dir, user, group) {
     include buildmaster::settings
     include packages::mozilla::python27
-
+    include users::builder
     # master_type can be one of the following:
     # build, scheduler, tests  try
     # hardcoding build for now.
@@ -9,8 +9,8 @@ define buildmaster::virtualenv($virtualenv_dir) {
     python::virtualenv {
         "${virtualenv_dir}":
             python => "/tools/python27/bin/python2.7",
-            user => $users::builder::username,
-            group => $users::builder::group,
+            user => $user,
+            group => $group,
             packages => [
             "Jinja2==2.5.5",
             "MySQL-python==1.2.3",

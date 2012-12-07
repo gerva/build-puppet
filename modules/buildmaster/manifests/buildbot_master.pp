@@ -47,20 +47,14 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
         }
     }
 
-    file {
-        "$master_basedir":
-            ensure => "directory";
-
-        "$virtualenv_dir":
-            ensure => "directory";
-
-        "$full_master_dir":
-            ensure => "directory";
-
-        "$buildbot_configs_dir":
-            ensure => "directory";
-
-        "$full_master_dir/master":
+    file {["$master_basedir",
+        "$virtualenv_dir",
+        "$full_master_dir",
+        "$buildbot_configs_dir",
+        "$full_master_dir/master"
+        ]:
+            owner => $master_user,
+            group => $master_group,
             ensure => "directory";
     } -> Anchor['buildmaster::buildbot_master::$basedir::$master_type::$http_port::begin']
 

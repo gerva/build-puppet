@@ -24,11 +24,10 @@ define buildmaster::virtualenv($virtualenv_dir) {
             "pyOpenSSl==0.10",
             "pyasn1==0.0.11a",
             "pycrypto==2.3",
-            #"buildbot-slave==0.8.4-pre-moz2",
             "pytz==2011d",
             "zope.interface==3.6.1",
-            "mozillapulse==ad95569a089e",
             "wsgiref==0.1.2",
+            "mozillapulse==ad95569a089e",
             ],
     }
 }

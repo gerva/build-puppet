@@ -1,4 +1,4 @@
-define buildmaster::virtualenv($virtualenv_dir, user, group) {
+define buildmaster::virtualenv($virtualenv_dir, $user, $group) {
     include buildmaster::settings
     include packages::mozilla::python27
     include users::builder

@@ -48,7 +48,6 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     }
 
     file {["$master_basedir",
-        "$virtualenv_dir",
         "$full_master_dir",
         "$buildbot_configs_dir",
         "$full_master_dir/master"

@@ -53,7 +53,8 @@ define python::virtualenv($python, $ensure="present", $packages, $user=null, $gr
                         File[$virtualenv],
                         Class['python::virtualenv::prerequisites'],
                     ],
-                    creates => "$virtualenv/bin/pip";
+                    creates => "$virtualenv/bin/pip",
+                    cwd => $virtualenv;
             }
 
             # now install each package; we use regsubst to qualify the resource

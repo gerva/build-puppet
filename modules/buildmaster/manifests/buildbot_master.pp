@@ -79,12 +79,10 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
                 Exec["setup-$basedir"],
                 ];
 
-        "/etc/cron.d/$master_name":
-            require => Exec["setup-$basedir"],
-            owner => "root",
-            group => "root",
-            mode => 600,
-            content => template("buildmaster/buildmaster-cron.erb");
+    #    "/etc/cron.d/$master_name":
+    #        require => Exec["setup-$basedir"],
+    #        mode => 600,
+    #        content => template("buildmaster/buildmaster-cron.erb");
     }
 
     buildmaster::virtualenv {

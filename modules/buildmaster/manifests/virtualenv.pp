@@ -22,7 +22,7 @@ define buildmaster::virtualenv($virtualenv_dir, $user, $group) {
             "pytz==2011d",
             "zope.interface==3.6.1",
             "wsgiref==0.1.2",
-            "mozillapulse==ad95569a089e",
+            #"mozillapulse==ad95569a089e",
             ],
     }
 }

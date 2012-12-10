@@ -91,13 +91,15 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             virtualenv_dir => $virtualenv_dir,
             user => $master_user,
             group => $master_group,
-    } -> Anchor['buildmaster::buildbot_master::$basedir::$master_type::$http_port::end']
+    #} -> Anchor['buildmaster::buildbot_master::$basedir::$master_type::$http_port::end']
+    }
 
     buildmaster::repos {
         "clone-buildbot-$master_type":
             repo_name => 'buildbot-configs',
             dst_dir => $buildbot_configs_dir;
-    } -> Anchor['buildmaster::buildbot_master::$basedir::$master_type::$http_port::end']
+    }
+    #} -> Anchor['buildmaster::buildbot_master::$basedir::$master_type::$http_port::end']
 
     exec {
         "setup-$basedir":

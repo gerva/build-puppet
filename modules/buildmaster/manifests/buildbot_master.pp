@@ -107,6 +107,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             command => "/usr/bin/make -f Makefile.setup all BASEDIR=$full_master_dir MASTER_NAME=$master_name",
             #creates => "$full_master_dir/master",
             user => $master_user,
+            group => $master_group,
             logoutput => on_failure,
             environment => [
                 "VIRTUALENV=${virtualenv_dir}",

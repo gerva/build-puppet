@@ -4,6 +4,8 @@ define buildmaster::virtualenv($virtualenv_dir, $user, $group) {
     python::virtualenv {
         "${virtualenv_dir}":
             python => "/tools/python27/bin/python2.7",
+            user => $user,
+            group => $group,
             packages => [
             "Jinja2==2.5.5",
             "MySQL-python==1.2.3",

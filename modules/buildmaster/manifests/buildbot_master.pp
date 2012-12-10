@@ -87,11 +87,10 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     }
 
     buildmaster::virtualenv {
-        "creating-virtulenv":
+        "creating-virtualenv":
             virtualenv_dir => $virtualenv_dir,
             user => $master_user,
             group => $master_group,
-    #} -> Anchor['buildmaster::buildbot_master::$basedir::$master_type::$http_port::end']
     }
 
     buildmaster::repos {
@@ -99,20 +98,21 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             repo_name => 'buildbot-configs',
             dst_dir => $buildbot_configs_dir;
     }
-    #} -> Anchor['buildmaster::buildbot_master::$basedir::$master_type::$http_port::end']
 
     exec {
         "setup-$basedir":
+            require => [Buildmaster::Repos["clone-buildbot-$master_type"],
+                        Buildmaster::Virtualenv["creating-virtualenv"],
+                ],
             command => "/bin/bash -c && make -f Makefile.setup all BASEDIR=$full_master_dir MASTER_NAME=$master_name'",
             creates => "$full_master_dir/master",
             user => $master_user,
             logoutput => on_failure,
             environment => [
-                "HG=/usr/bin/hg",
                 "VIRTUALENV=/usr/bin/virtualenv-2.6",
                 "PYTHON=${python_executalbe}",
                 #"MASTERS_JSON=http://hg.mozilla.org/build/tools/raw-file/default/buildfarm/maintenance/production-masters.json",
             ],
             cwd => "$master_basedir/buildbot-configs";
-    } -> Anchor['buildmaster::buildbot_master::$basedir::$master_type::$http_port::end']
+    }
 }

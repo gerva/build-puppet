@@ -114,7 +114,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
                 "VIRTUALENV=/tools/python27-virtualenv/bin/virtualenv",
                 "PYTHON=${python_executalbe}",
                 "HG=/tools/python27-mercurial/bin/hg",
-                #"MASTERS_JSON=http://hg.mozilla.org/build/tools/raw-file/default/buildfarm/maintenance/production-masters.json",
+                "MASTERS_JSON=https://github.com/gerva/build-tools/blob/803823/buildfarm/maintenance/production-masters.json",
             ],
             cwd => "$buildbot_configs_dir";
     }

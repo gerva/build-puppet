@@ -13,6 +13,7 @@
 # TODO: determine master_type from json?
 define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     include buildmaster
+    include packages::mozilla::py27_virtualenv
     $master_group = $users::builder::group
     $master_user = $users::builder::username
     $master_basedir = $buildmaster::settings::master_root
@@ -110,7 +111,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             group => $master_group,
             logoutput => on_failure,
             environment => [
-                "VIRTUALENV=${virtualenv_dir}",
+                "VIRTUALENV=/tools/python27-virtualenv/bin/virtualenv",
                 "PYTHON=${python_executalbe}",
                 #"MASTERS_JSON=http://hg.mozilla.org/build/tools/raw-file/default/buildfarm/maintenance/production-masters.json",
             ],

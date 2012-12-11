@@ -7,5 +7,8 @@ define buildmaster::virtualenv($virtualenv_dir, $user, $group) {
             user => $user,
             group => $group,
         # packages downloaded by make
+            packages => [
+                "distribute==0.6.14",
+            ],
     }
 }

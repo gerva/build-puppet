@@ -5,7 +5,7 @@ node /bld-centos6-hp-\d+.build.scl1.mozilla.com/ {
 node "relabs07.build.mtv1.mozilla.com" {
     $num_masters = 1
     buildmaster::buildbot_master {
-        "relabs-bm07-build1":
+        "bm07-build1":
         http_port => 8001,
         master_type => "build",
         basedir => "build1";

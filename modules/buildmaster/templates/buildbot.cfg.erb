@@ -1,4 +1,4 @@
 
 ####  This file under configuration management control
 ####  DO NOT EDIT MANUALLY
-command[check_buildbot]=<%= scope.lookupvar('nrpe::base::plugins_dir') %>/check_procs -c <%= num_masters %>:<%= num_masters %> -C buildbot
+command[check_buildbot]=<%=plugins_dir%>/check_procs -c <%= num_masters %>:<%= num_masters %> -C buildbot

@@ -2,7 +2,7 @@
 ####  DO NOT EDIT MANUALLY
 
 [client]
-host=<%= extlookup('buildbot_schedulerdb_host') %>
-user=<%= extlookup('buildbot_schedulerdb_user') %>
-password=<%= extlookup('buildbot_schedulerdb_password') %>
-database=<%= extlookup('buildbot_schedulerdb_database') %>
+host=<%= scope.lookupvar('secrets::buildbot_schedulerdb_host') %>
+user=<%= scope.lookupvar('secrets::buildbot_schedulerdb_user') %>
+password=<%= scope.lookupvar('secrets::buildbot_schedulerdb_password') %>
+database=<%= scope.lookupvar('secrets::buildbot_schedulerdb_database') %>

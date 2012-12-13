@@ -22,6 +22,12 @@ class config::secrets {
     $mozpool_staging_db_username = extlookup("mozpool_staging_db_username")
     $mozpool_staging_db_password = extlookup("mozpool_staging_db_password")
     $mozpool_staging_db_database = extlookup("mozpool_staging_db_database")
-    # just a test...
-    $buildbot_statusdb_user = extlookup("buildbot_statusdb_user")
+    $buildbot_statusdb_username = extlookup("buildbot_statusdb_username")
+    $buildbot_statusdb_hostname = extlookup("buildbot_statusdb_hostname")
+    $buildbot_statusdb_password = extlookup("buildbot_statusdb_password")
+    $buildbot_statusdb_database = extlookup("buildbot_statusdb_database")
+    $buildbot_schedulerdb_username = extlookup("buildbot_schedulerdb_username")
+    $buildbot_schedulerdb_hostname = extlookup("buildbot_schedulerdb_hostname")
+    $buildbot_schedulerdb_password = extlookup("buildbot_schedulerdb_password")
+    $buildbot_schedulerdb_database = extlookup("buildbot_schedulerdb_database")
 }

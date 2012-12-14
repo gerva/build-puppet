@@ -30,8 +30,8 @@ class config::secrets {
     $buildbot_schedulerdb_hostname = extlookup("buildbot_schedulerdb_hostname")
     $buildbot_schedulerdb_password = extlookup("buildbot_schedulerdb_password")
     $buildbot_schedulerdb_database = extlookup("buildbot_schedulerdb_database")
-    $pulse_exchange = extlookup("pulse_exchange_here")
-    $pulse_password = extlookup("pulse_password_here")
-    $pulse_username = extlookup("pulse_username_here")
+    $pulse_exchange = extlookup("pulse_exchange")
+    $pulse_password = extlookup("pulse_password")
+    $pulse_username = extlookup("pulse_username")
     $buildmaster_secrets = extlookup("buildmaster_secrets")
 }

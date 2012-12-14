@@ -33,4 +33,5 @@ class config::secrets {
     $pulse_exchange = extlookup("pulse_exchange_here")
     $pulse_password = extlookup("pulse_password_here")
     $pulse_username = extlookup("pulse_username_here")
+    $buildmaster_secrets = extlookup("buildmaster_secrets")
 }

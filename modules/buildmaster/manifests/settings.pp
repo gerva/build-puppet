@@ -13,4 +13,5 @@ class buildmaster::settings {
     $pulse_exchange = $::config::secrets::pulse_exchange_here
     $pulse_password = $::config::secrets::pulse_password_here
     $pulse_username = $::config::secrets::pulse_username_here
+    $buildmaster_secrets = $::config::secrets::buildmaster_secrets
 }

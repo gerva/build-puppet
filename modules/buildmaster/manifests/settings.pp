@@ -10,8 +10,8 @@ class buildmaster::settings {
     $buildbot_schedulerdb_hostname = $::config::secrets::buildbot_schedulerdb_hostname
     $buildbot_schedulerdb_password = $::config::secrets::buildbot_schedulerdb_password
     $buildbot_schedulerdb_database = $::config::secrets::buildbot_schedulerdb_database
-    $pulse_exchange = $::config::secrets::pulse_exchange_here
-    $pulse_password = $::config::secrets::pulse_password_here
-    $pulse_username = $::config::secrets::pulse_username_here
+    $pulse_exchange = $::config::secrets::pulse_exchange
+    $pulse_password = $::config::secrets::pulse_password
+    $pulse_username = $::config::secrets::pulse_username
     $buildmaster_secrets = $::config::secrets::buildmaster_secrets
 }

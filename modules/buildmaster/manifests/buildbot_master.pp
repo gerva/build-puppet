@@ -43,8 +43,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
         }
     }
 
-    file {["$master_basedir",
-        "$full_master_dir",
+    file {["$full_master_dir",
         "$buildbot_configs_dir",
         "$full_master_dir/master"
         ]:
@@ -83,22 +82,22 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     }
 
     buildmaster::virtualenv {
-        "creating-virtualenv":
+        "creating-virtualenv-$master_name":
             virtualenv_dir => $virtualenv_dir,
             user => $master_user,
             group => $master_group,
     }
 
     buildmaster::repos {
-        "clone-buildbot-$master_type":
+        "clone-buildbot-$master_name":
             repo_name => 'buildbot-configs',
             dst_dir => $buildbot_configs_dir;
     }
 
     exec {
         "setup-$basedir":
-            require => [Buildmaster::Repos["clone-buildbot-$master_type"],
-                        Buildmaster::Virtualenv["creating-virtualenv"],
+            require => [Buildmaster::Repos["clone-buildbot-$master_name"],
+                        Buildmaster::Virtualenv["creating-virtualenv-$master_name"],
                 ],
             command => "/usr/bin/make -f Makefile.setup all BASEDIR=$full_master_dir MASTER_NAME=$master_name",
             #creates => "$full_master_dir/master",

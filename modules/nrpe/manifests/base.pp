@@ -5,7 +5,7 @@ class nrpe::base {
     include config # for vars for templates
 
     $plugins_dir = $nrpe::settings::plugins_dir
-    $nrpe_etcdir = $nrpe::settings::ect_dir
+    $nrpe_etcdir = $nrpe::settings::nrpe_etcdir
 
     # configure
     file {

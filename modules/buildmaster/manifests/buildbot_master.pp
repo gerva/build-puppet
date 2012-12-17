@@ -14,6 +14,7 @@
 define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     include buildmaster
     include packages::mozilla::py27_virtualenv
+    include nrpe
     $master_group = $users::builder::group
     $master_user = $users::builder::username
     $master_basedir = $buildmaster::settings::master_root
@@ -73,6 +74,12 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
                 File["/etc/default/buildbot.d"],
                 Exec["setup-$basedir"],
                 ];
+
+        "${nrpe::settings::plugins_dir}/buildbot.cfg":
+            content => template("buildmaster/buildbot.cfg.erb"),
+            notify => Service["nrpe"],
+            require => Class["nrpe"],
+            mode => 644;
 
     #    "/etc/cron.d/$master_name":
         "/root/$master_name-crontab-from-puppet":

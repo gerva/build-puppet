@@ -76,12 +76,6 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
                 Exec["setup-$basedir"],
                 ];
 
-        "${nrpe::settings::nrpe_etcdir}/buildbot.cfg":
-            content => template("buildmaster/buildbot.cfg.erb"),
-            require => Package["nrpe"],
-            notify => Class['nrpe::service'],
-            mode => 644;
-
     #    "/etc/cron.d/$master_name":
         "/root/$master_name-crontab-from-puppet":
             require => Exec["setup-$basedir"],

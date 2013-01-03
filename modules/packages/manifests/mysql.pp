@@ -1,15 +1,15 @@
-class packages::openipmi {
+class packages::mysql {
     case $operatingsystem {
         CentOS: {
             package {
-                [ "OpenIPMI",
-                  "ipmitool",
-                ]:
+                "mysql":
                     ensure => latest;
             }
         }
+
         default: {
             fail("cannot install on $operatingsystem")
         }
     }
 }
+

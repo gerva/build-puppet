@@ -23,8 +23,8 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     $master_name = $name
     $full_master_dir = "$master_basedir/$basedir"
 
-    $virtualenv_dir = "${full_master_dir}/venv"
-    $python_executalbe = "${full_master_dir}/venv/bin/python"
+    #$virtualenv_dir = "${full_master_dir}/venv"
+    $python_executalbe = "/tools/python27/bin/python2.7"
     $buildbot_configs_dir ="${full_master_dir}/buildbot-configs"
 
     if $num_masters == '' {
@@ -83,12 +83,12 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             content => template("buildmaster/buildmaster-cron.erb");
     }
 
-    buildmaster::virtualenv {
-        "creating-virtualenv-$master_name":
-            virtualenv_dir => $virtualenv_dir,
-            user => $master_user,
-            group => $master_group,
-    }
+    #buildmaster::virtualenv {
+    #    "creating-virtualenv-$master_name":
+    #        virtualenv_dir => $virtualenv_dir,
+    #        user => $master_user,
+    #        group => $master_group,
+    #}
 
     buildmaster::repos {
         "clone-buildbot-$master_name":
@@ -99,7 +99,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     exec {
         "setup-$basedir":
             require => [Buildmaster::Repos["clone-buildbot-$master_name"],
-                        Buildmaster::Virtualenv["creating-virtualenv-$master_name"],
+                #       Buildmaster::Virtualenv["creating-virtualenv-$master_name"],
                 ],
             command => "/usr/bin/make -f Makefile.setup all BASEDIR=$full_master_dir MASTER_NAME=$master_name",
             #creates => "$full_master_dir/master",

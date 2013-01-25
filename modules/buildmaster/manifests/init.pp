@@ -26,9 +26,16 @@ class buildmaster {
             enable => true;
     }
     sysctl::value {
-         "net.ipv4.tcp_keepalive_time":
+        "net.ipv4.tcp_keepalive_time":
             value => "240"
     }
+    file {
+        "/builds/buildbot":
+		ensure => directory,
+		owner => $users::builder::group,
+		group => $users::builder::username,
+    }
+
 
     #todo fix it:
     #exec {

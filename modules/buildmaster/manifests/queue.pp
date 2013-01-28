@@ -43,15 +43,15 @@ class buildmaster::queue {
     }
     exec {
         "clone-tools":
-            creates => "$queue_dir/tools",
+            creates => "${buildmaster::settings::queue_dir}/tools",
             command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/tools",
             user => $master_user,
-            cwd => $queue_dir;
+            cwd => ${buildmaster::settings::queue_dir};
         "install-tools":
             require => Exec["clone-tools"],
-            creates => "$queue_dir/lib/python2.7/site-packages/buildtools.egg-link",
+            creates => "${buildmaster::settings::queue_dir}/lib/python2.7/site-packages/buildtools.egg-link",
             command => "/tools/python27/bin/python2.7 setup.py develop",
-            cwd => "$queue_dir/tools",
+            cwd => "${buildmaster::settings::queue_dir}/tools",
             user => $master_user;
     }
     service {

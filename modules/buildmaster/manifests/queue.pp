@@ -43,6 +43,7 @@ class buildmaster::queue {
     }
     exec {
         "clone-tools":
+            require => File["${buildmaster::settings::queue_dir}"],
             creates => "${buildmaster::settings::queue_dir}/tools",
             command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/tools",
             user => $master_user,

@@ -26,4 +26,5 @@ class buildmaster::tools {
             command => "${buildmaster::settings::queue_dir}/bin/python setup.py develop",
             cwd => "${buildmaster::settings::queue_dir}/tools",
             user => $master_user;
+    }
 }

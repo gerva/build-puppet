@@ -31,9 +31,9 @@ class buildmaster {
     }
     file {
         "/builds/buildbot":
-		ensure => directory,
-		owner => $users::builder::group,
-		group => $users::builder::username,
+             ensure => directory,
+             owner => $users::builder::group,
+             group => $users::builder::username,
     }
 
 

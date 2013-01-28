@@ -46,7 +46,7 @@ class buildmaster::queue {
             creates => "$queue_dir/tools",
             command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/tools",
             user => $master_user,
-            cwd => $master_basedir;
+            cwd => $queue_dir;
         "install-tools":
             require => Exec["clone-tools"],
             creates => "$queue_dir/lib/python2.7/site-packages/buildtools.egg-link",

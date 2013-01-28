@@ -49,7 +49,7 @@ class buildmaster::queue {
             cwd => $master_basedir;
         "install-tools":
             require => Exec["clone-tools"],
-            creates => "$master_queue_venv/lib/python2.67/site-packages/buildtools.egg-link",
+            creates => "$queue_dir/lib/python2.7/site-packages/buildtools.egg-link",
             command => "/tools/python27/bin/python2.7 setup.py develop",
             cwd => "$queue_dir/tools",
             user => $master_user;

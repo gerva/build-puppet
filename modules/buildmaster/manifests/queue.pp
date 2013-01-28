@@ -30,8 +30,6 @@ class buildmaster::queue {
             mode => 600,
             owner => $users::builder::username,
             group => $users::builder::username;
-        "${nrpe::settings::nrpe_etcdir}/nrpe.d":
-            ensure => "directory";
         "${nrpe::settings::nrpe_etcdir}/nrpe.d/pulse_publisher.cfg":
             content => template("buildmaster/pulse_publisher.cfg.erb"),
             require => Package["nrpe"],

@@ -1,4 +1,4 @@
-class buildmaster:tool {
+class buildmaster:tools {
     include packages::mozilla::python27
     include settings
 

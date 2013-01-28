@@ -35,11 +35,6 @@ class buildmaster::queue {
             require => Package["nrpe"],
             notify => Class["nrpe::service"],
             mode => 644;
-        "${nrpe::settings::nrpe_etcdir}/nrpe.d/buildbot.cfg":
-            content => template("buildmaster/buildbot.cfg.erb"),
-            require => Package["nrpe"],
-            notify => Class['nrpe::service'],
-            mode => 644;
         "${nrpe::settings::nrpe_etcdir}/nrpe.d/command_runner.cfg":
             content => template("buildmaster/command_runner.cfg.erb"),
             require => Package["nrpe"],

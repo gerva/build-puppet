@@ -45,7 +45,7 @@ class buildmaster::queue {
         "clone-tools":
             require => File["${buildmaster::settings::queue_dir}"],
             creates => "${buildmaster::settings::queue_dir}/tools",
-            command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/tools",
+            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/tools"
             user => $master_user,
             cwd => "${buildmaster::settings::queue_dir}";
         "install-tools":

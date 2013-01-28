@@ -30,17 +30,17 @@ class buildmaster::queue {
             mode => 600,
             owner => $users::builder::username,
             group => $users::builder::username;
-        "${nrpe::settings::nrpe_etcdir}/pulse_publisher.cfg":
+        "${nrpe::settings::nrpe_etcdir}/npre.d/pulse_publisher.cfg":
             content => template("buildmaster/pulse_publisher.cfg.erb"),
             require => Package["nrpe"],
             notify => Class["nrpe::service"],
             mode => 644;
-        "${nrpe::settings::nrpe_etcdir}/buildbot.cfg":
+        "${nrpe::settings::nrpe_etcdir}/npre.d/buildbot.cfg":
             content => template("buildmaster/buildbot.cfg.erb"),
             require => Package["nrpe"],
             notify => Class['nrpe::service'],
             mode => 644;
-        "${nrpe::settings::nrpe_etcdir}/command_runner.cfg":
+        "${nrpe::settings::nrpe_etcdir}/npre.d/command_runner.cfg":
             content => template("buildmaster/command_runner.cfg.erb"),
             require => Package["nrpe"],
             notify => Class["nrpe::service"],

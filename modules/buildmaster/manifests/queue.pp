@@ -41,20 +41,20 @@ class buildmaster::queue {
             notify => Class["nrpe::service"],
             mode => 644;
     }
-    exec {
-        "clone-tools":
-            require => File["${buildmaster::settings::queue_dir}"],
-            creates => "${buildmaster::settings::queue_dir}/tools",
-            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/tools",
-            user => $master_user,
-            cwd => "${buildmaster::settings::queue_dir}";
-        "install-tools":
-            require => Exec["clone-tools"],
-            creates => "${buildmaster::settings::queue_dir}/lib/python2.7/site-packages/buildtools.egg-link",
-            command => "/tools/python27/bin/python2.7 setup.py develop",
-            cwd => "${buildmaster::settings::queue_dir}/tools",
-            user => $master_user;
-    }
+#    exec {
+#        "clone-tools":
+#            require => File["${buildmaster::settings::queue_dir}"],
+#            creates => "${buildmaster::settings::queue_dir}/tools",
+#            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/tools",
+#            user => $master_user,
+#            cwd => "${buildmaster::settings::queue_dir}";
+#        "install-tools":
+#            require => Exec["clone-tools"],
+#            creates => "${buildmaster::settings::queue_dir}/lib/python2.7/site-packages/buildtools.egg-link",
+#            command => "/tools/python27/bin/python2.7 setup.py develop",
+#            cwd => "${buildmaster::settings::queue_dir}/tools",
+#            user => $master_user;
+#    }
     service {
         "command_runner":
             hasstatus => true,

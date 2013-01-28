@@ -7,8 +7,8 @@ class buildmaster::queue {
     file {
         "${buildmaster::settings::queue_dir}":
             ensure => "directory",
-            owner => $user::builder::username,
-            group => $user::builder::username;
+            owner => $users::builder::usersname,
+            group => $users::builder::usersname;
         "/etc/init.d/command_runner":
             content => template("buildmaster/command_runner.initd.erb"),
             notify => Service["command_runner"],
@@ -28,8 +28,8 @@ class buildmaster::queue {
         "${buildmaster::settings::queue_dir}/passwords.py":
             content => template("buildmaster/passwords.py.erb"),
             mode => 600,
-            owner => $user::builder::username,
-            group => $user::builder::username;
+            owner => $users::builder::usersname,
+            group => $users::builder::usersname;
         "${nrpe::settings::nrpe_etcdir}/pulse_publisher.cfg":
             content => template("buildmaster/pulse_publisher.cfg.erb"),
             require => Package["nrpe"],

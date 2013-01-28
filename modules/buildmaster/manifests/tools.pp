@@ -15,7 +15,7 @@ class buildmaster::tools {
         "clone-tools":
             require => [ File["${buildmaster::settings::queue_dir}"], 
                          Python::Virtualenv["$buildmaster::settings::queue_dir"],
-                         ]
+                         ],
             creates => "${buildmaster::settings::queue_dir}/tools",
             command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/tools",
             user => $master_user,

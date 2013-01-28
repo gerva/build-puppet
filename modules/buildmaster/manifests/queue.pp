@@ -41,6 +41,19 @@ class buildmaster::queue {
             notify => Class["nrpe::service"],
             mode => 644;
     }
+    exec {
+        "clone-tools":
+            creates => "$queue_dir/tools",
+            command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/tools",
+            user => $master_user,
+            cwd => $master_basedir;
+        "install-tools":
+            require => Exec["clone-tools"],
+            creates => "$master_queue_venv/lib/python2.67/site-packages/buildtools.egg-link",
+            command => "$/tools/python27/bin/python2.7 setup.py develop",
+            cwd => "$queue_dir/tools",
+            user => $master_user;
+    }
     service {
         "command_runner":
             hasstatus => true,

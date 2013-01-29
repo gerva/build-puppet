@@ -64,6 +64,7 @@ class buildmaster::queue {
             require => [
                 File["/etc/init.d/command_runner"],
                 File["${buildmaster::settings::queue_dir}/run_command_runner.sh"],
+                Exec["install-tools"],
                 ],
             enable => true,
             ensure => running;
@@ -72,6 +73,7 @@ class buildmaster::queue {
             require => [
                 File["/etc/init.d/pulse_publisher"],
                 File["${buildmaster::settings::queue_dir}/run_pulse_publisher.sh"],
+                Exec["install-tools"],
                 ],
             enable => true,
             ensure => running;

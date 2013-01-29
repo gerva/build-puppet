@@ -9,7 +9,6 @@ class buildmaster::tools {
             packages => [
                 "distribute=0.6.26"
             ],
-            notify => Service['supervisord'];
     }
     exec {
         "clone-tools":

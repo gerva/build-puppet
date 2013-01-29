@@ -1,6 +1,6 @@
 # Handle installing Python virtualenvs containing Python packages.
 # https://wiki.mozilla.org/ReleaseEngineering/Puppet/Modules/python
-define python::virtualenv($python, $ensure="present", $packages, $user=null, $group=null) {
+define python::virtualenv($python, $ensure="present", $packages=null, $user=null, $group=null) {
     include python::virtualenv::settings
     include python::virtualenv::prerequisites
 
@@ -56,14 +56,15 @@ define python::virtualenv($python, $ensure="present", $packages, $user=null, $gr
                     creates => "$virtualenv/bin/pip",
                     cwd => $virtualenv;
             }
-
-            # now install each package; we use regsubst to qualify the resource
-            # name with the virtualenv; a similar regsubst will be used in the
-            # python::virtualenv::package define to separate these two values
-            $qualified_packages = regsubst($packages, "^", "$virtualenv||")
-            python::virtualenv::package {
-                $qualified_packages:
-                    user => $ve_user;
+            if ($packages != null) {
+                # now install each package; we use regsubst to qualify the resource
+                # name with the virtualenv; a similar regsubst will be used in the
+                # python::virtualenv::package define to separate these two values
+                $qualified_packages = regsubst($packages, "^", "$virtualenv||")
+                python::virtualenv::package {
+                    $qualified_packages:
+                        user => $ve_user;
+                }
             }
         }
 

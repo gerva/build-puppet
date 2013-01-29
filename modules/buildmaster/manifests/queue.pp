@@ -5,10 +5,10 @@ class buildmaster::queue {
     include buildmaster::settings
 
     file {
-        "${buildmaster::settings::queue_dir}":
-            ensure => "directory",
-            owner => $users::builder::username,
-            group => $users::builder::username;
+#        "${buildmaster::settings::queue_dir}":
+#            ensure => "directory",
+#            owner => $users::builder::username,
+#            group => $users::builder::username;
         "/etc/init.d/command_runner":
             content => template("buildmaster/command_runner.initd.erb"),
             notify => Service["command_runner"],
@@ -18,14 +18,17 @@ class buildmaster::queue {
             notify => Service["pulse_publisher"],
             mode => 755;
         "${buildmaster::settings::queue_dir}/run_command_runner.sh":
+            require => Class["buildmaster::tools"],
             content => template("buildmaster/run_command_runner.sh.erb"),
             notify => Service["command_runner"],
             mode => 755;
         "${buildmaster::settings::queue_dir}/run_pulse_publisher.sh":
+            require => Class["buildmaster::tools"],
             content => template("buildmaster/run_pulse_publisher.sh.erb"),
             notify => Service["pulse_publisher"],
             mode => 755;
         "${buildmaster::settings::queue_dir}/passwords.py":
+            require => Class["buildmaster::tools"],
             content => template("buildmaster/passwords.py.erb"),
             mode => 600,
             owner => $users::builder::username,

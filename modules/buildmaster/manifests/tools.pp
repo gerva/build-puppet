@@ -6,9 +6,6 @@ class buildmaster::tools {
         "$buildmaster::settings::queue_dir":
             python => "/tools/python27/bin/python2.7",
             require => Class['packages::mozilla::python27'],
-            packages => [
-                "distribute=0.6.26"
-            ],
             user => $users::builder::username,
             group => $users::builder::group;
     }

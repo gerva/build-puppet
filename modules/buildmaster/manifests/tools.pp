@@ -16,13 +16,15 @@ class buildmaster::tools {
                          ],
             creates => "${buildmaster::settings::queue_dir}/tools",
             command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/tools",
-            user => $master_user,
+            user => $users::builder::username,
+            group => $users::builder::group,
             cwd => "${buildmaster::settings::queue_dir}";
         "install-tools":
             require => Exec["clone-tools"],
             creates => "${buildmaster::settings::queue_dir}/lib/python2.7/site-packages/buildtools.egg-link",
             command => "${buildmaster::settings::queue_dir}/bin/python setup.py develop",
             cwd => "${buildmaster::settings::queue_dir}/tools",
-            user => $master_user;
+            user => $users::builder::username,
+            group => $users::builder::group;
     }
 }

@@ -9,10 +9,11 @@ class buildmaster::tools {
             packages => [
                 "distribute=0.6.26"
             ],
+            user => $users::builder::username;
     }
     exec {
         "clone-tools":
-            require => [ File["${buildmaster::settings::queue_dir}"], 
+            require => [ File["${buildmaster::settings::queue_dir}"],
                          Python::Virtualenv["$buildmaster::settings::queue_dir"],
                          ],
             creates => "${buildmaster::settings::queue_dir}/tools",

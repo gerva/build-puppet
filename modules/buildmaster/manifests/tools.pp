@@ -9,7 +9,8 @@ class buildmaster::tools {
             packages => [
                 "distribute=0.6.26"
             ],
-            user => $users::builder::username;
+            user => $users::builder::username,
+            group => $users::builder::group;
     }
     exec {
         "clone-tools":

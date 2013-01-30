@@ -1,3 +1,6 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 # install a particular version of the buildslave code
 #
 # title: version number
@@ -16,7 +19,6 @@ define buildslave::install::version($active=false, $ensure="present") {
     case $version {
         "0.8.4-pre-moz2": {
             include packages::mozilla::python27
-            $python = "/tools/python27/bin/python2.7"
             $py_require = Class['packages::mozilla::python27']
             $packages = [
                           "zope.interface==3.6.1",
@@ -35,16 +37,16 @@ define buildslave::install::version($active=false, $ensure="present") {
 
     case $ensure {
         present: {
-	    Anchor["buildslave::install::version::${version}::begin"] ->
+            Anchor["buildslave::install::version::${version}::begin"] ->
             python::virtualenv {
                 "/tools/buildbot-$version":
-                    python => $python,
+                    python => $::packages::mozilla::python27::python,
                     require => $py_require,
                     packages => $packages;
             } -> Anchor["buildslave::install::version::${version}::end"]
 
             if $active {
-		Anchor["buildslave::install::version::${version}::begin"] ->
+                Anchor["buildslave::install::version::${version}::begin"] ->
                 file {
                     "/tools/buildbot":
                         ensure => "link",
@@ -57,11 +59,10 @@ define buildslave::install::version($active=false, $ensure="present") {
             # absent? that's easy - blow away the directory
             python::virtualenv {
                 "/tools/buildbot-$version":
-                    python => $python,
+                    python => $::packages::mozilla::python27::python,
                     packages => $packages,
                     ensure => absent;
             }
         }
     }
 }
-

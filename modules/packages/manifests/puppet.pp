@@ -1,3 +1,6 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 class packages::puppet {
     anchor {
         'packages::puppet::begin': ;
@@ -6,6 +9,7 @@ class packages::puppet {
 
     $puppet_version = "2.7.17"
     $puppet_rpm_version = "${puppet_version}-1.el6"
+    $puppet_deb_version = "${puppet_version}-1mozilla1"
     $facter_version = "1.6.11"
 
     case $::operatingsystem {
@@ -14,6 +18,12 @@ class packages::puppet {
                 "puppet":
                     ensure => "$puppet_rpm_version";
                 # puppet this pulls the required version of facter
+            }
+        }
+        Ubuntu: {
+            package {
+                ["puppet", "puppet-common"]:
+                    ensure => "$puppet_deb_version";
             }
         }
         Darwin: {
@@ -27,7 +37,7 @@ class packages::puppet {
             } -> Anchor['packages::puppet::end']
         }
         default: {
-            fail("cannot install on $operatingsystem")
+            fail("cannot install on $::operatingsystem")
         }
     }
 }

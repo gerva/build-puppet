@@ -1,7 +1,10 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 class disableservices::common {
 # This class disables unnecessary services common to both server and slave
 
-    case $operatingsystem {
+    case $::operatingsystem {
         CentOS : {
             service {
                 ['acpid', 'anacron', 'apmd', 'atd', 'auditd', 'autofs',
@@ -14,6 +17,14 @@ class disableservices::common {
                     ensure => stopped;
                 'cpuspeed' :
                     enable => false;
+            }
+        }
+        Ubuntu: {
+            service {
+                ['acpid', 'avahi-daemon', 'anacron', 'apport', 'modemmanager',
+                 'whoopsie', 'cups', 'bluetooth', 'lightdm', 'network-manager']:
+                    enable => false,
+                    ensure => stopped;
             }
         }
         Darwin : {

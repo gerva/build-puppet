@@ -1,6 +1,9 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 class network {
     # always set the hostname to the fqdn
-    case $operatingsystem {
+    case $::operatingsystem {
         CentOS: {
             file {
                 "/etc/sysconfig/network":
@@ -21,7 +24,7 @@ class network {
 
     # ensure interface configuration is correct
     # (in particular, don't use peer NTP configuration, as that comes from puppet)
-    case $operatingsystem {
+    case $::operatingsystem {
         CentOS: {
             file {
                 "/etc/sysconfig/network-scripts/ifcfg-eth0":
@@ -34,7 +37,7 @@ class network {
     }
 
     # disable wifi
-    case $operatingsystem {
+    case $::operatingsystem {
         CentOS: {
             # existing CentOS systems do not have wifi hardware
         }

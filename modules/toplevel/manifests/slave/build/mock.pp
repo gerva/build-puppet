@@ -1,3 +1,6 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 class toplevel::slave::build::mock inherits toplevel::slave::build {
     include ::config
     include mockbuild
@@ -11,5 +14,16 @@ class toplevel::slave::build::mock inherits toplevel::slave::build {
             command => "/usr/bin/gpasswd -a $users::builder::username mock_mozilla",
             unless => "/usr/bin/groups $users::builder::username | grep '\\<mock_mozilla\\>'",
             require => [Class['packages::mozilla::mock_mozilla'], Class['users::builder']];
+    }
+    
+    # Obsolete
+    file {
+        "$users::builder::home/.android":
+            ensure => absent,
+            recurse => true,
+            force => true;
+        "$users::builder::home/.mozpass.cfg":
+            ensure => absent,
+            force => true;
     }
 }

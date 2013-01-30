@@ -1,3 +1,6 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 # Ensure that a buildslave starts up on this machine
 
 class buildslave::startup {
@@ -21,11 +24,10 @@ class buildslave::startup {
     }
 
     # select an implementation class based on operating system
-    $startuptype = $operatingsystem ? {
+    $startuptype = $::operatingsystem ? {
         CentOS      => "initd",
-        Darwin      => "launchd"
-        # not done in PuppetAgain yet:
-        #Fedora      => "desktop",
+        Darwin      => "launchd",
+        Ubuntu      => "desktop"
     }
     Anchor['buildslave::startup::begin'] ->
     class {

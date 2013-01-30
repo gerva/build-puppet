@@ -1,7 +1,13 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 class packages::puppetserver {
     include packages::puppet
 
-    case $operatingsystem {
+    # puppet-server requires passenger, which is in its own repo
+    realize(Packages::Yumrepo['passenger'])
+
+    case $::operatingsystem {
         CentOS: {
             package {
                 "puppet-server":
@@ -10,7 +16,7 @@ class packages::puppetserver {
             }
         }
         default: {
-            fail("cannot install on $operatingsystem")
+            fail("cannot install on $::operatingsystem")
         }
     }
 }

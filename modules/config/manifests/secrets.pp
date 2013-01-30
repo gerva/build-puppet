@@ -1,3 +1,6 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 # the keys in this file are documented in
 #   https://wiki.mozilla.org/ReleaseEngineering/PuppetAgain#Secrets
 # if you add a new key here, add it to the wiki as well!
@@ -11,6 +14,7 @@ class config::secrets {
     $builder_pw_pbkdf2_salt = extlookup("builder_pw_pbkdf2_salt")
     $builder_pw_pbkdf2_iterations = extlookup("builder_pw_pbkdf2_iterations")
     $builder_pw_kcpassword_base64 = extlookup("builder_pw_kcpassword_base64")
+    $builder_pw_vnc_base64 = extlookup("builder_pw_vnc_base64")
     $mozpool_inventory_url = extlookup("mozpool_inventory_url")
     $mozpool_inventory_username = extlookup("mozpool_inventory_username")
     $mozpool_inventory_password = extlookup("mozpool_inventory_password")

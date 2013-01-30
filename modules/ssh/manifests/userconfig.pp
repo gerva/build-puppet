@@ -1,3 +1,6 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 define ssh::userconfig($home='', $config='', $group='', $authorized_keys=[]) {
     include ssh::keys
     $username = $title
@@ -5,7 +8,7 @@ define ssh::userconfig($home='', $config='', $group='', $authorized_keys=[]) {
     if ($home != '') {
         $home_ = $home
     } else {
-        $home_ = $operatingsystem ? {
+        $home_ = $::operatingsystem ? {
             Darwin => "/Users/$username",
             default => "/home/$username"
         }

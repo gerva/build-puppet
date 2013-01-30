@@ -1,11 +1,19 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 [database]
 engine = mysql+pymysql://<%= scope.lookupvar('::mozpool::settings::db_username') %>:<%= scope.lookupvar('::mozpool::settings::db_password') %>@<%= scope.lookupvar('::mozpool::settings::db_hostname') %>/<%= scope.lookupvar('::mozpool::settings::db_database') %>
 
+<% if !scope.lookupvar('mozpool_staging') -%>
 [inventory]
 url = <%= scope.lookupvar('::config::secrets::mozpool_inventory_url') %>
 username = <%= scope.lookupvar('::config::secrets::mozpool_inventory_username') %>
 password = <%= scope.lookupvar('::config::secrets::mozpool_inventory_password') %>
 filter = hostname__startswith=panda-
+# ignore staging pandas
+ignore_devices_on_servers_re = mobile-imaging-stage.*
+<% end -%>
 
 [server]
 fqdn = <%= scope.lookupvar('::fqdn') %>
@@ -19,3 +27,9 @@ image_store = /var/lib/tftpboot/pxelinux.cfg
 [mozpool]
 # this should correspond to a row in the pxe_configs table
 b2g_pxe_config = panda-b2g.2
+
+<%# enable fake devices on staging servers %>
+<% if scope.lookupvar('mozpool_staging') -%>
+[testing]
+run_fakes = true
+<% end -%>

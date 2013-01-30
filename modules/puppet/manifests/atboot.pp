@@ -1,3 +1,6 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 class puppet::atboot {
     include puppet
     include ::config
@@ -28,7 +31,7 @@ class puppet::atboot {
     $puppet_atboot_common = template("puppet/puppet-atboot-common.erb")
 
     # create a service
-    case $operatingsystem {
+    case $::operatingsystem {
         CentOS: {
             # On CentOS, puppet runs from an initscript that blocks until the
             # puppet run is complete
@@ -40,7 +43,7 @@ class puppet::atboot {
                     # packages::puppet will overwrite this file, so make sure it gets
                     # installed first
                     require => Class['packages::puppet'],
-                    content => template("puppet/puppet-centos-initrd.erb");
+                    content => template("puppet/puppet-centos-initd.erb");
             }
 
             service {
@@ -48,6 +51,23 @@ class puppet::atboot {
                     require => File['/etc/init.d/puppet'],
                     # note we do not try to run the service (running)
                     enable => true;
+            }
+        }
+        Ubuntu: {
+            # On Ubuntu, puppet runs by Upstart and on successful result
+            # notifies dependent services
+            file {
+                "/etc/puppet/init":
+                    mode => 0755,
+                    owner => 'root',
+                    group => 'root',
+                    content => template("puppet/puppet-ubuntu-initd.erb");
+                "/etc/init/puppet.conf":
+                    source => "puppet:///modules/puppet/puppet.upstart.conf";
+                "/etc/init.d/puppet":
+                    ensure => link,
+                    force  => true,
+                    target => "/lib/init/upstart-job";
             }
         }
 
@@ -73,8 +93,7 @@ class puppet::atboot {
             }
         }
         default: {
-            fail("puppet::atboot support missing for $operatingsystem")
+            fail("puppet::atboot support missing for $::operatingsystem")
         }
     }
 }
-

@@ -8,9 +8,8 @@ define python::user_pip_conf($homedir='', $group='') {
     if ($homedir != '') {
         $homedir_ = $homedir
     } else {
-        $homedir_ = $::operatingsystem ? {
-            Darwin => "/Users/$user",
-            default => "/home/$user"
+        # no osx support?
+        $homedir_ = "/home/$user"
         }
     }
 

@@ -10,13 +10,12 @@ define python::user_pip_conf($homedir='', $group='') {
     } else {
         # no osx support?
         $homedir_ = "/home/$user"
-        }
     }
 
     if ($group != '') {
         $group_ = $group
     } else {
-        $group_ = $user"
+        $group_ = $user
     }
 
     # for the template

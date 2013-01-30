@@ -9,7 +9,7 @@ class buildmaster::tools {
             user => $users::builder::username,
             group => $users::builder::group,
             packages => [
-                "Jinja2==2.5.5nja2==2.5.5",
+                "Jinja2==2.5.5",
                 "MySQL-python==1.2.3",
                 "SQLAlchemy==0.6.4",
                 "Twisted==10.1.0",

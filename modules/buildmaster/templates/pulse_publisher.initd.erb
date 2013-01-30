@@ -22,8 +22,8 @@ DESC="pulse publisher"
 
 USER=cltbld
 
-DAEMON=<%=scope.lookupvar("$buildmaster::settings::queue_dir")%>/run_pulse_publisher.sh
-PIDFILE=<%=scope.lookupvar("$buildmaster::settings::queue_dir")%>/pulse_publisher.pid
+DAEMON=<%=scope.lookupvar('buildmaster::settings::queue_dir')%>/run_pulse_publisher.sh
+PIDFILE=<%=scope.lookupvar('buildmaster::settings::queue_dir')%>/pulse_publisher.pid
 
 test -x ${DAEMON} || exit 0
 

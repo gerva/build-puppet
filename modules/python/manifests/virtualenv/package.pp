@@ -25,7 +25,7 @@ define python::virtualenv::package($user) {
             onlyif => "$virtualenv/bin/python $pip_check_py $pkg",
             user => $user,
             environment => [
-                "HOME=$::users::root::home", # because sudo will sometimes lead pip to ~administrator/.pip
+                "HOME=$python::user_pip_conf::$user::$homedir_"
             ],
             require => [
                 Class['python::pip_check_py'],

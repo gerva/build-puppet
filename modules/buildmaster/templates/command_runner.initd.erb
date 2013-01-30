@@ -27,7 +27,7 @@ PIDFILE=<%=scope.lookupvar("buildmaster::settings::queue_dir")%>/command_runner.
 
 test -x ${DAEMON} || exit 0
 
-. /lib/lsb/init-functions
+. /etc/init.d/functions
 
 start_agent() {
     USER="$1"

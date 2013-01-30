@@ -8,13 +8,13 @@ define python::user_pip_conf($homedir='', $group='') {
     if ($homedir != '') {
         $homedir_ = $homedir
     } else {
-        $homedir_ = users::$user::home
+        $homedir_ = "users::$user::home"
     }
 
     if ($group != '') {
         $group_ = $group
     } else {
-        $group_ = users::$user::group
+        $group_ = "users::$user::group"
     }
 
     # for the template

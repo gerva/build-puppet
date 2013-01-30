@@ -8,13 +8,16 @@ define python::user_pip_conf($homedir='', $group='') {
     if ($homedir != '') {
         $homedir_ = $homedir
     } else {
-        $homedir_ = "users::$user::home"
+        $homedir_ = $::operatingsystem ? {
+            Darwin => "/Users/$user",
+            default => "/home/$user"
+        }
     }
 
     if ($group != '') {
         $group_ = $group
     } else {
-        $group_ = "users::$user::group"
+        $group_ = $user"
     }
 
     # for the template

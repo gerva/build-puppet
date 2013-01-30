@@ -13,19 +13,19 @@ node "relabs06.build.mtv1.mozilla.com" {
 }
 
 node "relabs07.build.mtv1.mozilla.com" {
-    $num_masters = 2
+    $num_masters = 1
     buildmaster::buildbot_master {
         "bm07-build1":
         http_port => 8001,
         master_type => "build",
         basedir => "build1";
     }
-    buildmaster::buildbot_master {
-        "bm07-build2":
-        http_port => 8002,
-        master_type => "build",
-        basedir => "build2";
-    }
+#    buildmaster::buildbot_master {
+#        "bm07-build2":
+#        http_port => 8002,
+#        master_type => "build",
+#        basedir => "build2";
+#    }
     include toplevel::server::buildmaster
 }
 

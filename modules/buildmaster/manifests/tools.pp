@@ -27,8 +27,7 @@ class buildmaster::tools {
                 "mozillapulse==ad95569a089e",
                 "simplejson==2.1.6",
                 "buildbot==0.8.4_pre_moz1",
-            ],
-            cwd => "$buildmaster::settings::$master_root";
+            ];
     }
     exec {
         "clone-tools":

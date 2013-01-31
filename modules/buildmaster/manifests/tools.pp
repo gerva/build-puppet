@@ -15,6 +15,7 @@ class buildmaster::tools {
                 "${python_packages_url}/carrot-0.10.7.tar.gz",
                 "${python_packages_url}/amqplib-0.6.1.tgz",
                 "${python_packages_url}/anyjson-0.3.tar.gz",
+                "${python_packages_url}/pytz-2011d.tar.gz",
             ];
     }
     exec {

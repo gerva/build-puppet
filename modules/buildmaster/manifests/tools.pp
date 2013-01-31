@@ -8,14 +8,6 @@ class buildmaster::tools {
             require => Class['packages::mozilla::python27'],
             user => $users::builder::username,
             group => $users::builder::group,
-            packages => [
-                "SQLAlchemy==0.6.4",
-                "Twisted==10.1.0",
-                "argparse==1.1",
-                "simplejson==2.1.6",
-                "mozillapulse==ad95569a089e",
-                "buildbot==0.8.4-pre-moz1",
-            ];
     }
     exec {
         "clone-tools":

@@ -13,6 +13,7 @@ class buildmaster::tools {
                 "${python_packages_url}/buildbot-0.8.4-pre-moz2.tar.gz",
                 "${python_packages_url}/mozillapulse-ad95569a089e.tar.bz2",
                 "${python_packages_url}/carrot-0.10.7.tar.gz",
+                "${python_packages_url}/amqplib-0.6.1.tgz",
             ];
     }
     exec {

@@ -2,6 +2,7 @@ class buildmaster::tools {
     include packages::mozilla::python27
     include settings
 
+    $python_packages_url = "http://puppetagain.pub.build.mozilla.org/data/python/packages/"
     python::virtualenv {
         "$buildmaster::settings::queue_dir":
             python => "/tools/python27/bin/python2.7",
@@ -9,8 +10,9 @@ class buildmaster::tools {
             user => $users::builder::username,
             group => $users::builder::group,
             packages => [
-                "http://puppetagain.pub.build.mozilla.org/data/python/packages/buildbot-0.8.4-pre-moz2.tar.gz",
-                "http://puppetagain.pub.build.mozilla.org/data/python/packages/mozillapulse-ad95569a089e.tar.bz2",
+                "${python_packeges_url}/buildbot-0.8.4-pre-moz2.tar.gz",
+                "${python_packeges_url}/mozillapulse-ad95569a089e.tar.bz2",
+                "${python_packeges_url}/carrot-0.10.7.tar.gz",
             ];
     }
     exec {

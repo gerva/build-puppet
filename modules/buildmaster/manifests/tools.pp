@@ -7,7 +7,10 @@ class buildmaster::tools {
             python => "/tools/python27/bin/python2.7",
             require => Class['packages::mozilla::python27'],
             user => $users::builder::username,
-            group => $users::builder::group;
+            group => $users::builder::group,
+            packages => [
+                "http://puppetagain.pub.build.mozilla.org/data/python/packages/buildbot-0.8.4-pre-mozr2.tar.gz",
+            ];
     }
     exec {
         "clone-tools":

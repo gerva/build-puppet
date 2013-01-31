@@ -8,7 +8,6 @@ class buildmaster::tools {
             require => Class['packages::mozilla::python27'],
             user => $users::builder::username,
             group => $users::builder::group;
-        }
     }
     exec {
         "clone-tools":

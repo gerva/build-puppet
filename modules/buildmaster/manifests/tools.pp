@@ -7,7 +7,7 @@ class buildmaster::tools {
             python => "/tools/python27/bin/python2.7",
             require => Class['packages::mozilla::python27'],
             user => $users::builder::username,
-            group => $users::builder::group,
+            group => $users::builder::group;
     }
     exec {
         "clone-tools":

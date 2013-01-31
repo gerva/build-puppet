@@ -9,7 +9,8 @@ class buildmaster::tools {
             user => $users::builder::username,
             group => $users::builder::group,
             packages => [
-                "http://puppetagain.pub.build.mozilla.org/data/python/packages/buildbot-0.8.4-pre-mozr2.tar.gz",
+                "http://puppetagain.pub.build.mozilla.org/data/python/packages/buildbot-0.8.4-pre-moz2.tar.gz",
+                "http://puppetagain.pub.build.mozilla.org/data/python/packages/mozillapulse-ad95569a089e.tar.bz2",
             ];
     }
     exec {

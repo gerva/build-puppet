@@ -36,14 +36,4 @@ class buildmaster {
              owner => $users::builder::group,
              group => $users::builder::username,
     }
-
-
-    #todo fix it:
-    #exec {
-    #    "clone-configs":
-    #        creates => "$master_basedir/buildbot-configs",
-    #        command => "/usr/bin/hg clone -r production http://hg.mozilla.org/build/buildbot-configs",
-    #        user => $users::builder::username,
-    #        cwd => $master_basedir;
-    #}
 }

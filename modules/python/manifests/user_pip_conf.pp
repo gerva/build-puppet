@@ -5,17 +5,13 @@ define python::user_pip_conf($homedir='', $group='') {
     include config
 
     $user = $title
-    if ($homedir != '') {
-        $homedir_ = $homedir
-    } else {
-        # no osx support?
-        $homedir_ = "/home/$user"
+    $homedir_ = $homedir ? {
+        '' => "/home/$user",
+        default => $homedir,
     }
-
-    if ($group != '') {
-        $group_ = $group
-    } else {
-        $group_ = $user
+    $group_ = $group ? {
+        '' => $user,
+        default => $group,
     }
 
     # for the template

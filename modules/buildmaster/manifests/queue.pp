@@ -5,10 +5,6 @@ class buildmaster::queue {
     include buildmaster::settings
 
     file {
-#        "${buildmaster::settings::queue_dir}":
-#            ensure => "directory",
-#            owner => $users::builder::username,
-#            group => $users::builder::username;
         "/etc/init.d/command_runner":
             content => template("buildmaster/command_runner.initd.erb"),
             notify => Service["command_runner"],
@@ -44,20 +40,6 @@ class buildmaster::queue {
             notify => Class["nrpe::service"],
             mode => 644;
     }
-#    exec {
-#        "clone-tools":
-#            require => File["${buildmaster::settings::queue_dir}"],
-#            creates => "${buildmaster::settings::queue_dir}/tools",
-#            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/tools",
-#            user => $master_user,
-#            cwd => "${buildmaster::settings::queue_dir}";
-#        "install-tools":
-#            require => Exec["clone-tools"],
-#            creates => "${buildmaster::settings::queue_dir}/lib/python2.7/site-packages/buildtools.egg-link",
-#            command => "/tools/python27/bin/python2.7 setup.py develop",
-#            cwd => "${buildmaster::settings::queue_dir}/tools",
-#            user => $master_user;
-#    }
     service {
         "command_runner":
             hasstatus => true,

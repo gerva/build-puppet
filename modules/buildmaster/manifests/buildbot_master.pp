@@ -24,7 +24,6 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     $full_master_dir = "$master_basedir/$basedir"
 
     #$virtualenv_dir = "${full_master_dir}/venv"
-    $python_executalbe = "/tools/python27/bin/python2.7"
     $buildbot_configs_dir ="${full_master_dir}/buildbot-configs"
 
     if $num_masters == '' {
@@ -76,19 +75,11 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
                 Exec["setup-$basedir"],
                 ];
 
-    #    "/etc/cron.d/$master_name":
-        "/root/$master_name-crontab-from-puppet":
+        "/etc/cron.d/$master_name":
             require => Exec["setup-$basedir"],
             mode => 600,
             content => template("buildmaster/buildmaster-cron.erb");
     }
-
-    #buildmaster::virtualenv {
-    #    "creating-virtualenv-$master_name":
-    #        virtualenv_dir => $virtualenv_dir,
-    #        user => $master_user,
-    #        group => $master_group,
-    #}
 
     buildmaster::repos {
         "clone-buildbot-$master_name":
@@ -98,17 +89,15 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
 
     exec {
         "setup-$basedir":
-            require => [Buildmaster::Repos["clone-buildbot-$master_name"],
-                #       Buildmaster::Virtualenv["creating-virtualenv-$master_name"],
-                ],
+            require => Buildmaster::Repos["clone-buildbot-$master_name"],
             command => "/usr/bin/make -f Makefile.setup all BASEDIR=$full_master_dir MASTER_NAME=$master_name",
-            #creates => "$full_master_dir/master",
+            creates => "$full_master_dir/master",
             user => $master_user,
             group => $master_group,
             logoutput => on_failure,
             environment => [
                 "VIRTUALENV=/tools/python27-virtualenv/bin/virtualenv",
-                "PYTHON=${python_executalbe}",
+                "PYTHON=/tools/python27/bin/python2.7",
                 "HG=/tools/python27-mercurial/bin/hg",
                 "MASTERS_JSON=https://raw.github.com/gerva/build-tools/803823/buildfarm/maintenance/production-masters.json",
             ],

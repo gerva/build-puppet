@@ -16,6 +16,8 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     include packages::mozilla::py27_virtualenv
     include nrpe::settings
     include nrpe::service
+    include users::builder
+    include buildmaster::settings
     $master_group = $users::builder::group
     $master_user = $users::builder::username
     $master_basedir = $buildmaster::settings::master_root

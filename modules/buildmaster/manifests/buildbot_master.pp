@@ -31,7 +31,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     }
 
     # Different types of masters require different BuildSlaves.py files
-    ${buildslaves_template = "BuildSlaves-${master_type}.py.erb"
+    $buildslaves_template = "BuildSlaves-${master_type}.py.erb"
 
     if ($buildslaves_template) {
         file {

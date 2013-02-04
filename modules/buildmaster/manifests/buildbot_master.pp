@@ -24,8 +24,6 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
 
     $master_name = $name
     $full_master_dir = "$master_basedir/$basedir"
-
-    #$virtualenv_dir = "${full_master_dir}/venv"
     $buildbot_configs_dir ="${full_master_dir}/buildbot-configs"
 
     if $num_masters == '' {

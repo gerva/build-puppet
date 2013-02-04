@@ -70,7 +70,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
 
         "/etc/default/buildbot.d/${master_name}":
             content => $full_master_dir,
-            require => Exec["setup-${basedir}"],
+            require => Exec["setup-${basedir}"];
 
         "/etc/cron.d/${master_name}":
             require => Exec["setup-${basedir}"],

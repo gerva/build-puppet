@@ -31,22 +31,22 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     }
 
     # Different types of masters require different BuildSlaves.py files
-    $buildslaves_template = "BuildSlaves-$master_type.py.erb"
+    ${buildslaves_template = "BuildSlaves-${master_type}.py.erb"
 
     if ($buildslaves_template) {
         file {
-            "$full_master_dir/master/BuildSlaves.py":
+            "${full_master_dir}/master/BuildSlaves.py":
                 require => Exec["setup-$basedir"],
                 owner => $master_user,
                 group => $master_group,
                 mode => 600,
-                content => template("buildmaster/$buildslaves_template");
+                content => template("buildmaster/${buildslaves_template}");
         }
     }
 
-    file {["$full_master_dir",
-        "$buildbot_configs_dir",
-        "$full_master_dir/master"
+    file {["${full_master_dir}",
+        "${buildbot_configs_dir}",
+        "${full_master_dir}/master"
         ]:
             owner => $master_user,
             group => $master_group,
@@ -54,44 +54,44 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     }
 
     file {
-        "$full_master_dir/master/passwords.py":
+        "${full_master_dir}/master/passwords.py":
             require => Exec["setup-$basedir"],
             owner => $master_user,
             group => $master_group,
             mode => 600,
             content => template("buildmaster/passwords.py.erb");
 
-        "$full_master_dir/master/postrun.cfg":
+        "${full_master_dir}/master/postrun.cfg":
             require => Exec["setup-$basedir"],
             owner => $master_user,
             group => $master_group,
             mode => 600,
             content => template("buildmaster/postrun.cfg.erb");
 
-        "/etc/default/buildbot.d/$basedir":
+        "/etc/default/buildbot.d/${basedir}":
             content => $full_master_dir,
             require => [
                 File["/etc/default/buildbot.d"],
-                Exec["setup-$basedir"],
+                Exec["setup-${basedir}"],
                 ];
 
-        "/etc/cron.d/$master_name":
-            require => Exec["setup-$basedir"],
+        "/etc/cron.d/${master_name}":
+            require => Exec["setup-${basedir}"],
             mode => 600,
             content => template("buildmaster/buildmaster-cron.erb");
     }
 
     buildmaster::repos {
-        "clone-buildbot-$master_name":
+        "clone-buildbot-${master_name}":
             repo_name => 'buildbot-configs',
             dst_dir => $buildbot_configs_dir;
     }
 
     exec {
-        "setup-$basedir":
-            require => Buildmaster::Repos["clone-buildbot-$master_name"],
+        "setup-${basedir}":
+            require => Buildmaster::Repos["clone-buildbot-${master_name}"],
             command => "/usr/bin/make -f Makefile.setup all BASEDIR=$full_master_dir MASTER_NAME=$master_name",
-            creates => "$full_master_dir/master",
+            creates => "${full_master_dir}/master",
             user => $master_user,
             group => $master_group,
             logoutput => on_failure,
@@ -101,6 +101,6 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
                 "HG=/tools/python27-mercurial/bin/hg",
                 "MASTERS_JSON=https://raw.github.com/gerva/build-tools/803823/buildfarm/maintenance/production-masters.json",
             ],
-            cwd => "$buildbot_configs_dir";
+            cwd => "${buildbot_configs_dir}";
     }
 }

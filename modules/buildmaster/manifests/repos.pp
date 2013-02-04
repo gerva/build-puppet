@@ -7,7 +7,7 @@ define buildmaster::repos($repo_name, $dst_dir) {
     exec {
         # make will take care of checking out
         # buildbotcustom and tools
-        "clone-$repo_name-$dst_dir":
+        "clone-$repo_name-${dst_dir}":
             require => [
                 Class['packages::mozilla::py27_mercurial'],
                 File[$dst_dir],

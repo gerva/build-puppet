@@ -68,7 +68,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             mode => 600,
             content => template("buildmaster/postrun.cfg.erb");
 
-        "/etc/default/buildbot.d/${basedir}":
+        "/etc/default/buildbot.d/${master_name}":
             content => $full_master_dir,
             require => [
                 File["/etc/default/buildbot.d"],

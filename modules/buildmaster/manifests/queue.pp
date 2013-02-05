@@ -14,17 +14,17 @@ class buildmaster::queue {
             notify => Service["pulse_publisher"],
             mode => 755;
         "${buildmaster::settings::queue_dir}/run_command_runner.sh":
-            require => Class["buildmaster::tools"],
+            require => Python::Virtualenv["$buildmaster::settings::queue_dir"],
             content => template("buildmaster/run_command_runner.sh.erb"),
             notify => Service["command_runner"],
             mode => 755;
         "${buildmaster::settings::queue_dir}/run_pulse_publisher.sh":
-            require => Class["buildmaster::tools"],
+            require => Python::Virtualenv["$buildmaster::settings::queue_dir"],
             content => template("buildmaster/run_pulse_publisher.sh.erb"),
             notify => Service["pulse_publisher"],
             mode => 755;
         "${buildmaster::settings::queue_dir}/passwords.py":
-            require => Class["buildmaster::tools"],
+            require => Python::Virtualenv["$buildmaster::settings::queue_dir"],
             content => template("buildmaster/passwords.py.erb"),
             mode => 600,
             owner => $users::builder::username,
@@ -59,5 +59,40 @@ class buildmaster::queue {
                 ],
             enable => true,
             ensure => running;
+    }
+}
+
+    python::virtualenv {
+        "$buildmaster::settings::queue_dir":
+            python => "/tools/python27/bin/python2.7",
+            require => Class['packages::mozilla::python27'],
+            user => $users::builder::username,
+            group => $users::builder::group,
+            packages => [
+                "buildbot==0.8.4-pre-moz2",
+                "mozillapulse==ad95569a089e",
+                "carrot==0.10.7",
+                "$amqplib==0.6.1",
+                "anyjson==0.3",
+                "pytz-2011d",
+            ];
+    }
+    exec {
+        "clone-tools":
+            require => [ File["${buildmaster::settings::queue_dir}"],
+                         Python::Virtualenv["$buildmaster::settings::queue_dir"],
+                         ],
+            creates => "${buildmaster::settings::queue_dir}/tools",
+            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/tools",
+            user => $users::builder::username,
+            group => $users::builder::group,
+            cwd => "${buildmaster::settings::queue_dir}";
+        "install-tools":
+            require => Exec["clone-tools"],
+            creates => "${buildmaster::settings::queue_dir}/lib/python2.7/site-packages/buildtools.egg-link",
+            command => "${buildmaster::settings::queue_dir}/bin/python setup.py develop",
+            cwd => "${buildmaster::settings::queue_dir}/tools",
+            user => $users::builder::username,
+            group => $users::builder::group;
     }
 }

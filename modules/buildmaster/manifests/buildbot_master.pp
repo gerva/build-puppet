@@ -13,17 +13,18 @@
 # TODO: determine master_type from json?
 define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     include buildmaster
-    include packages::mozilla::py27_virtualenv
-    include nrpe::settings
-    include nrpe::service
-    include users::builder
     include buildmaster::settings
+    include nrpe::service
+    include nrpe::settings
+    include users::builder
+    include packages::mozilla::py27_mercurial
+    include packages::mozilla::py27_virtualenv
+
     $master_group = $users::builder::group
     $master_user = $users::builder::username
     $master_basedir = $buildmaster::settings::master_root
-
     $master_name = $name
-    $full_master_dir = "$master_basedir/$basedir"
+    $full_master_dir = "$master_basedir/${basedir}"
     $buildbot_configs_dir ="${full_master_dir}/buildbot-configs"
 
     if $num_masters == '' {

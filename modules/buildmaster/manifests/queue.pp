@@ -71,9 +71,9 @@ class buildmaster::queue {
                 "buildbot==0.8.4-pre-moz2",
                 "mozillapulse==ad95569a089e",
                 "carrot==0.10.7",
-                "$amqplib==0.6.1",
+                "amqplib==0.6.1",
                 "anyjson==0.3",
-                "pytz-2011d",
+                "pytz==2011d",
             ];
     }
     exec {

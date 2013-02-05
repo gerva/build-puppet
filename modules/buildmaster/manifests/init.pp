@@ -15,7 +15,6 @@ class buildmaster {
     #include secrets
     include buildmaster::queue
     include buildmaster::settings
-    include buildmaster::tools
     $master_basedir = $buildmaster::settings::master_basedir
     $clone_config_dir = $buildmaster::settings::master_basedir
     if $num_masters == '' {

@@ -60,7 +60,6 @@ class buildmaster::queue {
             enable => true,
             ensure => running;
     }
-}
 
     python::virtualenv {
         "$buildmaster::settings::queue_dir":

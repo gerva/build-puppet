@@ -20,7 +20,7 @@ define python::virtualenv::package($user) {
     if ($user == 'root') {
         $home_dir = $::users::root::home
     } else {
-        home_dir = $::operatingsystem ? {
+        $home_dir = $::operatingsystem ? {
             Darwin => "/Users/$user",
             default => "/home/$user"
         }

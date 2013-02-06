@@ -60,14 +60,14 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
 
     file {
         "${full_master_dir}/master/passwords.py":
-            require => Exec["setup-$basedir"],
+            require => Exec["setup-${basedir}"],
             owner => $master_user,
             group => $master_group,
             mode => 600,
             content => template("buildmaster/passwords.py.erb");
 
         "${full_master_dir}/master/postrun.cfg":
-            require => Exec["setup-$basedir"],
+            require => Exec["setup-${basedir}"],
             owner => $master_user,
             group => $master_group,
             mode => 600,
@@ -92,7 +92,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     exec {
         "setup-${basedir}":
             require => Buildmaster::Repos["clone-buildbot-${master_name}"],
-            command => "/usr/bin/make -f Makefile.setup all BASEDIR=$full_master_dir MASTER_NAME=$master_name",
+            command => "/usr/bin/make -f Makefile.setup all BASEDIR=${full_master_dir} MASTER_NAME=${master_name}",
             creates => "${full_master_dir}/master",
             user => $master_user,
             group => $master_group,

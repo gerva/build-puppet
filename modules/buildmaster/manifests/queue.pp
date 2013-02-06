@@ -6,8 +6,9 @@
 # sets up buildmaster::settings::queue processors for pulse, commands, etc.
 
 class buildmaster::queue {
-    include users::builder
     include buildmaster::settings
+    include users::builder
+    include nrpe
 
     file {
         "/etc/init.d/command_runner":

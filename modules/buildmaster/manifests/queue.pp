@@ -84,7 +84,7 @@ class buildmaster::queue {
     }
 
     buildmaster::repos {
-        "clone-hg-tools":
+        "clone-tools":
             hg_repo => 'http://hg.mozilla.org/build/tools',
             dst_dir => "${buildmaster::settings::queue_dir}/tools";
     }
@@ -94,7 +94,7 @@ class buildmaster::queue {
             require => [ File["${buildmaster::settings::queue_dir}"],
                          Python::Virtualenv["$buildmaster::settings::queue_dir"],
                          Buildmaster::Repos["clone-tools"],
-                       ]
+                       ],
             creates => "${buildmaster::settings::queue_dir}/lib/python2.7/site-packages/buildtools.egg-link",
             command => "${buildmaster::settings::queue_dir}/bin/python setup.py develop",
             cwd => "${buildmaster::settings::queue_dir}/tools",

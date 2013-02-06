@@ -4,9 +4,7 @@
 #
 # buildmaster repo class
 # creates the souce code repoitories
-define buildmaster::repos($repo_name, $dst_dir) {
-
-    $hg_repo = "http://hg.mozilla.org/build/$repo_name"
+define buildmaster::repos($hg_repo, $dst_dir) {
 
     exec {
         # make will take care of checking out

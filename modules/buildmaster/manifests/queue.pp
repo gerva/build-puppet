@@ -82,18 +82,19 @@ class buildmaster::queue {
                 "pytz==2011d",
             ];
     }
+
+    buildmaster::repos {
+        "clone-hg-tools":
+            hg_repo => 'http://hg.mozilla.org/build/tools',
+            dst_dir => "${buildmaster::settings::queue_dir}/tools";
+    }
+
     exec {
-        "clone-tools":
+        "install-tools":
             require => [ File["${buildmaster::settings::queue_dir}"],
                          Python::Virtualenv["$buildmaster::settings::queue_dir"],
-                         ],
-            creates => "${buildmaster::settings::queue_dir}/tools",
-            command => "/tools/python27-mercurial/bin/hg clone http://hg.mozilla.org/build/tools",
-            user => $users::builder::username,
-            group => $users::builder::group,
-            cwd => "${buildmaster::settings::queue_dir}";
-        "install-tools":
-            require => Exec["clone-tools"],
+                         Buildmaster::Repos["clone-tools"],
+                       ]
             creates => "${buildmaster::settings::queue_dir}/lib/python2.7/site-packages/buildtools.egg-link",
             command => "${buildmaster::settings::queue_dir}/bin/python setup.py develop",
             cwd => "${buildmaster::settings::queue_dir}/tools",

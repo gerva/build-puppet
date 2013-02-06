@@ -85,7 +85,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
 
     buildmaster::repos {
         "clone-buildbot-${master_name}":
-            repo_name => 'buildbot-configs',
+            hg_repo => 'http://hg.mozilla.org/build/buildbot-configs',
             dst_dir => $buildbot_configs_dir;
     }
 

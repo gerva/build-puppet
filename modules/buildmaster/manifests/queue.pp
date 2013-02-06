@@ -6,6 +6,7 @@
 # sets up buildmaster::settings::queue processors for pulse, commands, etc.
 
 class buildmaster::queue {
+    include users::builder
     include buildmaster::settings
 
     file {

@@ -23,6 +23,7 @@ define python::virtualenv::package($user) {
         home_dir = $::operatingsystem ? {
             Darwin => "/Users/$user",
             default => "/home/$user"
+        }
     }
 
     exec {

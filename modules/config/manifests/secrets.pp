@@ -38,4 +38,8 @@ class config::secrets {
     $pulse_password = extlookup("pulse_password")
     $pulse_username = extlookup("pulse_username")
     $buildmaster_secrets = extlookup("buildmaster_secrets")
+    $tuxedoUsername = extlookup("tuxedo_user")
+    $tuxedoPassword = extlookup("tuxedo_password")
+    $balrog_username = extlookup("balrog_username")
+    $balrog_password = extlookup("balrog_password")
 }

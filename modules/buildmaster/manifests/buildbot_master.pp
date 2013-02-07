@@ -77,7 +77,9 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             content => $full_master_dir,
             require => Exec["setup-${basedir}"];
 
-        "/etc/cron.d/${master_name}":
+        #"/etc/cron.d/${master_name}":
+        # just disable crontabs until everthing is ready
+        "/root/${master_name}":
             require => Exec["setup-${basedir}"],
             mode => 600,
             content => template("buildmaster/buildmaster-cron.erb");
@@ -86,7 +88,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     buildmaster::repos {
         "clone-buildbot-${master_name}":
             hg_repo => 'http://hg.mozilla.org/build/buildbot-configs',
-            dst_dir => $buildbot_configs_dir;
+            dst_dir => ${buildbot_configs_dir};
     }
 
     exec {

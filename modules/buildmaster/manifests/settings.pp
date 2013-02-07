@@ -3,6 +3,8 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 class buildmaster::settings {
+    import users::builder
+    import config::secrets
 
     $master_root = "/builds/buildbot"
     $queue_dir = "${master_root}/queue"
@@ -18,4 +20,5 @@ class buildmaster::settings {
     $pulse_password = $::config::secrets::pulse_password
     $pulse_username = $::config::secrets::pulse_username
     $buildmaster_secrets = $::config::secrets::buildmaster_secrets
+    $lock_dir = "/var/lock/${users::builder::username}"
 }

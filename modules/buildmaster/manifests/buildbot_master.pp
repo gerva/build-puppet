@@ -77,6 +77,11 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             content => $full_master_dir,
             require => Exec["setup-${basedir}"];
 
+        "${buildmaster::settings::lock_dir}":
+            ensure => directory,
+            owner => $master_user,
+            group => $master_group;
+
         "/etc/cron.d/${master_name}":
             require => Exec["setup-${basedir}"],
             mode => 600,

@@ -3,8 +3,8 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 class buildmaster::settings {
-    import users::builder
-    import config::secrets
+    include users::builder
+    include config::secrets
 
     $master_root = "/builds/buildbot"
     $queue_dir = "${master_root}/queue"

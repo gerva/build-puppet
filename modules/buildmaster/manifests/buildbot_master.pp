@@ -51,7 +51,6 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
 
     file {["${full_master_dir}",
         "${buildbot_configs_dir}",
-        "${full_master_dir}/master"
         ]:
             owner => $master_user,
             group => $master_group,

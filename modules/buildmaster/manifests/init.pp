@@ -34,15 +34,10 @@ class buildmaster {
             value => "240"
     }
     file {
-        "/builds/buildbot":
+        ["/builds/buildbot",
+        "${buildmaster::settings::lock_dir}"]:
             ensure => directory,
             owner => $users::builder::group,
             group => $users::builder::username;
-
-        "${buildmaster::settings::lock_dir}":
-            ensure => directory,
-            owner => $master_user,
-            group => $master_group;
-
     }
 }

@@ -21,6 +21,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     include nrpe::service
     include nrpe::settings
     include users::builder
+    include packages::mozilla::python27
     include packages::mozilla::py27_mercurial
     include packages::mozilla::py27_virtualenv
 
@@ -98,7 +99,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             logoutput => on_failure,
             environment => [
                 "VIRTUALENV=/tools/python27-virtualenv/bin/virtualenv",
-                "PYTHON=/tools/python27/bin/python2.7",
+                "PYTHON=${$packages::mozilla::python27::python}",
                 "HG=/tools/python27-mercurial/bin/hg",
                 "MASTERS_JSON=https://raw.github.com/gerva/build-tools/803823/buildfarm/maintenance/production-masters.json",
             ],

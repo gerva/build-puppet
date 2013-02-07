@@ -9,6 +9,7 @@ class buildmaster::queue {
     include buildmaster::settings
     include users::builder
     include nrpe
+    include packages::mozilla::python27
 
     file {
         "/etc/init.d/command_runner":
@@ -69,7 +70,7 @@ class buildmaster::queue {
 
     python::virtualenv {
         "$buildmaster::settings::queue_dir":
-            python => "/tools/python27/bin/python2.7",
+            python => "${packages::mozilla::python27::python}",
             require => Class['packages::mozilla::python27'],
             user => $users::builder::username,
             group => $users::builder::group,

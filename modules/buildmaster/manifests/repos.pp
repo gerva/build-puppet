@@ -5,7 +5,7 @@
 # buildmaster repo class
 # creates the souce code repoitories
 define buildmaster::repos($hg_repo, $dst_dir) {
-
+    include packages::mozilla::py27_mercurial
     exec {
         # make will take care of checking out
         # buildbotcustom and tools

@@ -7,7 +7,6 @@
 
 class buildmaster::queue {
     include buildmaster::settings
-    include buildmaster::repos
     include users::builder
     include nrpe
 

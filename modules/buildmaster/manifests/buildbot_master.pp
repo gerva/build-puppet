@@ -77,9 +77,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             content => $full_master_dir,
             require => Exec["setup-${basedir}"];
 
-        #"/etc/cron.d/${master_name}":
-        # just disable crontabs until everthing is ready
-        "/root/${master_name}":
+        "/etc/cron.d/${master_name}":
             require => Exec["setup-${basedir}"],
             mode => 600,
             content => template("buildmaster/buildmaster-cron.erb");

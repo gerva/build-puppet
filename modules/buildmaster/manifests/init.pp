@@ -45,7 +45,6 @@ class buildmaster {
         "/root/.my.cnf":
             content => template("buildmaster/my.cnf.erb"),
             mode => 600,
-            mode => 644;
         "/etc/init.d/buildbot":
             source => "puppet:///modules/buildmaster/buildbot.initd",
             mode => 755;

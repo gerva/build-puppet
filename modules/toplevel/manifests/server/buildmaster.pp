@@ -5,6 +5,7 @@ class toplevel::server::buildmaster inherits toplevel::server {
     include nrpe::base
     include users::builder
     include dirs::builds::buildmaster
+    include dirs::builds::buildbot
     include packages::gcc
     include packages::make
     include packages::mercurial

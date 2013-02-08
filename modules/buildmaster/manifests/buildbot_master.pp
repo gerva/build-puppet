@@ -71,29 +71,13 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             group => $master_group,
             mode => 600,
             content => template("buildmaster/postrun.cfg.erb");
-        "/etc/default/buildbot.d/":
-            ensure => directory,
-            mode => 755,
-            recurse => true,
-            force => true;
         "/etc/default/buildbot.d/${master_name}":
-            content => $full_master_dir,
+            content => "${full_master_dir}",
             require => Exec["setup-${basedir}"];
-        "/etc/init.d/buildbot":
-            source => "puppet:///modules/buildmaster/buildbot.initd",
-            mode => 755;
         "/etc/cron.d/${master_name}":
             require => Exec["setup-${basedir}"],
             mode => 600,
             content => template("buildmaster/buildmaster-cron.erb");
-        "/root/.my.cnf":
-            content => template("buildmaster/my.cnf.erb"),
-            mode => 600;
-        "/etc/nagios/nrpe.d/buildbot.cfg":
-            content => template("buildmaster/buildbot.cfg.erb"),
-            notify => Class["nrpe::service"],
-            require => Package["nrpe"],
-            mode => 644;
     }
 
     buildmaster::repos {

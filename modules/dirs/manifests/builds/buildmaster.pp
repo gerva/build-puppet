@@ -7,7 +7,9 @@ class dirs::builds::buildmaster {
     file {
         "/etc/default/buildbot.d/":
             ensure => directory,
-            mode => 755;
+            mode => 755,
+            recurse => true,
+            force => true;
         "/etc/init.d/buildbot":
             source => "puppet:///modules/buildmaster/buildbot.initd",
             mode => 755;

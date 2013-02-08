@@ -39,10 +39,5 @@ class buildmaster {
             ensure => directory,
             owner => $users::builder::group,
             group => $users::builder::username;
-
-        "/etc/default/buildbot.d":
-            ensure => directory,
-            recurse => true,
-            force => true,
     }
 }

@@ -44,7 +44,7 @@ class buildmaster {
             require => Package["nrpe"];
         "/root/.my.cnf":
             content => template("buildmaster/my.cnf.erb"),
-            mode => 600,
+            mode => 600;
         "/etc/init.d/buildbot":
             source => "puppet:///modules/buildmaster/buildbot.initd",
             mode => 755;

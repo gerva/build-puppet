@@ -12,4 +12,9 @@ class toplevel::slave::test inherits toplevel::slave {
     include packages::fonts
     include tweaks::fonts
     include tweaks::cleanup
+
+    # this will get fixed in a subsequent patch for bug 838351
+    if ($::operatingsystem == 'Ubuntu') {
+        include packages::linux_desktop
+    }
 }

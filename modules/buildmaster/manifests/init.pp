@@ -19,6 +19,7 @@ class buildmaster {
     #include secrets
     include buildmaster::queue
     include buildmaster::settings
+    include tweaks::tcp_keepalive
     $master_basedir = $buildmaster::settings::master_basedir
     $clone_config_dir = $buildmaster::settings::master_basedir
     if $num_masters == '' {
@@ -28,10 +29,6 @@ class buildmaster {
         "buildbot":
             require => File["/etc/init.d/buildbot"],
             enable => true;
-    }
-    sysctl::value {
-        "net.ipv4.tcp_keepalive_time":
-            value => "240"
     }
     file {
         "${buildmaster::settings::lock_dir}":

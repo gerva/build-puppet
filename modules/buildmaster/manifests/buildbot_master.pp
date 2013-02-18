@@ -95,7 +95,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             group => $master_group,
             logoutput => on_failure,
             environment => [
-                "VIRTUALENV=/tools/python27-virtualenv/bin/virtualenv",
+                "VIRTUALENV=$::packages::mozilla:py27_virtualenv::virtualenv",
                 "PYTHON=$::packages::mozilla::python27::python",
                 "HG=$::packages::mozilla::py27_mercurial::mercurial",
                 "MASTERS_JSON=https://raw.github.com/gerva/build-tools/803823/buildfarm/maintenance/production-masters.json",

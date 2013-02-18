@@ -15,7 +15,7 @@ define buildmaster::repos($hg_repo, $dst_dir) {
             require => [
                 Class['packages::mozilla::py27_mercurial'],
             ],
-            command => "/tools/python27-mercurial/bin/hg clone $hg_repo $dst_dir",
+            command => "$::packages::mozilla::py27_mercurial::mercurial clone $hg_repo $dst_dir",
             user => "$users::builder::username";
     }
 }

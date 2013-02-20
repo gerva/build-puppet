@@ -15,8 +15,6 @@
 # TODO: determine num_masters from json (bug 647374)
 class buildmaster {
     # TODO: port releng module
-    #include releng::master
-    #include secrets
     include buildmaster::queue
     include buildmaster::settings
     include tweaks::tcp_keepalive

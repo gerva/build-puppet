@@ -32,10 +32,6 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     $full_master_dir = "$master_basedir/${basedir}"
     $buildbot_configs_dir ="${full_master_dir}/buildbot-configs"
 
-    if $num_masters == '' {
-        fail("you must set num_masters")
-    }
-
     # Different types of masters require different BuildSlaves.py files
     $buildslaves_template = "BuildSlaves-${master_type}.py.erb"
 

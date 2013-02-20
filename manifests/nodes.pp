@@ -20,7 +20,6 @@ node "relabs06.build.mtv1.mozilla.com" {
 }
 
 node "relabs07.build.mtv1.mozilla.com" {
-    $num_masters = 2
     $master_json = 'https://raw.github.com/gerva/build-tools/803823/buildfarm/maintenance/production-masters.json'
     buildmaster::buildbot_master {
         "bm07-build1":

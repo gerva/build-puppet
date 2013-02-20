@@ -62,6 +62,7 @@ class buildmaster::queue {
             require => [
                 File["/etc/init.d/pulse_publisher"],
                 File["${buildmaster::settings::queue_dir}/run_pulse_publisher.sh"],
+                File["${buildmaster::settings::queue_dir}/passwords.py"],
                 Exec["install-tools"],
                 ],
             enable => true,

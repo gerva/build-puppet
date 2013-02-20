@@ -5,7 +5,7 @@ class packages::tmux {
     case $::operatingsystem {
         CentOS: {
             package {
-                "tmux.x86_64"
+                "tmux.x86_64":
                     ensure => latest;
             }
         }

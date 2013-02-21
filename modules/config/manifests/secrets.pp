@@ -43,4 +43,6 @@ class config::secrets {
     $balrog_username = extlookup("balrog_username")
     $balrog_password = extlookup("balrog_password")
     $master_json = extlookup("master_json")
+    $buildbot_tools_hg_repo = extlookup("buildbot_tools_hg_repo")
+    $buildbot_configs_hg_repo = extlookup("buildbot_configs_hg_repo")
 }

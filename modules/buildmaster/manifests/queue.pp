@@ -87,7 +87,7 @@ class buildmaster::queue {
 
     buildmaster::repos {
         "clone-tools":
-            hg_repo => 'http://hg.mozilla.org/build/tools',
+            hg_repo => "${buildmaster::settings::buildbot_tools_hg_repo}",
             dst_dir => "${buildmaster::settings::queue_dir}/tools";
     }
 

@@ -21,4 +21,5 @@ class buildmaster::settings {
     $pulse_username = $::config::secrets::pulse_username
     $buildmaster_secrets = $::config::secrets::buildmaster_secrets
     $lock_dir = "/var/lock/${users::builder::username}"
+    $master_json=$::config::secrets::master_json
 }

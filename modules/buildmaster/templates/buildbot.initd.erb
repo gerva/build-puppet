@@ -20,7 +20,7 @@ DESC="Buildbot <%=master_name%>"
 USER=cltbld
 
 DAEMON=/usr/bin/make
-BASEDIR="<%full_master_dir%>"
+BASEDIR="<%=full_master_dir%>"
 PIDFILE="<%=full_master_dir%>/<%=master_name%>.pid"
 
 test -x ${DAEMON} || exit 0

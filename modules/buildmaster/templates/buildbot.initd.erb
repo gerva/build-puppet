@@ -29,7 +29,7 @@ test -x ${DAEMON} || exit 0
 
 start_buildbot() {
 
-    su -s /bin/bash -c "${DAEMON}" -C "${BASEDIR}" start - ${USER}
+    su -s /bin/bash -c "${DAEMON} -C ${BASEDIR} start" - ${USER}
     return $?
 }
 

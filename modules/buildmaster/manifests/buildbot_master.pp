@@ -74,6 +74,11 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             require => Exec["setup-${basedir}"],
             mode => 600,
             content => template("buildmaster/buildmaster-cron.erb");
+        # this is just a test
+        "/root/buildbot-${master_name}.initd"
+            require => Exec["setup-${basedir}"],
+            mode => 744,
+            content => template("buildmaster/buildbot.initd.erb");
     }
 
     buildmaster::repos {

@@ -8,11 +8,8 @@
 # To setup a particular instance of a buildbot master, see
 # buildmaster::buildbot_master
 #
-# buildmaster requires that $num_masters be set on the node prior to including this class
-#
 # TODO: move $libdir stuff into template?
 # TODO: you still have to set up ssh keys!
-# TODO: determine num_masters from json (bug 647374)
 class buildmaster {
     # TODO: port releng module
     include buildmaster::queue

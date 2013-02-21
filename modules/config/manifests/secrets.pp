@@ -42,4 +42,5 @@ class config::secrets {
     $tuxedoPassword = extlookup("tuxedo_password")
     $balrog_username = extlookup("balrog_username")
     $balrog_password = extlookup("balrog_password")
+    $master_json = extlookup("master_json")
 }

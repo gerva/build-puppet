@@ -12,7 +12,4 @@ class toplevel::server inherits toplevel::base {
     include ganglia
     include nrpe
     include packages::strace
-    # teporary disable tmux installation
-    # there is an error installing its depenendecies
-    #include packages::tmux
 }

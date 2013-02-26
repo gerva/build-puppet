@@ -35,15 +35,13 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     # Different types of masters require different BuildSlaves.py files
     $buildslaves_template = "BuildSlaves-${master_type}.py.erb"
 
-    if ($buildslaves_template) {
-        file {
-            "${full_master_dir}/master/BuildSlaves.py":
-                require => Exec["setup-$basedir"],
-                owner => $master_user,
-                group => $master_group,
-                mode => 600,
-                content => template("buildmaster/${buildslaves_template}");
-        }
+    file {
+        "${full_master_dir}/master/BuildSlaves.py":
+            require => Exec["setup-$basedir"],
+            owner => $master_user,
+            group => $master_group,
+            mode => 600,
+            content => template("buildmaster/${buildslaves_template}");
     }
 
     file {["${full_master_dir}",
@@ -86,7 +84,7 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
         "setup-${basedir}":
             require => Buildmaster::Repos["clone-buildbot-${master_name}"],
             command => "/usr/bin/make -f Makefile.setup all BASEDIR=${full_master_dir} MASTER_NAME=${master_name}",
-            creates => "${full_master_dir}/master",
+            creates => "${full_master_dir}/bin/buildbot",
             user => $master_user,
             group => $master_group,
             logoutput => on_failure,

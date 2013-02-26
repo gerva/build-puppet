@@ -25,10 +25,10 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     include packages::mozilla::py27_mercurial
     include packages::mozilla::py27_virtualenv
 
-    $master_group = ${users::builder::group}
-    $master_user = ${users::builder::username}
-    $master_basedir = ${buildmaster::settings::master_root}
-    $master_name = ${name}
+    $master_group = "${users::builder::group}"
+    $master_user = "${users::builder::username}"
+    $master_basedir = "${buildmaster::settings::master_root}"
+    $master_name = "${name}"
     $full_master_dir = "${master_basedir}/${basedir}"
     $buildbot_configs_dir ="${full_master_dir}/buildbot-configs"
 

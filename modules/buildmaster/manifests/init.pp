@@ -12,7 +12,6 @@
 # TODO: you still have to set up ssh keys!
 class buildmaster {
     # TODO: port releng module
-    include nrpe::custom
     include buildmaster::queue
     include buildmaster::settings
     include tweaks::tcp_keepalive
@@ -28,10 +27,10 @@ class buildmaster {
             ensure => directory,
             owner => $users::builder::group,
             group => $users::builder::username;
-#        "/etc/nagios/nrpe.d/buildbot.cfg":
-#            content => template("buildmaster/buildbot.cfg.erb"),
-#            notify => Class["nrpe::service"],
-#            require => Package["nrpe"];
+        "/etc/nagios/nrpe.d/buildbot.cfg":
+            content => template("buildmaster/buildbot.cfg.erb"),
+            notify => Class["nrpe::service"],
+            require => Package["nrpe"];
         "/root/.my.cnf":
             content => template("buildmaster/my.cnf.erb"),
             mode => 600;
@@ -43,9 +42,5 @@ class buildmaster {
             mode => 755,
             recurse => true,
             force => true;
-    }
-    nrpe::custom {
-        "buildbot.cfg":
-            content => template("buildmaster/buildbot.cfg.erb");
     }
 }

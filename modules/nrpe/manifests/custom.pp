@@ -6,7 +6,7 @@ class nrpe::custom($content) {
     $name=$title
     file {
         "${nrpe::settings::plugins_dir}/${name}":
-            content => $content
+            content => $content,
             require => Package["nrpe"],
             notify => Class['nrpe::service'];
     }

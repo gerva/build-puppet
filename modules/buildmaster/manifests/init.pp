@@ -8,8 +8,6 @@
 # To setup a particular instance of a buildbot master, see
 # buildmaster::buildbot_master
 #
-# TODO: move $libdir stuff into template?
-# TODO: you still have to set up ssh keys!
 class buildmaster {
     # TODO: port releng module
     include buildmaster::queue

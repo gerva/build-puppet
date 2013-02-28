@@ -18,8 +18,6 @@
 define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     include buildmaster
     include buildmaster::settings
-    include nrpe::service
-    include nrpe::settings
     include users::builder
     include packages::mozilla::python27
     include packages::mozilla::py27_mercurial

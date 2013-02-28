@@ -9,7 +9,6 @@
 # buildmaster::buildbot_master
 #
 class buildmaster {
-    # TODO: port releng module
     include buildmaster::queue
     include buildmaster::settings
     include tweaks::tcp_keepalive

@@ -8,7 +8,6 @@
 class buildmaster::queue {
     include buildmaster::settings
     include users::builder
-    include nrpe
     include packages::mozilla::python27
 
     file {
@@ -36,16 +35,6 @@ class buildmaster::queue {
             mode => 600,
             owner => $users::builder::username,
             group => $users::builder::username;
-        "${nrpe::settings::nrpe_etcdir}/nrpe.d/pulse_publisher.cfg":
-            content => template("buildmaster/pulse_publisher.cfg.erb"),
-            require => Package["nrpe"],
-            notify => Class["nrpe::service"],
-            mode => 644;
-        "${nrpe::settings::nrpe_etcdir}/nrpe.d/command_runner.cfg":
-            content => template("buildmaster/command_runner.cfg.erb"),
-            require => Package["nrpe"],
-            notify => Class["nrpe::service"],
-            mode => 644;
     }
     service {
         "command_runner":
@@ -83,6 +72,16 @@ class buildmaster::queue {
                 "anyjson==0.3",
                 "pytz==2011d",
             ];
+    }
+
+    nrpe::custom {
+        "pulse_publisher.cfg":
+            nrpe_content => template("buildmaster/pulse_publisher.cfg.erb"),
+    }
+
+    nrpe::custom {
+        "command_runner.cfg":
+            nrpe_content => template("buildmaster/command_runner.cfg.erb"),
     }
 
     buildmaster::repos {

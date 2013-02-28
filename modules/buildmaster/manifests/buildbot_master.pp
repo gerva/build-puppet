@@ -13,8 +13,6 @@
 #
 # $master_type must be one of 'build', 'try', 'tests', or 'scheduler'
 #
-# TODO: Discover http_port from json?
-# TODO: determine master_type from json?
 define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
     include buildmaster
     include buildmaster::settings

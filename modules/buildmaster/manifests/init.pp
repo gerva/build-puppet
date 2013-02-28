@@ -27,10 +27,6 @@ class buildmaster {
             ensure => directory,
             owner => $users::builder::group,
             group => $users::builder::username;
-#        "/etc/nagios/nrpe.d/buildbot.cfg":
-#            content => template("buildmaster/buildbot.cfg.erb"),
-#            notify => Class["nrpe::service"],
-#            require => Package["nrpe"];
         "/root/.my.cnf":
             content => template("buildmaster/my.cnf.erb"),
             mode => 600;

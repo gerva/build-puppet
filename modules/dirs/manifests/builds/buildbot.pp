@@ -6,7 +6,7 @@ class dirs::builds::buildbot {
     include config
 
     file {
-            "/builds/buildbot" :
+        "/builds/buildbot" :
             ensure => directory,
             owner => "$users::builder::username",
             group => "$users::builder::group",

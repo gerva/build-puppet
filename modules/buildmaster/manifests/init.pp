@@ -45,6 +45,6 @@ class buildmaster {
     }
     nrpe::custom {
         "buildbot.cfg":
-            nrpe_content => template("buildmaster/buildbot.cfg.erb"),
+            content => template("buildmaster/buildbot.cfg.erb"),
     }
 }

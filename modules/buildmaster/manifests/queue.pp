@@ -76,12 +76,12 @@ class buildmaster::queue {
 
     nrpe::custom {
         "pulse_publisher.cfg":
-            nrpe_content => template("buildmaster/pulse_publisher.cfg.erb"),
+            content => template("buildmaster/pulse_publisher.cfg.erb"),
     }
 
     nrpe::custom {
         "command_runner.cfg":
-            nrpe_content => template("buildmaster/command_runner.cfg.erb"),
+            content => template("buildmaster/command_runner.cfg.erb"),
     }
 
     buildmaster::repos {

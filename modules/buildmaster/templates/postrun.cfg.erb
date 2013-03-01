@@ -14,55 +14,55 @@
     "*": {
       "*": {
         "user": "ffxbld",
-        "sshkey": "/home/cltbld/.ssh/ffxbld_dsa",
+        "sshkey": "<%=scope.lookupvar('users::builder::home')%>/.ssh/ffxbld_dsa",
         "host": "stage.mozilla.org"
         },
       "try": {
         "user": "trybld",
-        "sshkey": "/home/cltbld/.ssh/trybld_dsa",
+        "sshkey": "<%=scope.lookupvar('users::builder::home')%>/.ssh/trybld_dsa",
         "host": "stage.mozilla.org"
       },
       "shadow-central": {
         "user": "ffxbld",
-        "sshkey": "/home/cltbld/.ssh/ffxbld_dsa",
+        "sshkey": "<%=scope.lookupvar('users::builder::home')%>/.ssh/ffxbld_dsa",
         "host": "pvtbuilds2.dmz.scl3.mozilla.com"
       }
     },
     "fuzzing": {
       "*": {
         "user": "ffxbld",
-        "sshkey": "/home/cltbld/.ssh/ffxbld_dsa",
+        "sshkey": "<%=scope.lookupvar('users::builder::home')%>/.ssh/ffxbld_dsa",
         "host": "pvtbuilds2.dmz.scl3.mozilla.com"
       }
     },
     "xulrunner": {
       "*": {
         "user": "xrbld",
-        "sshkey": "/home/cltbld/.ssh/xrbld_dsa",
+        "sshkey": "<%=scope.lookupvar('users::builder::home')%>/.ssh/xrbld_dsa",
         "host": "stage.mozilla.org"
       }
     },
     "thunderbird": {
       "*": {
         "user": "tbirdbld",
-        "sshkey": "/home/cltbld/.ssh/tbirdbld_dsa",
+        "sshkey": "<%=scope.lookupvar('users::builder::home')%>/.ssh/tbirdbld_dsa",
         "host": "stage.mozilla.org"
       },
       "try-comm-central": {
         "user": "tbirdtry",
-        "sshkey": "/home/cltbld/.ssh/trybld_dsa",
+        "sshkey": "<%=scope.lookupvar('users::builder::home')%>/.ssh/trybld_dsa",
         "host": "stage.mozilla.org"
       }
     },
     "thunderbird-test": {
       "*": {
         "user": "tbirdbld",
-        "sshkey": "/home/cltbld/.ssh/tbirdbld_dsa",
+        "sshkey": "<%=scope.lookupvar('users::builder::home')%>/.ssh/tbirdbld_dsa",
         "host": "stage.mozilla.org"
       },
       "try-comm-central": {
         "user": "tbirdtry",
-        "sshkey": "/home/cltbld/.ssh/trybld_dsa",
+        "sshkey": "<%=scope.lookupvar('users::builder::home')%>/.ssh/trybld_dsa",
         "host": "stage.mozilla.org"
       }
     }

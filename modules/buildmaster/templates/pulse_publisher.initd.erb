@@ -17,7 +17,7 @@
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DESC="pulse publisher"
 
-USER=cltbld
+USER=<%=scope.lookupvar('users::builder::username')%>
 
 DAEMON=<%=scope.lookupvar('buildmaster::settings::queue_dir')%>/run_pulse_publisher.sh
 PIDFILE=<%=scope.lookupvar('buildmaster::settings::queue_dir')%>/pulse_publisher.pid

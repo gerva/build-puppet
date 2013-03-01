@@ -45,4 +45,5 @@ class config::secrets {
     $master_json = extlookup("master_json")
     $buildbot_tools_hg_repo = extlookup("buildbot_tools_hg_repo")
     $buildbot_configs_hg_repo = extlookup("buildbot_configs_hg_repo")
+    $buildbot_mail_to = extlookup("buildbot_mail_to")
 }

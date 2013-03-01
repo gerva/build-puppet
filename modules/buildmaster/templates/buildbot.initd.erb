@@ -21,7 +21,7 @@
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DESC="Buildbot"
 
-USER=cltbld
+USER=<%=scope.lookupvar('users::builder::username')%>
 
 DAEMON=/usr/bin/make
 LOCKFILE=/var/lock/subsys/buildbot

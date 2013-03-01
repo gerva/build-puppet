@@ -28,7 +28,7 @@ class buildmaster {
             content => template("buildmaster/my.cnf.erb"),
             mode => 600;
         "/etc/init.d/buildbot":
-            source => "puppet:///modules/buildmaster/buildbot.initd",
+            content => template("buildmaster/buildbot.initd.erb"),
             mode => 755;
         "/etc/default/buildbot.d/":
             ensure => directory,

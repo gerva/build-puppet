@@ -24,4 +24,5 @@ class buildmaster::settings {
     $master_json = $::config::secrets::master_json
     $buildbot_tools_hg_repo = $::config::secrets::buildbot_tools_hg_repo
     $buildbot_configs_hg_repo = $::config::secrets::buildbot_configs_hg_repo
+    $buildbot_mail_to= $::config::secrets::buildbot_mail_to
 }

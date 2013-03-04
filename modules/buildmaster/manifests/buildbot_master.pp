@@ -77,8 +77,10 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
 
     exec {
         "setup-${basedir}":
-            require => [ Buildmaster::Repos["clone-buildbot-${master_name}"],
-                         File["${full_master_dir}"], ],
+            require => [
+                Buildmaster::Repos["clone-buildbot-${master_name}"],
+                File["${full_master_dir}"],
+            ],
             command => "/usr/bin/make -f Makefile.setup all BASEDIR=${full_master_dir} MASTER_NAME=${master_name}",
             creates => "${full_master_dir}/bin/buildbot",
             user => $master_user,

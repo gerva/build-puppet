@@ -20,21 +20,21 @@ class buildmaster::queue {
             notify => Service["pulse_publisher"],
             mode => 755;
         "${buildmaster::settings::queue_dir}/run_command_runner.sh":
-            require => Python::Virtualenv["$buildmaster::settings::queue_dir"],
+            require => Python::Virtualenv["${buildmaster::settings::queue_dir}"],
             content => template("buildmaster/run_command_runner.sh.erb"),
             notify => Service["command_runner"],
             mode => 755;
         "${buildmaster::settings::queue_dir}/run_pulse_publisher.sh":
-            require => Python::Virtualenv["$buildmaster::settings::queue_dir"],
+            require => Python::Virtualenv["${buildmaster::settings::queue_dir}"],
             content => template("buildmaster/run_pulse_publisher.sh.erb"),
             notify => Service["pulse_publisher"],
             mode => 755;
         "${buildmaster::settings::queue_dir}/passwords.py":
-            require => Python::Virtualenv["$buildmaster::settings::queue_dir"],
+            require => Python::Virtualenv["${buildmaster::settings::queue_dir}"],
             content => template("buildmaster/passwords.py.erb"),
             mode => 600,
-            owner => $users::builder::username,
-            group => $users::builder::username;
+            owner => "${users::builder::username}",
+            group => "${users::builder::username}";
     }
     service {
         "command_runner":
@@ -62,8 +62,8 @@ class buildmaster::queue {
         "$buildmaster::settings::queue_dir":
             python => "${packages::mozilla::python27::python}",
             require => Class['packages::mozilla::python27'],
-            user => $users::builder::username,
-            group => $users::builder::group,
+            user => "${users::builder::username}",
+            group => "${users::builder::group}",
             packages => [
                 "buildbot==0.8.4-pre-moz2",
                 "mozillapulse==ad95569a089e",
@@ -82,16 +82,6 @@ class buildmaster::queue {
     }
     nrpe_custom {["pulse_publisher.cfg", "command_runner.cfg"]: }
 
-#    nrpe::custom {
-#        "pulse_publisher.cfg":
-#            content => template("buildmaster/pulse_publisher.cfg.erb"),
-#    }
-#
-#    nrpe::custom {
-#        "command_runner.cfg":
-#            content => template("buildmaster/command_runner.cfg.erb"),
-#    }
-
     buildmaster::repos {
         "clone-tools":
             hg_repo => "${buildmaster::settings::buildbot_tools_hg_repo}",
@@ -100,14 +90,15 @@ class buildmaster::queue {
 
     exec {
         "install-tools":
-            require => [ File["${buildmaster::settings::queue_dir}"],
-                         Python::Virtualenv["$buildmaster::settings::queue_dir"],
-                         Buildmaster::Repos["clone-tools"],
-                       ],
+            require => [
+                File["${buildmaster::settings::queue_dir}"],
+                Python::Virtualenv["${buildmaster::settings::queue_dir}"],
+                Buildmaster::Repos["clone-tools"],
+                ],
             creates => "${buildmaster::settings::queue_dir}/lib/python2.7/site-packages/buildtools.egg-link",
             command => "${buildmaster::settings::queue_dir}/bin/python setup.py develop",
             cwd => "${buildmaster::settings::queue_dir}/tools",
-            user => $users::builder::username,
-            group => $users::builder::group;
+            user => "${users::builder::username}",
+            group => "${users::builder::group}";
     }
 }

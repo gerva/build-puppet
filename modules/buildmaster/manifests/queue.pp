@@ -75,14 +75,19 @@ class buildmaster::queue {
     }
 
     nrpe::custom {
-        "pulse_publisher.cfg":
-            content => template("buildmaster/pulse_publisher.cfg.erb"),
+        ["pulse_publisher.cfg", "command_runner.cfg"]:
+            content => template("buildmaster/${name}.erb"),
     }
 
-    nrpe::custom {
-        "command_runner.cfg":
-            content => template("buildmaster/command_runner.cfg.erb"),
-    }
+#    nrpe::custom {
+#        "pulse_publisher.cfg":
+#            content => template("buildmaster/pulse_publisher.cfg.erb"),
+#    }
+#
+#    nrpe::custom {
+#        "command_runner.cfg":
+#            content => template("buildmaster/command_runner.cfg.erb"),
+#    }
 
     buildmaster::repos {
         "clone-tools":

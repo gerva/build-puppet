@@ -40,9 +40,8 @@ define buildmaster::buildbot_master($basedir, $master_type, $http_port) {
             content => template("buildmaster/${buildslaves_template}");
     }
 
-    file {["${full_master_dir}",
-        #"${buildbot_configs_dir}",
-        ]:
+    file {
+        "${full_master_dir}",
             owner => $master_user,
             group => $master_group,
             ensure => "directory";

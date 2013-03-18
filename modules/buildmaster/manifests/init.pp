@@ -36,8 +36,11 @@ class buildmaster {
             recurse => true,
             force => true;
     }
+
     nrpe::custom {
         "buildbot.cfg":
             content => template("buildmaster/buildbot.cfg.erb"),
+            requires => File['/etc/default/buildbot.d/'],
+            subscribe => [ '/etc/default/buildbot.d' ];
     }
 }

@@ -171,7 +171,7 @@ class config::base {
     $buildbot_configs_hg_repo = "https://hg.mozilla.org/build/buildbot-configs"
     $buildbot_configs_branch = "production"
     # mercurial repository for tools
-    $buildbot_tools_hg_repo = "https://hg.mozilla.org/build/tools"
+    $buildbot_tools_hg_repo = "https://hg.mozilla.org/users/mgervasini_mozilla.com/tools"
     # the branch of buildbot-custom to follow
     $buildbotcustom_branch = "production-0.8"
     # URL for masters.json (note the confusion about plurality!), listing all masters

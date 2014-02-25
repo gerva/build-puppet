@@ -17,5 +17,7 @@ class toplevel::server::buildmaster inherits toplevel::server {
     include packages::mozilla::python27
     include packages::mozilla::py27_virtualenv
     include packages::mozilla::py27_mercurial
+    # bug 964880 Add swap to linux build machines with <12GB
+    include tweaks::swap_on_instance_storage
 }
 

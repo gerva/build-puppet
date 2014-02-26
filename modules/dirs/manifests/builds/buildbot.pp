@@ -5,6 +5,8 @@ class dirs::builds::buildbot {
     include users::builder
     include config
     include dirs::builds
+    # bug 964880 Add swap to linux build machines with <12GB
+    include tweaks::swap_on_instance_storage
 
     file {
         "/builds/buildbot" :

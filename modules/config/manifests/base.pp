@@ -168,7 +168,7 @@ class config::base {
     # email address to which buildbot-related mail should be sent
     $buildbot_mail_to = "nobody@mozilla.com"
     # mercurial repository and branch from which to check out buildbot-configs
-    $buildbot_configs_hg_repo = "https://hg.mozilla.org/build/buildbot-configs"
+    $buildbot_configs_hg_repo = "https://hg.mozilla.org/users/mgervasini_mozilla.com/buildbot-configs"
     $buildbot_configs_branch = "production"
     # mercurial repository for tools
     $buildbot_tools_hg_repo = "https://hg.mozilla.org/users/mgervasini_mozilla.com/tools"

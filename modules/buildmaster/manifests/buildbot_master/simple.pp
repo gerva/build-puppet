@@ -27,9 +27,6 @@ define buildmaster::buildbot_master::simple($basedir, $http_port, $master_cfg, $
         "/etc/default/buildbot.d/${master_name}":
             content => "${full_master_dir}",
             before => Nrpe::Custom["buildbot.cfg"];
-        "/etc/cron.d/${master_name}":
-            mode => 600,
-            content => template("buildmaster/buildmaster-cron.erb");
         "${full_master_dir}/master":
             owner => $master_user,
             group => $master_group,

@@ -56,10 +56,6 @@ define buildmaster::buildbot_master::mozilla($basedir, $master_type, $http_port=
             content => "${full_master_dir}",
             require => Exec["setup-${basedir}"],
             before => Nrpe::Custom["buildbot.cfg"];
-        "/etc/cron.d/${master_name}":
-            require => Exec["setup-${basedir}"],
-            mode => 600,
-            content => template("buildmaster/buildmaster-cron.erb");
     }
 
     # Scheduler masters don't need postrun.cfg

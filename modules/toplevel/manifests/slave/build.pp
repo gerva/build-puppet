@@ -27,6 +27,7 @@ class toplevel::slave::build inherits toplevel::slave {
     include packages::patch
 
     include jacuzzi_metadata
+    include aws::instance_storage
 
     ccache::ccache_dir {
         "/builds/ccache":

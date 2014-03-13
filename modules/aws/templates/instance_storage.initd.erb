@@ -1,39 +1,38 @@
 #! /bin/bash
-#  initscript for jacuzzi_metadata
+#  initscript for instance_storage
 #
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-# chkconfig: 2345 45 08
+# chkconfig: 2345 46 08
 ### BEGIN INIT INFO
-# Provides:          jacuzzi_metadata
-# Required-Start:    $local_fs $network buildbot instance_storage
+# Provides:          instance_storage
+# Required-Start:    $local_fs $network buildbot
 # Should-Start:      $remote_fs
 # Should-Stop:       $remote_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      K 0 1 6
-# Short-Description: jacuzzi_metadata
-# Description:       Fetches jacuzzi metadata for VMs and stores it in a local file
+# Short-Description: instance storage
+# Description:       Initializes instance storage on EC2 instances
 ### END INIT INFO
 
 # MOZILLA DEPLOYMENT NOTES
 # - This file is distributed by Puppet to all linux build servers
-# - it lives in the 'jacuzzi_metadata' puppet module
+# - it lives in the 'aws::instance_storage' puppet module
 
 # Required-Stop:     $local_fs
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
-DESC="jacuzzi_metadata"
+DESC="instance_storage"
 
-CMD=/usr/local/bin/jacuzzi_metadata.py
-OUTPUT=/etc/jacuzzi_metadata.json
+CMD=/usr/local/bin/manage_instance_storage.py
 PYTHON=<%= scope.lookupvar('::packages::mozilla::python27::python') %>
 
 test -x ${CMD} || exit 0
 
 do_start () {
-    echo "Fetching jacuzzi metadata"
-    if ${CMD} -o ${OUTPUT}; then
+    echo "Setting up instance storage"
+    if ${CMD}; then
         echo "done"
         return 0
     else

@@ -9,7 +9,7 @@ class config inherits config::base {
     $builder_username = "relabsbld"
     $grouped_puppet_servers = {
         ".*" => [
-            "relabs-puppet1.relabs.releng.scl3.mozilla.com",
+            "relabs-puppet2.relabs.releng.scl3.mozilla.com",
         ],
     }
     $puppet_servers = sort_servers_by_group($grouped_puppet_servers)
@@ -17,15 +17,13 @@ class config inherits config::base {
     $data_servers = $puppet_servers
     $data_server = $puppet_server
 
-    $distinguished_puppetmaster = "relabs-puppet1.relabs.releng.scl3.mozilla.com"
+    $distinguished_puppetmaster = "relabs-puppet2.relabs.releng.scl3.mozilla.com"
     $puppet_again_repo = "https://hg.mozilla.org/build/puppet/"
 
     $puppet_server_reports = "http"
     $puppet_server_reporturl = "http://foreman.pvt.build.mozilla.org:3001/"
     $puppet_server_facturl = "http://foreman.pvt.build.mozilla.org:3000/"
-    # disabled temporarily for #946872
-    # $puppetmaster_upstream_rsync_source = 'rsync://puppetagain.pub.build.mozilla.org/data/'
-    # $puppetmaster_upstream_rsync_args = '--exclude=repos/apt'
+    $puppetmaster_upstream_rsync_source = 'rsync://puppetagain.pub.build.mozilla.org/data/'
     $puppetmaster_public_mirror_hosts = [ ]
     $puppetmaster_extsyncs = {
         'slavealloc' => {
@@ -45,7 +43,7 @@ class config inherits config::base {
         '10.250.48.1', # fake
     ]
 
-    $ntp_server = "ntp.build.mozilla.org"
+    $ntp_server = "time.mozilla.org"
     $admin_users = [
         "arr",
         "bhearsum",

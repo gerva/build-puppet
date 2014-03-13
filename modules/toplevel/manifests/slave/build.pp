@@ -26,6 +26,8 @@ class toplevel::slave::build inherits toplevel::slave {
     include packages::mozilla::retry
     include packages::patch
 
+    include jacuzzi_metadata
+
     ccache::ccache_dir {
         "/builds/ccache":
             maxsize => "10G",

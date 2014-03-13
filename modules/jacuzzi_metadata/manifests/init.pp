@@ -14,15 +14,6 @@ class jacuzzi_metadata {
             source => "puppet:///modules/jacuzzi_metadata/jacuzzi_metadata.py";
     }
 
-    # Run this from exec so that we get it at least once when puppet runs the first time.
-    exec {
-        "get_jacuzzi_metadata":
-            require => File["/usr/local/bin/jacuzzi_metadata.py"],
-            creates => "/etc/jacuzzi_metadata.json",
-            user    => "root",
-            command => "$python /usr/local/bin/jacuzzi_metadata.py -o /etc/jacuzzi_metadata.json";
-    }
-
     # On Linux systems, run from init.d on boot
     case $::operatingsystem {
         Ubuntu, CentOS: {

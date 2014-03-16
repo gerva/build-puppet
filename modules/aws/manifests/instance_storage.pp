@@ -8,7 +8,7 @@ class aws::instance_storage {
             file {
                 "/etc/init.d/instance_storage":
                     require => File["/usr/local/bin/manage_instance_storage.py"],
-                    content => template("instance_storage/instance_storage.initd.erb"),
+                    content => template("aws/instance_storage.initd.erb"),
                     mode    => 0755,
                     owner   => "root",
                     notify  => Service["instance_storage"];

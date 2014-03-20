@@ -3,9 +3,8 @@ import urllib2
 import urlparse
 import time
 import logging
-import json
 import os
-from subprocess import check_call, CalledProcessError, STDOUT
+from subprocess import check_call, CalledProcessError
 
 devnull = open(os.devnull, 'w')
 
@@ -32,20 +31,20 @@ def get_aws_metadata(key):
 
 def run_cmd(cmd, cwd=None, raise_on_error=True, quiet=True):
     if not cwd:
-	cwd = os.getcwd()
+        cwd = os.getcwd()
     log.info("Running %s in %s", cmd, cwd)
     try:
-	if quiet:
-	    stdout = devnull
-	else:
-	    stdout = None
+        if quiet:
+            stdout = devnull
+        else:
+            stdout = None
 
-	check_call(cmd, cwd=cwd, stdout=stdout, stderr=None)
-	return True
+        check_call(cmd, cwd=cwd, stdout=stdout, stderr=None)
+        return True
     except CalledProcessError:
-	if raise_on_error:
-	    raise
-	return False
+        if raise_on_error:
+            raise
+        return False
 
 
 def get_ephemeral_devices():
@@ -53,14 +52,14 @@ def get_ephemeral_devices():
     names = [b for b in block_devices if b.startswith("ephemeral")]
     retval = []
     for n in names:
-	device = get_aws_metadata("block-device-mapping/%s" % n)
-	device = "/dev/%s" % device
-	if not os.path.exists(device):
-	    device = aws2xen(device)
-	if os.path.exists(device):
-	    retval.append(device)
-	else:
-	    log.warn("%s doesn't exist", device)
+        device = get_aws_metadata("block-device-mapping/%s" % n)
+        device = "/dev/%s" % device
+        if not os.path.exists(device):
+            device = aws2xen(device)
+        if os.path.exists(device):
+            retval.append(device)
+        else:
+            log.warn("%s doesn't exist", device)
     return retval
 
 
@@ -76,18 +75,18 @@ def format(device):
 def lvmjoin(devices):
     "Creates a single lvm volume from a list of block devices"
     for d in devices:
-	if not run_cmd(['pvdisplay', d], raise_on_error=False):
-	    run_cmd(['dd', 'if=/dev/zero', 'of=%s' % d, 'bs=512', 'count=1'])
-	    run_cmd(['pvcreate', '-ff', '-y', d])
+        if not run_cmd(['pvdisplay', d], raise_on_error=False):
+            run_cmd(['dd', 'if=/dev/zero', 'of=%s' % d, 'bs=512', 'count=1'])
+            run_cmd(['pvcreate', '-ff', '-y', d])
 
     vg_name = 'vg'
     lv_name = 'local'
     if not run_cmd(['vgdisplay', vg_name], raise_on_error=False):
-	run_cmd(['vgcreate', vg_name] + devices)
+        run_cmd(['vgcreate', vg_name] + devices)
     lv_path = "/dev/mapper/%s-%s" % (vg_name, lv_name)
     if not run_cmd(['lvdisplay', lv_path], raise_on_error=False):
-	run_cmd(['lvcreate', '-l', '100%VG', '--name', lv_name, vg_name])
-	format(lv_path)
+        run_cmd(['lvcreate', '-l', '100%VG', '--name', lv_name, vg_name])
+        format(lv_path)
     return lv_path
 
 
@@ -95,11 +94,11 @@ def main():
     logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
     devices = get_ephemeral_devices()
     if len(devices) > 1:
-	device = lvmjoin(devices)
+        device = lvmjoin(devices)
     else:
-	device = devices[0]
-	# TODO: Check if it's already formatted
-	format(device)
+        device = devices[0]
+        # TODO: Check if it's already formatted
+        format(device)
     print "Got", device
 
     # TODO: mount these on boot; modify fstab

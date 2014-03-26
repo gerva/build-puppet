@@ -6,6 +6,7 @@ import urlparse
 import time
 import logging
 import os
+import json
 from subprocess import check_call, CalledProcessError, check_output
 
 devnull = open(os.devnull, 'w')
@@ -137,7 +138,7 @@ def in_fstab(device):
     return is_in_fstab
 
 
-def update_fstab(device, mount_point='/builds'):
+def update_fstab(device, mount_point):
     """Updates /etc/fstab if needed"""
 
     if in_fstab(device):
@@ -153,6 +154,29 @@ def update_fstab(device, mount_point='/builds'):
         out_f.write(new_device)
 
 
+def my_name():
+    import socket
+    return socket.gethostname().partition('.')[0]
+
+
+def mount_point():
+    """Checks if this machine is part of any jacuzzi pool"""
+    jacuzzi_metadata_file = '/etc/jacuzzi_metadata.json'
+    # default mount point
+    _mount_point = '/mnt/instance_storage'
+    try:
+        with open(jacuzzi_metadata_file) as data_file:
+            jacuzzi_data = json.load(data_file)
+    except IOError:
+        log.debug('{0} does not exist'.format(jacuzzi_metadata_file))
+        return _mount_point
+
+    if my_name() in jacuzzi_data:
+        # hey I am a Jacuzzi!
+        _mount_point = '/builds'
+    return _mount_point
+
+
 def main():
     """Prepares the ephemeral devices"""
     logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
@@ -162,9 +186,8 @@ def main():
     else:
         device = devices[0]
         format_device(device)
-    print "Got", device
-
-    update_fstab(device)
+    log.debug("Got {0}".format(device))
+    update_fstab(device, mount_point())
 
 
 if __name__ == '__main__':

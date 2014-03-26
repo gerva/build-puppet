@@ -1,10 +1,12 @@
 #!/usr/bin/env python
+"""Manages the instance storage on aws"""
+
 import urllib2
 import urlparse
 import time
 import logging
 import os
-from subprocess import check_call, CalledProcessError
+from subprocess import check_call, CalledProcessError, check_output
 
 devnull = open(os.devnull, 'w')
 
@@ -15,6 +17,7 @@ AWS_METADATA_URL = "http://169.254.169.254/latest/meta-data/"
 
 
 def get_aws_metadata(key):
+    """Gets values form AWS_METADATA_URL"""
     url = urlparse.urljoin(AWS_METADATA_URL, key)
     max_tries = 3
     for _ in range(max_tries):
@@ -23,22 +26,22 @@ def get_aws_metadata(key):
             return urllib2.urlopen(url, timeout=1).read()
         except urllib2.URLError:
             if _ < max_tries - 1:
-                log.debug("failed to fetch %s; sleeping and retrying", url, exc_info=True)
+                log.debug("failed to fetch %s; sleeping and retrying",
+                          url, exc_info=True)
                 time.sleep(1)
                 continue
             return None
 
 
 def run_cmd(cmd, cwd=None, raise_on_error=True, quiet=True):
+    """A subprocess wrapper"""
     if not cwd:
         cwd = os.getcwd()
     log.info("Running %s in %s", cmd, cwd)
+    stdout = None
+    if quiet:
+        stdout = devnull
     try:
-        if quiet:
-            stdout = devnull
-        else:
-            stdout = None
-
         check_call(cmd, cwd=cwd, stdout=stdout, stderr=None)
         return True
     except CalledProcessError:
@@ -47,12 +50,28 @@ def run_cmd(cmd, cwd=None, raise_on_error=True, quiet=True):
         return False
 
 
+def get_output_form_cmd(cmd, cwd=None, raise_on_error=True):
+    """A subprocess wrapper but it returns the stdout"""
+    # note this is a simple wrapper, do not try to run this function
+    # if command produces a lot of output.
+    if not cwd:
+        cwd = os.getcwd()
+    log.info("Running %s in %s", cmd, cwd)
+    try:
+        return check_output(cmd, cwd=cwd, stderr=None).splitlines()
+    except CalledProcessError:
+        if raise_on_error:
+            raise
+        return []
+
+
 def get_ephemeral_devices():
+    """Gets the list of ephemeral devices"""
     block_devices = get_aws_metadata("block-device-mapping/").split("\n")
     names = [b for b in block_devices if b.startswith("ephemeral")]
     retval = []
-    for n in names:
-        device = get_aws_metadata("block-device-mapping/%s" % n)
+    for name in names:
+        device = get_aws_metadata("block-device-mapping/%s" % name)
         device = "/dev/%s" % device
         if not os.path.exists(device):
             device = aws2xen(device)
@@ -63,21 +82,33 @@ def get_ephemeral_devices():
     return retval
 
 
-def aws2xen(s):
-    "Converts AWS device names (e.g. /dev/sdb) to xen block device names (e.g. /dev/xvdb)"
-    return s.replace("/s", "/xv")
+def aws2xen(device):
+    """"Converts AWS device names (e.g. /dev/sdb)
+    to xen block device names (e.g. /dev/xvdb)"""
+    return device.replace("/s", "/xv")
 
 
-def format(device):
-    run_cmd(['mkfs.ext4', device])
+def format_device(device):
+    """formats the disk with ext4 fs if needed"""
+    blkid_cmd = ('blkid', '-o', 'udev', 'ext4', device)
+    need_format = True
+    for line in get_output_form_cmd(blkid_cmd):
+        if 'ID_FS_TYPE=ext4' in line:
+            need_format = False
+            log.info('{0} no need to format: {1}'.format(device, line))
+            break
+    if need_format:
+        log.info('formatting {0}'.format(device))
+        run_cmd(['mkfs.ext4', device])
 
 
 def lvmjoin(devices):
     "Creates a single lvm volume from a list of block devices"
-    for d in devices:
-        if not run_cmd(['pvdisplay', d], raise_on_error=False):
-            run_cmd(['dd', 'if=/dev/zero', 'of=%s' % d, 'bs=512', 'count=1'])
-            run_cmd(['pvcreate', '-ff', '-y', d])
+    for device in devices:
+        if not run_cmd(['pvdisplay', device], raise_on_error=False):
+            run_cmd(['dd', 'if=/dev/zero', 'of=%s' % device,
+                     'bs=512', 'count=1'])
+            run_cmd(['pvcreate', '-ff', '-y', device])
 
     vg_name = 'vg'
     lv_name = 'local'
@@ -86,22 +117,54 @@ def lvmjoin(devices):
     lv_path = "/dev/mapper/%s-%s" % (vg_name, lv_name)
     if not run_cmd(['lvdisplay', lv_path], raise_on_error=False):
         run_cmd(['lvcreate', '-l', '100%VG', '--name', lv_name, vg_name])
-        format(lv_path)
+        format_device(lv_path)
     return lv_path
 
 
+def in_fstab(device):
+    """check if device is in fstab"""
+    is_in_fstab = False
+    fstab = []
+    with open('/etc/fstab', 'r') as f_in:
+        fstab = f_in.readlines()
+
+    for line in fstab:
+        if device in line:
+            log.debug("{0} already in /etc/fstab:").format(device)
+            log.debug(line)
+            is_in_fstab = True
+            break
+    return is_in_fstab
+
+
+def update_fstab(device, mount_point='/builds'):
+    """Updates /etc/fstab if needed"""
+
+    if in_fstab(device):
+        # no need to update fstab
+        return
+    # example:
+    # /dev/sda / ext4 defaults,noatime  1 1
+    #
+    new_device = '{0} {1} ext4 defaults,noatime 1 1'.format(device,
+                                                            mount_point)
+    log.debug('appending: {0} to /etc/fstab'.format(new_device))
+    with open('/etc/fstab', 'a') as out_f:
+        out_f.write(new_device)
+
+
 def main():
+    """Prepares the ephemeral devices"""
     logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
     devices = get_ephemeral_devices()
     if len(devices) > 1:
         device = lvmjoin(devices)
     else:
         device = devices[0]
-        # TODO: Check if it's already formatted
-        format(device)
+        format_device(device)
     print "Got", device
 
-    # TODO: mount these on boot; modify fstab
+    update_fstab(device)
 
 
 if __name__ == '__main__':

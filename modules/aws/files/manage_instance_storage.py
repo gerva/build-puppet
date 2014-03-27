@@ -226,7 +226,7 @@ def main():
         format_device(device)
     log.info("Got {0}".format(device))
     update_fstab(device, mount_point())
-
+    mount(device)
 
 if __name__ == '__main__':
     main()

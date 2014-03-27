@@ -192,9 +192,11 @@ def main():
         log.info('no ephemeral devices found')
         return
     if len(devices) > 1:
+        log.info('found: {0}'.format(devices))
         device = lvmjoin(devices)
     else:
         device = devices[0]
+        log.info('found: {0}'.format(device))
         format_device(device)
     log.debug("Got {0}".format(device))
     update_fstab(device, mount_point())

@@ -101,12 +101,13 @@ def format_device(device):
         log.debug('{0} is mounted: skipping formatting')
     blkid_cmd = ['blkid', '-o', 'udev', device]
     need_format = True
-    output = get_output_form_cmd(cmd=blkid_cmd)
-    for line in output.splitlines():
-        if 'ID_FS_TYPE=ext4' in line:
-            need_format = False
-            log.info('{0} no need to format: {1}'.format(device, line))
-            break
+    output = get_output_form_cmd(cmd=blkid_cmd, raise_on_error=False)
+    if output:
+        for line in output.splitlines():
+            if 'ID_FS_TYPE=ext4' in line:
+                need_format = False
+                log.info('{0} no need to format: {1}'.format(device, line))
+                break
     if need_format:
         log.info('formatting {0}'.format(device))
         run_cmd(['mkfs.ext4', device])

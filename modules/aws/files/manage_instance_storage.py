@@ -59,6 +59,7 @@ def get_output_form_cmd(cmd, cwd=None, raise_on_error=True):
     log.info("Running %s in %s", cmd, cwd)
     # check_output is not avalilable in prod (python 2.6)
     # return check_output(cmd, cwd=cwd, stderr=None).splitlines()
+    log.debug(cmd, cwd)
     proc = Popen(cmd, cwd=cwd, stdout=PIPE)
     output, err = proc.communicate()
     retcode = proc.poll()

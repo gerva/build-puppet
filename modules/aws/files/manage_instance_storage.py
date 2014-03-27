@@ -7,7 +7,7 @@ import time
 import logging
 import os
 import json
-from subprocess import check_call, CalledProcessError, check_output
+from subprocess import check_call, CalledProcessError, Popen, PIPE
 
 devnull = open(os.devnull, 'w')
 
@@ -58,17 +58,23 @@ def get_output_form_cmd(cmd, cwd=None, raise_on_error=True):
     if not cwd:
         cwd = os.getcwd()
     log.info("Running %s in %s", cmd, cwd)
-    try:
-        return check_output(cmd, cwd=cwd, stderr=None).splitlines()
-    except CalledProcessError:
-        if raise_on_error:
-            raise
-        return []
+    # check_output is not avalilable in prod (python 2.6)
+    # return check_output(cmd, cwd=cwd, stderr=None).splitlines()
+    proc = Popen(cmd, cwd=cwd, stdout=PIPE)
+    output, err = proc.communicate()
+    retcode = proc.poll()
+    if retcode and raise_on_error:
+        log.debug('cmd: {0} returned {1} ({2})'.format(cmd, retcode, err))
+        raise CalledProcessError
+    return output
 
 
 def get_ephemeral_devices():
     """Gets the list of ephemeral devices"""
-    block_devices = get_aws_metadata("block-device-mapping/").split("\n")
+    block_devices_mapping = get_aws_metadata("block-device-mapping/")
+    if not block_devices_mapping:
+        return []
+    block_devices = block_devices_mapping.split("\n")
     names = [b for b in block_devices if b.startswith("ephemeral")]
     retval = []
     for name in names:
@@ -181,6 +187,10 @@ def main():
     """Prepares the ephemeral devices"""
     logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
     devices = get_ephemeral_devices()
+    if not devices:
+        # no ephemeral devices, nothing to do, quit
+        log.info('no ephemeral devices found')
+        return
     if len(devices) > 1:
         device = lvmjoin(devices)
     else:

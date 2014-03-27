@@ -195,8 +195,7 @@ def mount_point():
     _mount_point = '/mnt/instance_storage'
     try:
         with open(jacuzzi_metadata_file) as data_file:
-            jacuzzi_data = json.load(data_file)
-        if my_name() in jacuzzi_data:
+            json.load(data_file)
             # hey I am a Jacuzzi!
             _mount_point = '/builds'
     except IOError:

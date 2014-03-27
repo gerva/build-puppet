@@ -146,7 +146,7 @@ def in_fstab(device):
 
     for line in fstab:
         if device in line:
-            log.debug("{0} already in /etc/fstab:").format(device)
+            log.debug("{0} already in /etc/fstab:".format(device))
             log.debug(line)
             is_in_fstab = True
             break

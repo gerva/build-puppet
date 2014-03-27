@@ -209,7 +209,7 @@ def main():
         device = devices[0]
         log.debug('found device: {0}'.format(device))
         format_device(device)
-    log.debug("Got {0}".format(device))
+    log.info("Got {0}".format(device))
     update_fstab(device, mount_point())
 
 

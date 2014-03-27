@@ -109,10 +109,23 @@ def format_device(device):
         run_cmd(['mkfs.ext4', device])
 
 
+def needs_pvcreate(device):
+    """checks if pvcreate is needed"""
+    output = get_output_form_cmd('pvs')
+    log.info("pvs output for device {0}: {1} ".format(device, output))
+    if device in output:
+        log.info("needs pvcreate -> True")
+    else:
+        log.info("needs pvcreate -> False")
+    # just for testing...
+    return False
+
+
 def lvmjoin(devices):
     "Creates a single lvm volume from a list of block devices"
     for device in devices:
-        if not run_cmd(['pvdisplay', device], raise_on_error=False):
+        if needs_pvcreate(device):
+        #if not run_cmd(['pvdisplay', device], raise_on_error=False):
             run_cmd(['dd', 'if=/dev/zero', 'of=%s' % device,
                      'bs=512', 'count=1'])
             run_cmd(['pvcreate', '-ff', '-y', device])
@@ -192,11 +205,11 @@ def main():
         log.info('no ephemeral devices found')
         return
     if len(devices) > 1:
-        log.info('found: {0}'.format(devices))
+        log.info('found devices: {0}'.format(devices))
         device = lvmjoin(devices)
     else:
         device = devices[0]
-        log.info('found: {0}'.format(device))
+        log.info('found device: {0}'.format(device))
         format_device(device)
     log.debug("Got {0}".format(device))
     update_fstab(device, mount_point())

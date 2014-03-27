@@ -96,6 +96,8 @@ def aws2xen(device):
 
 def format_device(device):
     """formats the disk with ext4 fs if needed"""
+    if is_mounted(device):
+        log.debug('{0} is mounted: skipping formatting')
     blkid_cmd = ('blkid', '-o', 'udev', 'ext4', device)
     need_format = True
     for line in get_output_form_cmd(blkid_cmd):
@@ -190,6 +192,21 @@ def mount_point():
     except TypeError:
         log.debug('{0} is empty'.format(jacuzzi_metadata_file))
     return _mount_point
+
+
+def is_mounted(device):
+    mount = get_output_form_cmd('mount')
+    log.debug("mount: {0}".format(mount))
+    for line in mount.splitlines():
+        if device in line:
+            log.debug('device: {0} is mounted'.format(device))
+            return True
+    log.debug('device: {0} is not mounted'.format(device))
+    return False
+
+
+def mount(device):
+    run_cmd(['mount', device])
 
 
 def main():

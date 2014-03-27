@@ -145,6 +145,7 @@ def in_fstab(device):
     with open('/etc/fstab', 'r') as f_in:
         fstab = f_in.readlines()
 
+    log.info(fstab)
     for line in fstab:
         if device in line:
             log.debug("{0} already in /etc/fstab:").format(device)
@@ -199,14 +200,14 @@ def main():
     devices = get_ephemeral_devices()
     if not devices:
         # no ephemeral devices, nothing to do, quit
-        log.info('no ephemeral devices found')
+        log.debug('no ephemeral devices found')
         return
     if len(devices) > 1:
-        log.info('found devices: {0}'.format(devices))
+        log.debug('found devices: {0}'.format(devices))
         device = lvmjoin(devices)
     else:
         device = devices[0]
-        log.info('found device: {0}'.format(device))
+        log.debug('found device: {0}'.format(device))
         format_device(device)
     log.debug("Got {0}".format(device))
     update_fstab(device, mount_point())

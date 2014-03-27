@@ -97,7 +97,7 @@ def format_device(device):
     """formats the disk with ext4 fs if needed"""
     if is_mounted(device):
         log.debug('{0} is mounted: skipping formatting')
-    blkid_cmd = ('blkid', '-o', 'udev', 'ext4', device)
+    blkid_cmd = ('blkid', '-o', 'udev', device)
     need_format = True
     for line in get_output_form_cmd(blkid_cmd):
         if 'ID_FS_TYPE=ext4' in line:

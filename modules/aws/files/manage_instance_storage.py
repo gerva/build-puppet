@@ -145,7 +145,6 @@ def in_fstab(device):
         fstab = f_in.readlines()
 
     for line in fstab:
-        log.info(line)
         if device in line:
             log.debug("{0} already in /etc/fstab:").format(device)
             log.debug(line)
@@ -163,8 +162,8 @@ def update_fstab(device, mount_point):
     # example:
     # /dev/sda / ext4 defaults,noatime  1 1
     #
-    new_device = '{0} {1} ext4 defaults,noatime 1 1'.format(device,
-                                                            mount_point)
+    new_device = '{0} {1} ext4 defaults,noatime 1 1\n'.format(device,
+                                                              mount_point)
     log.debug('appending: {0} to /etc/fstab'.format(new_device))
     with open('/etc/fstab', 'a') as out_f:
         out_f.write(new_device)

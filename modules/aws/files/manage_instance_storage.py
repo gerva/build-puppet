@@ -128,7 +128,7 @@ def lvmjoin(devices):
             run_cmd(['dd', 'if=/dev/zero', 'of=%s' % device,
                      'bs=512', 'count=1'])
             run_cmd(['pvcreate', '-ff', '-y', device])
-
+    return
     vg_name = 'vg'
     lv_name = 'local'
     if not run_cmd(['vgdisplay', vg_name], raise_on_error=False):

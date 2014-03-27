@@ -206,7 +206,7 @@ node /casper-netboot-\d+\.srv\.releng\.scl3\.mozilla\.com/ {
 ## Misc servers
 
 node "aws-manager1.srv.releng.scl3.mozilla.com" {
-    include toplevel::server
+    include toplevel::server::aws_manager
 }
 
 ## slaveapi
@@ -315,40 +315,40 @@ node "buildbot-master06.srv.releng.usw2.mozilla.com" {
 
 node "buildbot-master51.srv.releng.use1.mozilla.com" {
     buildmaster::buildbot_master::mozilla {
-        "bm51-tests1-linux":
+        "bm51-tests1-linux64":
             http_port => 8201,
             master_type => "tests",
-            basedir => "tests1-linux";
+            basedir => "tests1-linux64";
     }
     include toplevel::server::buildmaster::mozilla
 }
 
 node "buildbot-master52.srv.releng.use1.mozilla.com" {
     buildmaster::buildbot_master::mozilla {
-        "bm52-tests1-linux":
+        "bm52-tests1-linux64":
             http_port => 8201,
             master_type => "tests",
-            basedir => "tests1-linux";
+            basedir => "tests1-linux64";
     }
     include toplevel::server::buildmaster::mozilla
 }
 
 node "buildbot-master53.srv.releng.usw2.mozilla.com" {
     buildmaster::buildbot_master::mozilla {
-        "bm53-tests1-linux":
+        "bm53-tests1-linux64":
             http_port => 8201,
             master_type => "tests",
-            basedir => "tests1-linux";
+            basedir => "tests1-linux64";
     }
     include toplevel::server::buildmaster::mozilla
 }
 
 node "buildbot-master54.srv.releng.usw2.mozilla.com" {
     buildmaster::buildbot_master::mozilla {
-        "bm54-tests1-linux":
+        "bm54-tests1-linux64":
             http_port => 8201,
             master_type => "tests",
-            basedir => "tests1-linux";
+            basedir => "tests1-linux64";
     }
     include toplevel::server::buildmaster::mozilla
 }
@@ -391,13 +391,11 @@ node "buildbot-master60.srv.releng.usw2.mozilla.com" {
 node "buildbot-master61.srv.releng.use1.mozilla.com" {
     # Free Master
     include toplevel::server::buildmaster::mozilla
-    include selfserve_agent
 }
 
 node "buildbot-master62.srv.releng.use1.mozilla.com" {
     # Free Master
     include toplevel::server::buildmaster::mozilla
-    include selfserve_agent
 }
 
 node "buildbot-master63.srv.releng.use1.mozilla.com" {
@@ -413,7 +411,6 @@ node "buildbot-master64.srv.releng.usw2.mozilla.com" {
 node "buildbot-master65.srv.releng.usw2.mozilla.com" {
     # Free Master
     include toplevel::server::buildmaster::mozilla
-    include selfserve_agent
     include slaverebooter
 }
 
@@ -427,25 +424,24 @@ node "buildbot-master66.srv.releng.usw2.mozilla.com" {
     include toplevel::server::buildmaster::mozilla
     include toplevel::server::gaia_bumper
     include toplevel::server::b2g_bumper
-    include selfserve_agent
 }
 
 node "buildbot-master67.srv.releng.use1.mozilla.com" {
     buildmaster::buildbot_master::mozilla {
-        "bm67-tests1-linux":
+        "bm67-tests1-linux64":
             http_port => 8201,
             master_type => "tests",
-            basedir => "tests1-linux";
+            basedir => "tests1-linux64";
     }
     include toplevel::server::buildmaster::mozilla
 }
 
 node "buildbot-master68.srv.releng.usw2.mozilla.com" {
     buildmaster::buildbot_master::mozilla {
-        "bm68-tests1-linux":
+        "bm68-tests1-linux64":
             http_port => 8201,
             master_type => "tests",
-            basedir => "tests1-linux";
+            basedir => "tests1-linux64";
     }
     include toplevel::server::buildmaster::mozilla
 }

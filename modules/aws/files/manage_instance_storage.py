@@ -11,6 +11,7 @@ from subprocess import check_call, CalledProcessError, Popen, PIPE
 
 
 log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
 
 AWS_METADATA_URL = "http://169.254.169.254/latest/meta-data/"
 

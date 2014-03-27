@@ -100,7 +100,8 @@ def format_device(device):
         log.debug('{0} is mounted: skipping formatting')
     blkid_cmd = ['blkid', '-o', 'udev', device]
     need_format = True
-    for line in get_output_form_cmd(cmd=blkid_cmd):
+    output = get_output_form_cmd(cmd=blkid_cmd)
+    for line in output.splitlines():
         if 'ID_FS_TYPE=ext4' in line:
             need_format = False
             log.info('{0} no need to format: {1}'.format(device, line))

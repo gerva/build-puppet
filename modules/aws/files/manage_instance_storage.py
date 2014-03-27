@@ -65,7 +65,7 @@ def get_output_form_cmd(cmd, cwd=None, raise_on_error=True):
     retcode = proc.poll()
     if retcode and raise_on_error:
         log.debug('cmd: {0} returned {1} ({2})'.format(cmd, retcode, err))
-        raise CalledProcessError
+        raise CalledProcessError(retcode, cmd, output)
     return output
 
 

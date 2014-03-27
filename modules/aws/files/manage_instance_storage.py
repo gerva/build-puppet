@@ -112,11 +112,12 @@ def needs_pvcreate(device):
     """checks if pvcreate is needed"""
     output = get_output_form_cmd('pvs')
     log.info("pvs output for device {0}: {1} ".format(device, output))
-    if device in output:
-        log.info("needs pvcreate -> True")
-    else:
-        log.info("needs pvcreate -> False")
-    # just for testing...
+    for line in output.splitlines():
+        if device in line:
+            log.info("needs pvcreate -> True")
+        else:
+            log.info("needs pvcreate -> False")
+        # just for testing...
     return False
 
 

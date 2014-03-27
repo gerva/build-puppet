@@ -111,15 +111,11 @@ def format_device(device):
 def needs_pvcreate(device):
     """checks if pvcreate is needed"""
     output = get_output_form_cmd('pvs')
-    log.info("pvs output for device {0}: {1} ".format(device, output))
+    log.debug("pvs output for device {0}: {1} ".format(device, output))
     for line in output.splitlines():
         if device in line:
-            log.info("needs pvcreate -> False")
             return False
-        else:
-            log.info("needs pvcreate -> True")
-    # just for testing...
-    return False
+    return True
 
 
 def lvmjoin(devices):

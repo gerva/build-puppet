@@ -145,8 +145,8 @@ def in_fstab(device):
     with open('/etc/fstab', 'r') as f_in:
         fstab = f_in.readlines()
 
-    log.info(fstab)
     for line in fstab:
+        log.info(line)
         if device in line:
             log.debug("{0} already in /etc/fstab:").format(device)
             log.debug(line)

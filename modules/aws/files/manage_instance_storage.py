@@ -206,7 +206,11 @@ def is_mounted(device):
 
 
 def mount(device):
-    run_cmd(['mount', device])
+    mount_p = mount_point(device)
+    if not os.path.exists(mount_p):
+        log.debug('Creating directory {0}'.format(mount_p))
+        os.makedirs(mount_p)
+    run_cmd(['mount', device, mount_p])
 
 
 def main():

@@ -198,10 +198,11 @@ def is_mounted(device):
     mount = get_output_form_cmd('mount')
     log.debug("mount: {0}".format(mount))
     for line in mount.splitlines():
+        log.info(line)
         if device in line:
-            log.debug('device: {0} is mounted'.format(device))
+            log.info('device: {0} is mounted'.format(device))
             return True
-    log.debug('device: {0} is not mounted'.format(device))
+    log.info('device: {0} is not mounted'.format(device))
     return False
 
 

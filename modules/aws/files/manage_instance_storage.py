@@ -183,13 +183,13 @@ def mount_point():
     try:
         with open(jacuzzi_metadata_file) as data_file:
             jacuzzi_data = json.load(data_file)
+        if my_name() in jacuzzi_data:
+            # hey I am a Jacuzzi!
+            _mount_point = '/builds'
     except IOError:
         log.debug('{0} does not exist'.format(jacuzzi_metadata_file))
-        return _mount_point
-
-    if my_name() in jacuzzi_data:
-        # hey I am a Jacuzzi!
-        _mount_point = '/builds'
+    except TypeError:
+        log.debug('{0} is empty'.format(jacuzzi_metadata_file))
     return _mount_point
 
 

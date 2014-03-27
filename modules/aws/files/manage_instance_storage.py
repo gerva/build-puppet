@@ -142,36 +142,45 @@ def lvmjoin(devices):
     return lv_path
 
 
-def in_fstab(device):
+def fstab_line(device):
     """check if device is in fstab"""
-    is_in_fstab = False
-    fstab = []
-    with open('/etc/fstab', 'r') as f_in:
-        fstab = f_in.readlines()
-
-    for line in fstab:
+    is_fstab_line = False
+    for line in read_fstab():
         if device in line:
             log.debug("{0} already in /etc/fstab:".format(device))
             log.debug(line)
-            is_in_fstab = True
+            is_fstab_line = line
             break
-    return is_in_fstab
+    return is_fstab_line
+
+
+def read_fstab():
+    """"returns a list of lines in fstab"""
+    with open('/etc/fstab', 'r') as f_in:
+        return f_in.readlines()
 
 
 def update_fstab(device, mount_point):
     """Updates /etc/fstab if needed"""
-
-    if in_fstab(device):
-        # no need to update fstab
-        return
     # example:
     # /dev/sda / ext4 defaults,noatime  1 1
-    #
-    new_device = '{0} {1} ext4 defaults,noatime 1 1\n'.format(device,
-                                                              mount_point)
-    log.debug('appending: {0} to /etc/fstab'.format(new_device))
-    with open('/etc/fstab', 'a') as out_f:
-        out_f.write(new_device)
+    new_fstab_line = '{0} {1} ext4 defaults,noatime 1 1\n'.format(device,
+                                                                  mount_point)
+    old_fstab_line = fstab_line(device)
+    if old_fstab_line == new_fstab_line:
+        # nothing to do..
+        return
+    # needs to be added
+    if not old_fstab_line:
+        with open('/etc/fstab', 'a') as out_f:
+            out_f.write(new_fstab_line)
+        return
+    # just in case...
+    log.debug(read_fstab())
+    old_fstab = read_fstab()
+    with open('/etc/fstab', 'w') as out_fstab:
+        for line in old_fstab:
+            out_fstab.write(line.replace(old_fstab_line, new_fstab_line))
 
 
 def my_name():

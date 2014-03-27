@@ -9,8 +9,6 @@ import os
 import json
 from subprocess import check_call, CalledProcessError, Popen, PIPE
 
-devnull = open(os.devnull, 'w')
-
 
 log = logging.getLogger(__name__)
 
@@ -42,14 +40,11 @@ def run_cmd(cmd, cwd=None, raise_on_error=True, quiet=True):
     stdout = None
     if quiet:
         stdout = open(os.devnull, 'w')
+        check_call(cmd, cwd=cwd, stdout=stdout, stderr=None)
     try:
         check_call(cmd, cwd=cwd, stdout=stdout, stderr=None)
-        if stdout:
-            stdout.close()
         return True
     except CalledProcessError:
-        if stdout:
-            stdout.close()
         if raise_on_error:
             raise
         return False

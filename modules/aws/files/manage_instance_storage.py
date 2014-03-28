@@ -193,13 +193,13 @@ def update_fstab(device, mount_point):
     old_fstab = read_fstab()
     import tempfile
 
-    fstab_tmp = tempfile.NamedTemporaryFile(delete=False)
-    with open(fstab_tmp, 'w') as out_fstab:
+    temp_fstab = tempfile.NamedTemporaryFile(delete=False)
+    with open(temp_fstab.name, 'w') as out_fstab:
         for line in old_fstab:
             out_fstab.write(line.replace(old_fstab_line, new_fstab_line))
         log.debug('replaced {0} with: {1} in /etc/fstab'.format(old_fstab_line,
                                                                 new_fstab_line))
-    os.rename(fstab_tmp.name, '/etc/fstab')
+    os.rename(temp_fstab.name, '/etc/fstab')
 
 
 def my_name():

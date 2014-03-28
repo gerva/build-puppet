@@ -37,7 +37,7 @@ def run_cmd(cmd, cwd=None, raise_on_error=True, quiet=True):
     """A subprocess wrapper"""
     if not cwd:
         cwd = os.getcwd()
-    log.info("Running %s in %s", cmd, cwd)
+    log.debug("Running: %s cwd: %s", cmd, cwd)
     stdout = None
     if quiet:
         stdout = open(os.devnull, 'w')
@@ -56,7 +56,7 @@ def get_output_form_cmd(cmd, cwd=None, raise_on_error=True):
     # if command produces a lot of output.
     if not cwd:
         cwd = os.getcwd()
-    log.info("Running %s in %s", cmd, cwd)
+    log.debug("Running %s cwd: %s", cmd, cwd)
     # check_output is not avalilable in prod (python 2.6)
     # return check_output(cmd, cwd=cwd, stderr=None).splitlines()
     log.debug("cmd: {0}; cwd={1}".format(cmd, cwd))

@@ -40,6 +40,9 @@ def run_cmd(cmd, cwd=None, raise_on_error=True, quiet=True):
     log.debug("Running: %s cwd: %s", cmd, cwd)
     stdout = None
     stderr = open(os.devnull, 'w')
+    if log.level == logging.DEBUG:
+        # enable stderr only when we are in DEBUG mode
+        stderr = None
     if quiet:
         stdout = open(os.devnull, 'w')
     try:

@@ -128,15 +128,20 @@ def lvmjoin(devices):
     for device in devices:
         if needs_pvcreate(device):
         #if not run_cmd(['pvdisplay', device], raise_on_error=False):
+            log.info('clearing the partition table')
             run_cmd(['dd', 'if=/dev/zero', 'of=%s' % device,
                      'bs=512', 'count=1'])
+            log.info('creating a new physical volume for: {0}'.format(device))
             run_cmd(['pvcreate', '-ff', '-y', device])
     vg_name = 'vg'
     lv_name = 'local'
     if not run_cmd(['vgdisplay', vg_name], raise_on_error=False):
+        log.info('creating a new volume group, {0} with {1}'.format(vg_name,
+                                                                    devices))
         run_cmd(['vgcreate', vg_name] + devices)
     lv_path = "/dev/mapper/%s-%s" % (vg_name, lv_name)
     if not run_cmd(['lvdisplay', lv_path], raise_on_error=False):
+        log.info('creating a new logical volume')
         run_cmd(['lvcreate', '-l', '100%VG', '--name', lv_name, vg_name])
         format_device(lv_path)
     return lv_path
@@ -232,14 +237,14 @@ def main():
     devices = get_ephemeral_devices()
     if not devices:
         # no ephemeral devices, nothing to do, quit
-        log.debug('no ephemeral devices found')
+        log.info('no ephemeral devices found')
         return
     if len(devices) > 1:
-        log.debug('found devices: {0}'.format(devices))
+        log.info('found devices: {0}'.format(devices))
         device = lvmjoin(devices)
     else:
         device = devices[0]
-        log.debug('found device: {0}'.format(device))
+        log.info('found device: {0}'.format(device))
         format_device(device)
     log.info("Got {0}".format(device))
     update_fstab(device, mount_point())

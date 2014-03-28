@@ -214,7 +214,7 @@ def is_mounted(device):
     mount = get_output_form_cmd('mount')
     log.debug("mount: {0}".format(mount))
     for line in mount.splitlines():
-        log.info(line)
+        log.debug(line)
         if device in line:
             log.info('device: {0} is mounted'.format(device))
             return True

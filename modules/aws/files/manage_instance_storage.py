@@ -178,18 +178,23 @@ def update_fstab(device, mount_point):
     old_fstab_line = fstab_line(device)
     if old_fstab_line == new_fstab_line:
         # nothing to do..
+        log.debug('{0} already in /etc/fstab'.format(new_fstab_line))
         return
     # needs to be added
     if not old_fstab_line:
         with open('/etc/fstab', 'a') as out_f:
             out_f.write(new_fstab_line)
+        log.debug('added {0} in /etc/fstab'.format(new_fstab_line))
         return
     # just in case...
+    # log fstab content before updating it
     log.debug(read_fstab())
     old_fstab = read_fstab()
     with open('/etc/fstab', 'w') as out_fstab:
         for line in old_fstab:
             out_fstab.write(line.replace(old_fstab_line, new_fstab_line))
+        log.debug('replaced {0} with: {1} in /etc/fstab'.format(old_fstab_line,
+                                                                new_fstab_line))
 
 
 def my_name():

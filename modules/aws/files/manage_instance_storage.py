@@ -200,9 +200,9 @@ def mount_point():
     _mount_point = '/mnt/instance_storage'
     try:
         with open(jacuzzi_metadata_file) as data_file:
-            json.load(data_file)
-            # hey I am a Jacuzzi!
-            _mount_point = '/builds'
+            if json.load(data_file):
+                # hey I am a Jacuzzi!
+                _mount_point = '/builds'
     except IOError:
         log.debug('{0} does not exist'.format(jacuzzi_metadata_file))
     except TypeError:

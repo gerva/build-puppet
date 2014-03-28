@@ -216,9 +216,9 @@ def is_mounted(device):
     for line in mount.splitlines():
         log.debug(line)
         if device in line:
-            log.info('device: {0} is mounted'.format(device))
+            log.debug('device: {0} is mounted'.format(device))
             return True
-    log.info('device: {0} is not mounted'.format(device))
+    log.debug('device: {0} is not mounted'.format(device))
     return False
 
 
@@ -227,6 +227,7 @@ def mount(device):
     if not os.path.exists(mount_p):
         log.debug('Creating directory {0}'.format(mount_p))
         os.makedirs(mount_p)
+    log.info('mounting {0}'.format(device))
     run_cmd(['mount', device])
     #run_cmd(['mount', device, mount_p])
 

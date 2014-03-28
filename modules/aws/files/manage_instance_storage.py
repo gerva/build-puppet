@@ -108,7 +108,8 @@ def format_device(device):
     output = get_output_form_cmd(cmd=blkid_cmd, raise_on_error=False)
     if output:
         for line in output.splitlines():
-            if 'ID_FS_TYPE=ext4' in line:
+            if 'ID_FS_TYPE=ext4' in line or \
+               'ID_FS_TYPE=ext3' in line:
                 need_format = False
                 log.info('{0} no need to format: {1}'.format(device, line))
                 break
@@ -190,11 +191,15 @@ def update_fstab(device, mount_point):
     # log fstab content before updating it
     log.debug(read_fstab())
     old_fstab = read_fstab()
-    with open('/etc/fstab', 'w') as out_fstab:
+    import tempfile
+
+    fstab_tmp = tempfile.NamedTemporaryFile(delete=False)
+    with open(fstab_tmp, 'w') as out_fstab:
         for line in old_fstab:
             out_fstab.write(line.replace(old_fstab_line, new_fstab_line))
         log.debug('replaced {0} with: {1} in /etc/fstab'.format(old_fstab_line,
                                                                 new_fstab_line))
+    os.rename(fstab_tmp.name, '/etc/fstab')
 
 
 def my_name():

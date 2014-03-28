@@ -129,7 +129,7 @@ def lvmjoin(devices):
     for device in devices:
         if needs_pvcreate(device):
         #if not run_cmd(['pvdisplay', device], raise_on_error=False):
-            log.info('clearing the partition table')
+            log.info('clearing the partition table for {0}'.format(device))
             run_cmd(['dd', 'if=/dev/zero', 'of=%s' % device,
                      'bs=512', 'count=1'])
             log.info('creating a new physical volume for: {0}'.format(device))

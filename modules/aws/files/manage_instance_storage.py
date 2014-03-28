@@ -39,10 +39,11 @@ def run_cmd(cmd, cwd=None, raise_on_error=True, quiet=True):
         cwd = os.getcwd()
     log.debug("Running: %s cwd: %s", cmd, cwd)
     stdout = None
+    stderr = open(os.devnull, 'w')
     if quiet:
         stdout = open(os.devnull, 'w')
     try:
-        check_call(cmd, cwd=cwd, stdout=stdout, stderr=None)
+        check_call(cmd, cwd=cwd, stdout=stdout, stderr=stderr)
         return True
     except CalledProcessError:
         if raise_on_error:

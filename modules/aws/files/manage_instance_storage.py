@@ -215,8 +215,8 @@ def get_builders_from(jacuzzi_metadata_file):
     try:
         with open(jacuzzi_metadata_file) as data_file:
             json_data = json.load(data_file)
-    except (IOError, ValueError):
-        log.debug('{0} does not exist or it cannot be decoded'
+    except (IOError, ValueError, AttributeError):
+        log.debug('{0} does not exist or it cannot be decoded or is None'
                   .format(jacuzzi_metadata_file))
         return []
 

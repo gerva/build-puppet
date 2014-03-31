@@ -230,6 +230,10 @@ def mount_point():
     """Checks if this machine is part of any jacuzzi pool"""
     # default mount point
     _mount_point = DEFAULT_MOUNT_POINT
+    log.info('*************')
+    log.info('get_builders_from: {0}'
+             .format(get_builders_from(JACUZZI_METADATA_FILE)))
+    log.info('*************')
     if len(get_builders_from(JACUZZI_METADATA_FILE)) in range(1, 3):
         # if there are 1 or 2 builders: I am a Jacuzzi!
         _mount_point = JACUZZI_MOUNT_POINT

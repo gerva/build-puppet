@@ -223,9 +223,9 @@ def get_builders_from(jacuzzi_metadata_file):
         log.info('*************')
         log.info(json_data)
         log.info('*************')
-        return json_data.get(['builders'])
-    except TypeError:
-        # json_data is not a dictionary
+        return json_data['builders']
+    except (TypeError, KeyError):
+        # json_data is not a dictionary or no keys
         return []
 
 

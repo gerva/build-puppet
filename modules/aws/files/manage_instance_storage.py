@@ -15,6 +15,10 @@ log.setLevel(logging.DEBUG)
 
 AWS_METADATA_URL = "http://169.254.169.254/latest/meta-data/"
 
+DEFAULT_MOUNT_POINT = '/mnt/instance_storage'
+JACUZZI_MOUNT_POINT = '/builds'
+JACUZZI_METADATA_FILE = '/mnt/jacuzzi_metadata.json'
+
 
 def get_aws_metadata(key):
     """Gets values form AWS_METADATA_URL"""
@@ -54,7 +58,7 @@ def run_cmd(cmd, cwd=None, raise_on_error=True, quiet=True):
         return False
 
 
-def get_output_form_cmd(cmd, cwd=None, raise_on_error=True):
+def get_output_from_cmd(cmd, cwd=None, raise_on_error=True):
     """A subprocess wrapper but it returns the stdout"""
     # note this is a simple wrapper, do not try to run this function
     # if command produces a lot of output.
@@ -103,13 +107,16 @@ def format_device(device):
     """formats the disk with ext4 fs if needed"""
     if is_mounted(device):
         log.debug('{0} is mounted: skipping formatting')
-    blkid_cmd = ['blkid', '-o', 'udev', device]
+        return
+    # assuming this device needs to be formatted
     need_format = True
-    output = get_output_form_cmd(cmd=blkid_cmd, raise_on_error=False)
+    blkid_cmd = ['blkid', '-o', 'udev', device]
+    output = get_output_from_cmd(cmd=blkid_cmd, raise_on_error=False)
     if output:
         for line in output.splitlines():
             if 'ID_FS_TYPE=ext4' in line or \
                'ID_FS_TYPE=ext3' in line:
+               # if the disk is already ext4 or ext3, do not format
                 need_format = False
                 log.info('{0} no need to format: {1}'.format(device, line))
                 break
@@ -120,7 +127,7 @@ def format_device(device):
 
 def needs_pvcreate(device):
     """checks if pvcreate is needed"""
-    output = get_output_form_cmd('pvs')
+    output = get_output_from_cmd('pvs')
     log.debug("pvs output for device {0}: {1} ".format(device, output))
     for line in output.splitlines():
         if device in line:
@@ -132,7 +139,6 @@ def lvmjoin(devices):
     "Creates a single lvm volume from a list of block devices"
     for device in devices:
         if needs_pvcreate(device):
-        #if not run_cmd(['pvdisplay', device], raise_on_error=False):
             log.info('clearing the partition table for {0}'.format(device))
             run_cmd(['dd', 'if=/dev/zero', 'of=%s' % device,
                      'bs=512', 'count=1'])
@@ -156,7 +162,8 @@ def fstab_line(device):
     """check if device is in fstab"""
     is_fstab_line = False
     for line in read_fstab():
-        if device in line:
+        if not line.startswith('#') \
+           and device in line:
             log.debug("{0} already in /etc/fstab:".format(device))
             log.debug(line)
             is_fstab_line = line
@@ -170,12 +177,12 @@ def read_fstab():
         return f_in.readlines()
 
 
-def update_fstab(device, mount_point):
+def update_fstab(device, mount_location):
     """Updates /etc/fstab if needed"""
     # example:
     # /dev/sda / ext4 defaults,noatime  1 1
-    new_fstab_line = '{0} {1} ext4 defaults,noatime 1 1\n'.format(device,
-                                                                  mount_point)
+    new_fstab_line = '{0} {1} ext4 defaults,noatime 1 1\n'.format(
+                     device, mount_location)
     old_fstab_line = fstab_line(device)
     if old_fstab_line == new_fstab_line:
         # nothing to do..
@@ -202,32 +209,35 @@ def update_fstab(device, mount_point):
     os.rename(temp_fstab.name, '/etc/fstab')
 
 
-def my_name():
-    import socket
-    return socket.gethostname().partition('.')[0]
+def get_builders_from(jacuzzi_metadata_file):
+    """returns the builders list for the metadata file.
+       If the input file cannot be decoded or it does not exist, returns []"""
+    try:
+        with open(jacuzzi_metadata_file) as data_file:
+            json_data = json.load(data_file)
+    except (IOError, ValueError):
+        log.debug('{0} does not exist or it cannot be decoded'
+                  .format(jacuzzi_metadata_file))
+        return []
+
+    return json_data.get(['builders'], [])
 
 
 def mount_point():
     """Checks if this machine is part of any jacuzzi pool"""
-    jacuzzi_metadata_file = '/etc/jacuzzi_metadata.json'
     # default mount point
-    _mount_point = '/mnt/instance_storage'
-    try:
-        with open(jacuzzi_metadata_file) as data_file:
-            if json.load(data_file):
-                # hey I am a Jacuzzi!
-                _mount_point = '/builds'
-    except IOError:
-        log.debug('{0} does not exist'.format(jacuzzi_metadata_file))
-    except TypeError:
-        log.debug('{0} is empty'.format(jacuzzi_metadata_file))
+    _mount_point = DEFAULT_MOUNT_POINT
+    if len(get_builders_from(JACUZZI_METADATA_FILE)) in range(1, 3):
+        # if there are 1 or 2 builders: I am a Jacuzzi!
+        _mount_point = JACUZZI_MOUNT_POINT
     return _mount_point
 
 
 def is_mounted(device):
-    mount = get_output_form_cmd('mount')
-    log.debug("mount: {0}".format(mount))
-    for line in mount.splitlines():
+    """checks if a device is mounted"""
+    mount_out = get_output_from_cmd('mount')
+    log.debug("mount: {0}".format(mount_out))
+    for line in mount_out.splitlines():
         log.debug(line)
         if device in line:
             log.debug('device: {0} is mounted'.format(device))
@@ -237,13 +247,13 @@ def is_mounted(device):
 
 
 def mount(device):
+    """mounts device according to fstab"""
     mount_p = mount_point()
     if not os.path.exists(mount_p):
         log.debug('Creating directory {0}'.format(mount_p))
         os.makedirs(mount_p)
     log.info('mounting {0}'.format(device))
     run_cmd(['mount', device])
-    #run_cmd(['mount', device, mount_p])
 
 
 def main():
@@ -255,9 +265,11 @@ def main():
         log.info('no ephemeral devices found')
         return
     if len(devices) > 1:
+        # requires lvm
         log.info('found devices: {0}'.format(devices))
         device = lvmjoin(devices)
     else:
+        # single device no need for lvm, just format
         device = devices[0]
         log.info('found device: {0}'.format(device))
         format_device(device)

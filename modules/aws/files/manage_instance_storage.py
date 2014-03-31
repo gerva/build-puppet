@@ -220,6 +220,9 @@ def get_builders_from(jacuzzi_metadata_file):
                   .format(jacuzzi_metadata_file))
         return []
     try:
+        log.info('*************')
+        log.info(json_data)
+        log.info('*************')
         return json_data.get(['builders'], [])
     except TypeError:
         # json_data is not a dictionary

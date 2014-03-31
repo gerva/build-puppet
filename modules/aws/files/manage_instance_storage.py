@@ -219,8 +219,11 @@ def get_builders_from(jacuzzi_metadata_file):
         log.debug('{0} does not exist or it cannot be decoded or is None'
                   .format(jacuzzi_metadata_file))
         return []
-
-    return json_data.get(['builders'], [])
+    try:
+        return json_data.get(['builders'], [])
+    except TypeError:
+        # json_data is not a dictionary
+        return []
 
 
 def mount_point():

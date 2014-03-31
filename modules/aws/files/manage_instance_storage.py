@@ -220,9 +220,6 @@ def get_builders_from(jacuzzi_metadata_file):
                   .format(jacuzzi_metadata_file))
         return []
     try:
-        log.info('*************')
-        log.info(json_data)
-        log.info('*************')
         return json_data['builders']
     except (TypeError, KeyError):
         # json_data is not a dictionary or no keys
@@ -233,12 +230,8 @@ def mount_point():
     """Checks if this machine is part of any jacuzzi pool"""
     # default mount point
     _mount_point = DEFAULT_MOUNT_POINT
-    log.info('*************')
-    log.info('get_builders_from: {0}'
-             .format(get_builders_from(JACUZZI_METADATA_FILE)))
-    log.info('*************')
-    if len(get_builders_from(JACUZZI_METADATA_FILE)) in range(1, 3):
-        # if there are 1 or 2 builders: I am a Jacuzzi!
+    if len(get_builders_from(JACUZZI_METADATA_FILE)) in range(1, 4):
+        # if there are 1, 2 or 3 builders: I am a Jacuzzi!
         _mount_point = JACUZZI_MOUNT_POINT
     return _mount_point
 

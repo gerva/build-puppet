@@ -57,6 +57,7 @@ while true; do
 import urllib2, getpass
 deploypass="""$deploypass"""
 puppet_server="${PUPPET_SERVER:-puppet}"
+puppet_server="releng-puppet2.srv.releng.use1.mozilla.com"
 print "Contacting puppet server %s" % (puppet_server,)
 if not deploypass:
     deploypass = getpass.getpass('deploypass: ')
@@ -135,7 +136,7 @@ rm -f "$REBOOT_FLAG_FILE"
 # --pluginsync so that we download plugins on the first run, as they may be required
 # --ssldir=/var/lib/puppet/ssl because it defaults to /etc/puppet/ssl on OS X
 # FACTER_PUPPETIZING so that the manifests know this is a first run of puppet
-while ! FACTER_PUPPETIZING=true /usr/bin/puppet agent --no-daemonize --onetime --server="${PUPPET_SERVER:-puppet}" --pluginsync --ssldir=/var/lib/puppet/ssl; do
+while ! FACTER_PUPPETIZING=true /usr/bin/puppet agent --no-daemonize --onetime --server="${PUPPET_SERVER}" --environment=mgervasini --pluginsync --ssldir=/var/lib/puppet/ssl; do
 
     echo "Puppet run failed; re-trying after 10m"
     sleep 600

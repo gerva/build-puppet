@@ -16,7 +16,7 @@ log.setLevel(logging.DEBUG)
 AWS_METADATA_URL = "http://169.254.169.254/latest/meta-data/"
 
 DEFAULT_MOUNT_POINT = '/mnt/instance_storage'
-JACUZZI_MOUNT_POINT = '/builds'
+JACUZZI_MOUNT_POINT = '/builds/slave'
 JACUZZI_METADATA_FILE = '/mnt/jacuzzi_metadata.json'
 
 

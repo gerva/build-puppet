@@ -7,6 +7,9 @@
 # You can set PUPPET_SERVER before running this script to use a server other
 # than 'puppet'
 
+# don't know if it's needed or not... just in case
+echo "core" > /etc/slave-trustlevel
+
 REBOOT_FLAG_FILE="/REBOOT_AFTER_PUPPET"
 OS=`facter operatingsystem`
 case "$OS" in

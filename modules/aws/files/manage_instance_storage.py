@@ -237,6 +237,7 @@ def mount_point():
     try:
         with open('/etc/slave-trustlevel', 'r') as trustlevel_in:
             trustlevel = trustlevel_in.readlines()
+        trustlevel = [line.strip() for line in trustlevel]
         log.debug('trustlevel: %s', trustlevel)
         if 'try' in trustlevel:
             log.debug('This machine is a try machine')

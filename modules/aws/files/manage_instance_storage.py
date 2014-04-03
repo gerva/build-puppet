@@ -149,7 +149,7 @@ def lvmjoin(devices):
     if not run_cmd(['vgdisplay', vg_name], raise_on_error=False):
         log.info('creating a new volume group, %s with %s', vg_name, devices)
         run_cmd(['vgcreate', vg_name] + devices)
-    lv_path = "/dev/mapper/%s-%s", vg_name, lv_name
+    lv_path = "/dev/mapper/%s-%s" % (vg_name, lv_name)
     if not run_cmd(['lvdisplay', lv_path], raise_on_error=False):
         log.info('creating a new logical volume')
         run_cmd(['lvcreate', '-l', '100%VG', '--name', lv_name, vg_name])

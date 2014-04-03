@@ -11,7 +11,8 @@ class jacuzzi_metadata {
         "/usr/local/bin/jacuzzi_metadata.py":
             owner  => "root",
             mode   => 0755,
-            source => "puppet:///modules/jacuzzi_metadata/jacuzzi_metadata.py";
+            source => "puppet:///modules/jacuzzi_metadata/jacuzzi_metadata.py",
+            require  => Class['packages::mozilla::python27'];
     }
 
     # On Linux systems, run from init.d on boot

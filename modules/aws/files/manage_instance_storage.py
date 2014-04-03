@@ -180,7 +180,8 @@ def update_fstab(device, mount_location):
     """Updates /etc/fstab if needed"""
     # example:
     # /dev/sda / ext4 defaults,noatime  1 1
-    new_fstab_line = '%s %s ext4 defaults,noatime 0 0\n', device, mount_location
+    new_fstab_line = '%s %s ext4 defaults,noatime 0 0\n' % (device,
+                                                            mount_location)
     old_fstab_line = fstab_line(device)
     if old_fstab_line == new_fstab_line:
         # nothing to do..

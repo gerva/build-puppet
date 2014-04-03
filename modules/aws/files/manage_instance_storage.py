@@ -243,8 +243,8 @@ def mount_point():
             log.debug('This machine is a try')
             _mount_point = JACUZZI_MOUNT_POINT
     except (TypeError, IOError):
-        # IOError => file does not exist
-        # trustlevel is not an iterable (file is empty)
+        # IOError   => file does not exist
+        # TypeError => trustlevel is not an iterable (file is empty?)
         log.debug('/etc/slave-trustlevel not found or empty')
     log.debug('mount point: %s', _mount_point)
     return _mount_point

@@ -236,10 +236,9 @@ def mount_point():
     # parse slave-trustlevel file
     try:
         with open('/etc/slave-trustlevel', 'r') as trustlevel_in:
-            trustlevel = trustlevel_in.readlines()
-        trustlevel = [line.strip() for line in trustlevel]
+            trustlevel = trustlevel_in.read().strip()
         log.debug('trustlevel: %s', trustlevel)
-        if 'try' in trustlevel:
+        if trustlevel == 'try':
             log.debug('I am a try machine')
             _mount_point = JACUZZI_MOUNT_POINT
     except (TypeError, IOError):

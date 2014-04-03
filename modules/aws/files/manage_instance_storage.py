@@ -237,6 +237,7 @@ def mount_point():
     try:
         with open('/etc/slave-trustlevel', 'r') as trustlevel_in:
             trustlevel = trustlevel_in.readlines()
+        log.debug('trustlevel: %s', trustlevel)
         if 'try' in trustlevel:
             log.debug('This machine is a try machine')
             _mount_point = JACUZZI_MOUNT_POINT

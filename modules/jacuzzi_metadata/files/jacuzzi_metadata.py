@@ -75,12 +75,6 @@ def main():
             log.exception("error writing json, trying to clean up temporary file")
             os.unlink(tmpname)
 
-    # added for debugging
-    # make this machine a fake jacuzzi box, just for testing...
-    # REMOVE ME
-    with open('/etc/jacuzzi_metadata.json', 'w') as outfile:
-        outfile.write('{"builders": ["Linux b2g-inbound build", "Linux b2g-inbound leak test build"]}')
-
 
 if __name__ == '__main__':
     main()

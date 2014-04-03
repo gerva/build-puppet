@@ -240,7 +240,7 @@ def mount_point():
         trustlevel = [line.strip() for line in trustlevel]
         log.debug('trustlevel: %s', trustlevel)
         if 'try' in trustlevel:
-            log.debug('This machine is a try machine')
+            log.debug('This machine is a try')
             _mount_point = JACUZZI_MOUNT_POINT
     except (TypeError, IOError):
         # IOError => file does not exist

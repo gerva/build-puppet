@@ -238,6 +238,7 @@ def mount_point():
         with open('/etc/slave-trustlevel', 'r') as trustlevel_in:
             trustlevel = trustlevel_in.readlines()
         if 'try' in trustlevel:
+            log.debug('This machine is a try machine')
             _mount_point = JACUZZI_MOUNT_POINT
     except (TypeError, IOError):
         # IOError => file does not exist

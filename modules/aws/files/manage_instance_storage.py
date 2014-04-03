@@ -231,7 +231,7 @@ def mount_point():
     _mount_point = DEFAULT_MOUNT_POINT
     if len(get_builders_from(JACUZZI_METADATA_FILE)) in range(1, 4):
         # if there are 1, 2 or 3 builders: I am a Jacuzzi!
-        log.debug('This machine is a jacuzzi')
+        log.debug('I am a jacuzzi machine')
         _mount_point = JACUZZI_MOUNT_POINT
     # parse slave-trustlevel file
     try:
@@ -240,7 +240,7 @@ def mount_point():
         trustlevel = [line.strip() for line in trustlevel]
         log.debug('trustlevel: %s', trustlevel)
         if 'try' in trustlevel:
-            log.debug('This machine is a try')
+            log.debug('I am a try machine')
             _mount_point = JACUZZI_MOUNT_POINT
     except (TypeError, IOError):
         # IOError   => file does not exist

@@ -28,7 +28,7 @@ class aws::instance_storage {
             }
             file {
                 "/etc/lvm-init/lvm-init.json":
-                ensure => absent;
+                    ensure => absent;
             }
         }
     }
@@ -37,14 +37,14 @@ class aws::instance_storage {
         # remove the lvm-init file
             file {
                 "/sbin/lvm-init":
-                ensure => absent;
+                    ensure => absent;
             }
         }
         CentOS: {
         # on Centos, lvm-init is a package, remove it
             package {
                 "lvm-init":
-                ensure => absent;
+                    ensure => absent;
             }
         }
     }

@@ -135,6 +135,34 @@ def needs_pvcreate(device):
     return True
 
 
+def check_for_existing_vg():
+    """checks if vg already exists and returns its name.
+       returns None if there are no vg"""
+    vg = None
+    try:
+        vg = get_output_from_cmd(['vgs', '-o', 'vg_name'])
+        vg = vg.split('\n')[1].strip()
+        log.debug('found a volume group: %s', vg)
+    except CalledProcessError:
+        # vgs command failed, no volume groups
+        log.debug('there are no volume groups')
+    return vg
+
+
+def create_vg(vg_name, devices):
+    """creates a volume group"""
+    log.info('creating a new volume group, %s with %s', vg_name, devices)
+    run_cmd(['vgcreate', vg_name] + devices)
+
+
+def remove_vg(vg_name):
+    """removes a volume group"""
+    if vg_name is None:
+        log.debug('remove_vg: vg_name is None, nothing to do here')
+    log.info('removing volume group: %s', vg_name)
+    run_cmd(['vgremove', '-f ', 'vg'])
+
+
 def lvmjoin(devices):
     "Creates a single lvm volume from a list of block devices"
     for device in devices:
@@ -144,11 +172,22 @@ def lvmjoin(devices):
                      'bs=512', 'count=1'])
             log.info('creating a new physical volume for: %s', device)
             run_cmd(['pvcreate', '-ff', '-y', device])
+    # Volume Group
     vg_name = 'vg'
     lv_name = 'local'
-    if not run_cmd(['vgdisplay', vg_name], raise_on_error=False):
-        log.info('creating a new volume group, %s with %s', vg_name, devices)
-        run_cmd(['vgcreate', vg_name] + devices)
+    old_vg = check_for_existing_vg()
+    if not old_vg:
+        create_vg(vg_name, devices)
+    elif old_vg != vg_name:
+        # vg already exists with a different name;
+        remove_from_fstab(vg_name)
+        remove_vg(old_vg)
+        create_vg(vg_name, devices)
+    else:
+        # a volume group with the same name already exists
+        # ... there is nothing to do
+        pass
+    # Logical Volume
     lv_path = "/dev/mapper/%s-%s" % (vg_name, lv_name)
     if not run_cmd(['lvdisplay', lv_path], raise_on_error=False):
         log.info('creating a new logical volume')
@@ -176,12 +215,40 @@ def read_fstab():
         return f_in.readlines()
 
 
+def remove_from_fstab(device):
+    """removes device from fstab"""
+    old_fstab_line = fstab_line(device)
+    if not old_fstab_line:
+        log.debug('remove_from_fstab: %s is not in fstab')
+        return
+    import tempfile
+    temp_fstab = tempfile.NamedTemporaryFile(delete=False)
+    with open(temp_fstab.name, 'w') as out_fstab:
+        for line in read_fstab():
+            if old_fstab_line not in line:
+                out_fstab.write(line)
+    log.debug('removed %s from /etc/fstab', old_fstab_line)
+    os.rename(temp_fstab.name, '/etc/fstab')
+
+
+def append_to_fstab(device, mount_location):
+    """append device to fstab"""
+    new_fstab_line = get_fstab_line(device, mount_location)
+    with open('/etc/fstab', 'a') as out_f:
+        out_f.write(new_fstab_line)
+    log.debug('added %s in /etc/fstab', new_fstab_line)
+
+
+def get_fstab_line(device, mount_location):
+    """returns an entry for fstab"""
+    return '%s %s ext4 defaults,noatime 0 0\n' % (device, mount_location)
+
+
 def update_fstab(device, mount_location):
     """Updates /etc/fstab if needed"""
     # example:
     # /dev/sda / ext4 defaults,noatime  1 1
-    new_fstab_line = '%s %s ext4 defaults,noatime 0 0\n' % (device,
-                                                            mount_location)
+    new_fstab_line = get_fstab_line(device, mount_location)
     old_fstab_line = fstab_line(device)
     if old_fstab_line == new_fstab_line:
         # nothing to do..
@@ -189,23 +256,13 @@ def update_fstab(device, mount_location):
         return
     # needs to be added
     if not old_fstab_line:
-        with open('/etc/fstab', 'a') as out_f:
-            out_f.write(new_fstab_line)
-        log.debug('added %s in /etc/fstab', new_fstab_line)
+        append_to_fstab(device, mount_location)
         return
     # just in case...
     # log fstab content before updating it
     log.debug(read_fstab())
-    old_fstab = read_fstab()
-    import tempfile
-
-    temp_fstab = tempfile.NamedTemporaryFile(delete=False)
-    with open(temp_fstab.name, 'w') as out_fstab:
-        for line in old_fstab:
-            out_fstab.write(line.replace(old_fstab_line, new_fstab_line))
-        log.debug('replaced %s with: %s in /etc/fstab', old_fstab_line,
-                  new_fstab_line)
-    os.rename(temp_fstab.name, '/etc/fstab')
+    remove_from_fstab(device)
+    append_to_fstab(device, mount_location)
 
 
 def get_builders_from(jacuzzi_metadata_file):

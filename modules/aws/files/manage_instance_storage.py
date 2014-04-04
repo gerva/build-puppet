@@ -199,6 +199,7 @@ def lvmjoin(devices):
         # maps output from vgs -> fstab_entry
         fstab_entry = is_dev_in_fstab(old_lv)
         if is_mounted(fstab_entry):
+            disable_swap()
             umount(fstab_entry)
         remove_from_fstab(old_vg)
         remove_vg(old_vg)
@@ -352,6 +353,24 @@ def umount(device):
     except:
         # unable to umount, pass?
         pass
+
+
+def disable_swap():
+    """disable swap file"""
+    run_cmd(['swapoff', '-a'])
+
+
+def get_swap_file():
+    """gets the swapfile"""
+    try:
+        swapfile = get_output_from_cmd(['swapon', '-s'])
+        swapfile = swapfile.split('\n')[1].strip()
+    except (KeyError, CalledProcessError):
+        # KeyError => just a single line
+        # CalledProcessError => error executing swapon
+        swapfile = None
+    log.debug('swapfile => %s', swapfile)
+    return swapfile
 
 
 def real_path(path):

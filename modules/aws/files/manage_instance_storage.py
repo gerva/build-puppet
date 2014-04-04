@@ -182,7 +182,7 @@ def lvmjoin(devices):
         create_vg(vg_name, devices)
     elif old_vg != vg_name:
         # vg already exists with a different name;
-        remove_from_fstab(vg_name)
+        remove_from_fstab(old_vg)
         remove_vg(old_vg)
         create_vg(vg_name, devices)
     else:

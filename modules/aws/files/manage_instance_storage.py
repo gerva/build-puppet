@@ -229,7 +229,7 @@ def remove_from_fstab(device):
         for line in read_fstab():
             if old_fstab_line not in line:
                 out_fstab.write(line)
-    log.debug('removed %s from /etc/fstab', old_fstab_line)
+    log.debug('removed %s from /etc/fstab', old_fstab_line.strip())
     os.rename(temp_fstab.name, '/etc/fstab')
 
 

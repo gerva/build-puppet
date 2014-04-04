@@ -162,7 +162,7 @@ def remove_vg(vg_name):
     if vg_name is None:
         log.debug('remove_vg: vg_name is None, nothing to do here')
     log.info('removing volume group: %s', vg_name)
-    run_cmd(['vgremove', '-f ', 'vg'])
+    run_cmd(['vgremove', '-f', 'vg'])
 
 
 def lvmjoin(devices):

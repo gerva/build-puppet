@@ -402,7 +402,7 @@ def is_dev_in_fstab(path):
             return fstab_entry
         if real_path(fstab_entry) == path:
             return fstab_entry
-        if real_path(fstab_entry) == read_fstab(path):
+        if real_path(fstab_entry) == real_path(path):
             return fstab_entry
     return None
 

@@ -135,20 +135,34 @@ def needs_pvcreate(device):
     return True
 
 
-def check_for_existing_vg():
-    """checks if vg already exists and returns its name.
-       returns None if there are no vg"""
-    vg = None
+def _query_vgs(token, device=None):
+    """gets token value from vgs -o token device"""
+    token = None
+    cmd = ['vgs', '-o', token]
+    if device:
+        cmd.append(device)
+    log.debug('command: %s')
     try:
-        vg = get_output_from_cmd(['vgs', '-o', 'vg_name'])
-        vg = vg.split('\n')[1].strip()
-        log.debug('found a volume group: %s', vg)
+        token = get_output_from_cmd(cmd)
+        token = token.split('\n')[1].strip()
+        log.debug('found a volume group: %s', token)
     except CalledProcessError:
         # vgs command failed, no volume groups
         log.debug('there are no volume groups')
     except IndexError:
         log.debug('No volume groups found')
-    return vg
+    return token
+
+
+def query_lv_path(device=None):
+    """returns the ouptut of vgs -o lv_path <device>"""
+    return _query_vgs(token='lv_path', device=device)
+
+
+def query_vg_name(device=None):
+    """checks if vg already exists and returns its name.
+       returns None if there are no vg"""
+    return _query_vgs(token='vg_name', device=device)
 
 
 def create_vg(vg_name, devices):
@@ -177,11 +191,16 @@ def lvmjoin(devices):
     # Volume Group
     vg_name = 'vg'
     lv_name = 'local'
-    old_vg = check_for_existing_vg()
+    old_vg = query_vg_name()
     if not old_vg:
         create_vg(vg_name, devices)
     elif old_vg != vg_name:
         # vg already exists with a different name;
+        old_lv = query_lv_path()
+        # maps output from vgs -> fstab_entry
+        fstab_entry = is_dev_in_fstab(old_lv)
+        if is_mounted(fstab_entry):
+            umount(fstab_entry)
         remove_from_fstab(old_vg)
         remove_vg(old_vg)
         create_vg(vg_name, devices)
@@ -309,6 +328,9 @@ def mount_point():
 
 def is_mounted(device):
     """checks if a device is mounted"""
+    if not device:
+        log.debug('refusing to check if None device is mounted')
+        return False
     mount_out = get_output_from_cmd('mount')
     log.debug("mount: %s", mount_out)
     for line in mount_out.splitlines():
@@ -318,6 +340,52 @@ def is_mounted(device):
             return True
     log.debug('device: %s is not mounted', device)
     return False
+
+
+def umount(device):
+    """umounts device"""
+    if not device:
+        log.debug('umount: device in None, returning')
+        return
+    try:
+        get_output_from_cmd(['umount', device])
+        log.debug('%s umounted')
+    except:
+        # unable to umount, pass?
+        pass
+
+
+def real_path(path):
+    """path -> real path following symlinks (if any)"""
+    try:
+        realpath = get_output_from_cmd(['readlink', '-f', path]).strip()
+        log.debug('%s => %s', realpath, path)
+        return realpath
+    except:
+        # file does not exist
+        return path
+
+
+def is_dev_in_fstab(path):
+    """checks if a path is mounted
+        e.g. /dev/mapper/vg-local and /dev/vg/local are both links to /dev/dm-0
+        but only /dev/mapper is in fstab
+    """
+    # discard /
+    fstab = [item.strip() for item in read_fstab() and 'on / ' not in item]
+    # remove special mount points
+    fstab = [item for item in fstab if 'none' not in fstab]
+    for item in fstab:
+        fstab_entry = item.partition(' ')[0]
+        if fstab_entry == path:
+            return fstab_entry
+        if fstab_entry == real_path(path):
+            return fstab_entry
+        if real_path(fstab_entry) == path:
+            return fstab_entry
+        if real_path(fstab_entry) == read_fstab(path):
+            return fstab_entry
+    return None
 
 
 def mount(device):
@@ -351,6 +419,7 @@ def main():
     update_fstab(device, mount_point())
     if not is_mounted(device):
         mount(device)
+
 
 if __name__ == '__main__':
     main()

@@ -390,7 +390,8 @@ def is_dev_in_fstab(path):
         but only /dev/mapper is in fstab
     """
     # discard /
-    fstab = [item.strip() for item in read_fstab() and 'on / ' not in item]
+    fstab = [item.strip() for item in read_fstab()
+             if not item.startswith('LABEL=root_dev')]
     # remove special mount points
     fstab = [item for item in fstab if 'none' not in fstab]
     for item in fstab:

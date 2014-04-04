@@ -204,8 +204,8 @@ def fstab_line(device):
     for line in read_fstab():
         if not line.startswith('#') \
            and device in line:
-            log.debug("%s already in /etc/fstab:", device)
-            log.debug(line)
+            log.debug("%s already in /etc/fstab:", device.strip())
+            log.debug(line.strip())
             is_fstab_line = line
             break
     return is_fstab_line

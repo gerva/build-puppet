@@ -140,7 +140,7 @@ def _query_vgs(token, device=None):
     cmd = ['vgs', '-o', token]
     if device:
         cmd.append(device)
-    log.debug('command: %s')
+    log.debug('command: %s', cmd)
     try:
         token = get_output_from_cmd(cmd)
         token = token.split('\n')[1].strip()

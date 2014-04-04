@@ -221,7 +221,7 @@ def remove_from_fstab(device):
     """removes device from fstab"""
     old_fstab_line = fstab_line(device)
     if not old_fstab_line:
-        log.debug('remove_from_fstab: %s is not in fstab')
+        log.debug('remove_from_fstab: %s is not in fstab', device)
         return
     import tempfile
     temp_fstab = tempfile.NamedTemporaryFile(delete=False)

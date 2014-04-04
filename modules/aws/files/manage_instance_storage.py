@@ -146,6 +146,8 @@ def check_for_existing_vg():
     except CalledProcessError:
         # vgs command failed, no volume groups
         log.debug('there are no volume groups')
+    except IndexError:
+        log.debug('No volume groups found')
     return vg
 
 

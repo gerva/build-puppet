@@ -137,7 +137,6 @@ def needs_pvcreate(device):
 
 def _query_vgs(token, device=None):
     """gets token value from vgs -o token device"""
-    token = None
     cmd = ['vgs', '-o', token]
     if device:
         cmd.append(device)

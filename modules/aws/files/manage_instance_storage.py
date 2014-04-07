@@ -240,17 +240,18 @@ def remove_from_fstab(device):
         log.debug('remove_from_fstab: %s is not in fstab', device)
         return
     import tempfile
-    temp_fstab = tempfile.NamedTemporaryFile(delete=False)
-    with open(temp_fstab.name, 'w') as out_fstab:
-        for line in read_fstab():
-            if old_fstab_line not in line:
-                out_fstab.write(line)
-    log.debug('removed %s from %s', old_fstab_line.strip(), ETC_FSTAB)
     try:
+        temp_fstab = tempfile.NamedTemporaryFile(delete=False)
+        with open(temp_fstab.name, 'w') as out_fstab:
+            for line in read_fstab():
+                if old_fstab_line not in line:
+                    out_fstab.write(line)
+        log.debug('removed %s from %s', old_fstab_line.strip(), ETC_FSTAB)
         os.rename(temp_fstab.name, ETC_FSTAB)
-    except OSError:
-        # cannot rename or remove temporary file
-        log.debug('Unable to rename %s to %s', temp_fstab.name, ETC_FSTAB)
+    except (OSError, IOError):
+        # IOError => error opening temp_fstab
+        # OSError => error renaming files
+        log.debug('Unable to read/rename temporary fstab file')
         os.remove(temp_fstab.name)
         log.debug('deleted temporary file: %s', temp_fstab.name)
 

@@ -18,6 +18,7 @@ AWS_METADATA_URL = "http://169.254.169.254/latest/meta-data/"
 DEFAULT_MOUNT_POINT = '/mnt/instance_storage'
 JACUZZI_MOUNT_POINT = '/builds/slave'
 JACUZZI_METADATA_FILE = '/etc/jacuzzi_metadata.json'
+ETC_FSTAB = '/etc/fstab'
 
 
 def get_aws_metadata(key):
@@ -222,7 +223,7 @@ def fstab_line(device):
     for line in read_fstab():
         if not line.startswith('#') \
            and device in line:
-            log.debug("%s already in /etc/fstab:", device.strip())
+            log.debug("%s already in %s:", device.strip(), ETC_FSTAB)
             is_fstab_line = line
             break
     return is_fstab_line
@@ -230,7 +231,7 @@ def fstab_line(device):
 
 def read_fstab():
     """"returns a list of lines in fstab"""
-    with open('/etc/fstab', 'r') as f_in:
+    with open(ETC_FSTAB, 'r') as f_in:
         return f_in.readlines()
 
 
@@ -246,16 +247,16 @@ def remove_from_fstab(device):
         for line in read_fstab():
             if old_fstab_line not in line:
                 out_fstab.write(line)
-    log.debug('removed %s from /etc/fstab', old_fstab_line.strip())
-    os.rename(temp_fstab.name, '/etc/fstab')
+    log.debug('removed %s from %s', old_fstab_line.strip(), ETC_FSTAB)
+    os.rename(temp_fstab.name, ETC_FSTAB)
 
 
 def append_to_fstab(device, mount_location):
     """append device to fstab"""
     new_fstab_line = get_fstab_line(device, mount_location)
-    with open('/etc/fstab', 'a') as out_f:
+    with open(ETC_FSTAB, 'a') as out_f:
         out_f.write(new_fstab_line)
-    log.debug('added %s in /etc/fstab', new_fstab_line)
+    log.debug('added %s in %s', new_fstab_line, ETC_FSTAB)
 
 
 def get_fstab_line(device, mount_location):
@@ -271,7 +272,7 @@ def update_fstab(device, mount_location):
     old_fstab_line = fstab_line(device)
     if old_fstab_line == new_fstab_line:
         # nothing to do..
-        log.debug('%s already in /etc/fstab', new_fstab_line.strip())
+        log.debug('%s already in %s', new_fstab_line.strip(), ETC_FSTAB)
         return
     # needs to be added
     if not old_fstab_line:

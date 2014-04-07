@@ -356,6 +356,7 @@ def umount(device):
 
 def disable_swap():
     """disable swap file"""
+    log.debug('disabling swap files')
     run_cmd(['swapoff', '-a'])
 
 

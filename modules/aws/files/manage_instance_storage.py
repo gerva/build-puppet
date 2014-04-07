@@ -348,7 +348,7 @@ def umount(device):
         return
     try:
         get_output_from_cmd(['umount', device])
-        log.debug('%s umounted')
+        log.debug('%s umounted', device)
     except:
         # unable to umount, pass?
         pass

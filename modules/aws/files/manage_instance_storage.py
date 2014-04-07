@@ -140,17 +140,15 @@ def _query_vgs(token, device=None):
     cmd = ['vgs', '-o', token]
     if device:
         cmd.append(device)
-    log.debug('command: %s', cmd)
     try:
         token = get_output_from_cmd(cmd)
         token = token.split('\n')[1].strip()
         log.debug('found a volume group: %s', token)
-    except CalledProcessError:
+        return token
+    except (CalledProcessError, IndexError):
         # vgs command failed, no volume groups
-        log.debug('there are no volume groups')
-    except IndexError:
         log.debug('No volume groups found')
-    return token
+        return None
 
 
 def query_lv_path(device=None):
@@ -248,7 +246,13 @@ def remove_from_fstab(device):
             if old_fstab_line not in line:
                 out_fstab.write(line)
     log.debug('removed %s from %s', old_fstab_line.strip(), ETC_FSTAB)
-    os.rename(temp_fstab.name, ETC_FSTAB)
+    try:
+        os.rename(temp_fstab.name, ETC_FSTAB)
+    except OSError:
+        # cannot rename, remove temporary file
+        log.debug('Unable to rename %s to %s', temp_fstab.name, ETC_FSTAB)
+        os.remove(temp_fstab.name)
+        log.debug('deleted temporary file: %s', temp_fstab.name)
 
 
 def append_to_fstab(device, mount_location):

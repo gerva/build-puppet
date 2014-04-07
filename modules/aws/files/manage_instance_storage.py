@@ -349,7 +349,7 @@ def umount(device):
     try:
         get_output_from_cmd(['umount', device])
         log.debug('%s umounted', device)
-    except:
+    except CalledProcessError:
         # unable to umount, pass?
         pass
 
@@ -378,7 +378,7 @@ def real_path(path):
         realpath = get_output_from_cmd(['readlink', '-f', path]).strip()
         log.debug('%s => %s', path, realpath)
         return realpath
-    except:
+    except CalledProcessError:
         # file does not exist
         return path
 
@@ -397,6 +397,8 @@ def is_dev_in_fstab(path):
         fstab_entry = item.partition(' ')[0]
         if fstab_entry:
             if real_path(fstab_entry) == real_path(path):
+                log.debug('%s and %s point to the same device',
+                          fstab_entry, path)
                 return fstab_entry
     return None
 

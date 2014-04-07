@@ -67,7 +67,6 @@ def get_output_from_cmd(cmd, cwd=None, raise_on_error=True):
     log.debug("Running %s cwd: %s", cmd, cwd)
     # check_output is not avalilable in prod (python 2.6)
     # return check_output(cmd, cwd=cwd, stderr=None).splitlines()
-    log.debug("cmd: %s; cwd=%s", cmd, cwd)
     proc = Popen(cmd, cwd=cwd, stdout=PIPE)
     output, err = proc.communicate()
     retcode = proc.poll()
@@ -224,7 +223,6 @@ def fstab_line(device):
         if not line.startswith('#') \
            and device in line:
             log.debug("%s already in /etc/fstab:", device.strip())
-            log.debug(line.strip())
             is_fstab_line = line
             break
     return is_fstab_line

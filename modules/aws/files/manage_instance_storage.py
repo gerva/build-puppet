@@ -249,7 +249,7 @@ def remove_from_fstab(device):
     try:
         os.rename(temp_fstab.name, ETC_FSTAB)
     except OSError:
-        # cannot rename, remove temporary file
+        # cannot rename or remove temporary file
         log.debug('Unable to rename %s to %s', temp_fstab.name, ETC_FSTAB)
         os.remove(temp_fstab.name)
         log.debug('deleted temporary file: %s', temp_fstab.name)

@@ -141,13 +141,13 @@ def _query_vgs(token, device=None):
     if device:
         cmd.append(device)
     try:
-        token = get_output_from_cmd(cmd)
-        token = token.split('\n')[1].strip()
-        log.debug('found a volume group: %s', token)
-        return token
+        value = get_output_from_cmd(cmd)
+        value = value.split('\n')[1].strip()
+        log.debug('vgs: %s = %s', token, value)
+        return value
     except (CalledProcessError, IndexError):
         # vgs command failed, no volume groups
-        log.debug('No volume groups found')
+        log.debug('No %s for device %s', token, device)
         return None
 
 

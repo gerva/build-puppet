@@ -395,8 +395,9 @@ def is_dev_in_fstab(path):
     fstab = [item for item in fstab if 'none' not in item]
     for item in fstab:
         fstab_entry = item.partition(' ')[0]
-        if real_path(fstab_entry) == real_path(path):
-            return fstab_entry
+        if fstab_entry:
+            if real_path(fstab_entry) == real_path(path):
+                return fstab_entry
     return None
 
 

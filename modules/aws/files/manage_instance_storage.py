@@ -392,7 +392,7 @@ def is_dev_in_fstab(path):
     fstab = [item.strip() for item in read_fstab()
              if not item.startswith('LABEL=root_dev')]
     # remove special mount points
-    fstab = [item for item in fstab if 'none' not in fstab]
+    fstab = [item for item in fstab if 'none' not in item]
     for item in fstab:
         fstab_entry = item.partition(' ')[0]
         if fstab_entry == path:

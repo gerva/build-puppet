@@ -376,7 +376,7 @@ def real_path(path):
     """path -> real path following symlinks (if any)"""
     try:
         realpath = get_output_from_cmd(['readlink', '-f', path]).strip()
-        log.debug('%s => %s', realpath, path)
+        log.debug('%s => %s', path, realpath)
         return realpath
     except:
         # file does not exist

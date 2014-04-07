@@ -271,7 +271,7 @@ def update_fstab(device, mount_location):
     old_fstab_line = fstab_line(device)
     if old_fstab_line == new_fstab_line:
         # nothing to do..
-        log.debug('%s already in /etc/fstab', new_fstab_line)
+        log.debug('%s already in /etc/fstab', new_fstab_line.strip())
         return
     # needs to be added
     if not old_fstab_line:

@@ -194,6 +194,7 @@ def lvmjoin(devices):
                 # switching from a single disk instance to multiple disks
                 # returns an error in pvcreate, let's umount the disk
                 umount(device)
+                remove_from_fstab(device)
             log.info('clearing the partition table for %s', device)
             run_cmd(['dd', 'if=/dev/zero', 'of=%s' % device,
                      'bs=512', 'count=1'])
@@ -345,10 +346,10 @@ def mount_point():
     # in JACUZZI_MOUNT_POINT regardless the type of machine
     # assumption here: there's only one volume group
     if vg_size() >= REQ_BUILDS_SIZE:
-        log.debug('disk space: >= REQ_BUILDS_SIZE (%d GB)', REQ_BUILDS_SIZE)
+        log.debug('disk size: >= REQ_BUILDS_SIZE (%d GB)', REQ_BUILDS_SIZE)
         _mount_point = JACUZZI_MOUNT_POINT
     else:
-        log.debug('disk space: < REQ_BUILDS_SIZE (%d GB)', REQ_BUILDS_SIZE)
+        log.debug('disk size: < REQ_BUILDS_SIZE (%d GB)', REQ_BUILDS_SIZE)
     log.debug('mount point: %s', _mount_point)
     return _mount_point
 

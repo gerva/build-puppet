@@ -460,10 +460,11 @@ def main():
         device = devices[0]
         log.info('found device: %s', device)
         format_device(device)
-    log.info("Got %s", device)
+    log.debug("Got %s", device)
     update_fstab(device, mount_point())
-    if not is_mounted(device):
-        mount(device)
+    # fstab might have been updated, umount the device and re-mount it
+    umount(device)
+    mount(device)
 
 
 if __name__ == '__main__':

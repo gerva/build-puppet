@@ -14,12 +14,11 @@ log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
 AWS_METADATA_URL = "http://169.254.169.254/latest/meta-data/"
-
 DEFAULT_MOUNT_POINT = '/mnt/instance_storage'
 JACUZZI_MOUNT_POINT = '/builds/slave'
 JACUZZI_METADATA_FILE = '/etc/jacuzzi_metadata.json'
 ETC_FSTAB = '/etc/fstab'
-REQ_BUILDS_SIZE = '120'  # size in GB
+REQ_BUILDS_SIZE = '20'  # size in GB
 
 
 def get_aws_metadata(key):
@@ -168,6 +167,8 @@ def vg_size(device=None):
     if not raw_value:
         return 0
     # raw_value: 79.98g to 80
+    disk_size = int(round(float(raw_value.replace('g', ''))))
+    log.debug('disk size: %s', disk_size)
     return int(round(float(raw_value.replace('g', ''))))
 
 

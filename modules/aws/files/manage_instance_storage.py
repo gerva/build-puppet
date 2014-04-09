@@ -105,7 +105,7 @@ def aws2xen(device):
 def format_device(device):
     """formats the disk with ext4 fs if needed"""
     if is_mounted(device):
-        log.debug('%s is mounted: skipping formatting', device)
+        log.info('%s is mounted: skipping formatting', device)
         return
     # assuming this device needs to be formatted
     need_format = True
@@ -261,7 +261,7 @@ def remove_from_fstab(device):
             for line in read_fstab():
                 if old_fstab_line not in line:
                     out_fstab.write(line)
-        log.debug('removed %s from %s', old_fstab_line.strip(), ETC_FSTAB)
+        log.info('removed %s from %s', old_fstab_line.strip(), ETC_FSTAB)
         os.rename(temp_fstab.name, ETC_FSTAB)
     except (OSError, IOError):
         # IOError => error opening temp_fstab
@@ -276,7 +276,7 @@ def append_to_fstab(device, mount_location):
     new_fstab_line = get_fstab_line(device, mount_location)
     with open(ETC_FSTAB, 'a') as out_f:
         out_f.write(new_fstab_line)
-    log.debug('added %s in %s', new_fstab_line, ETC_FSTAB)
+    log.info('added %s in %s', new_fstab_line, ETC_FSTAB)
 
 
 def get_fstab_line(device, mount_location):
@@ -328,29 +328,29 @@ def mount_point():
     _mount_point = DEFAULT_MOUNT_POINT
     if len(get_builders_from(JACUZZI_METADATA_FILE)) in range(1, 4):
         # if there are 1, 2 or 3 builders: I am a Jacuzzi!
-        log.debug('jacuzzi:    yes')
+        log.info('jacuzzi:    yes')
         _mount_point = JACUZZI_MOUNT_POINT
     # parse slave-trustlevel file
     else:
-        log.debug('jacuzzi:    no')
+        log.info('jacuzzi:    no')
     try:
         with open('/etc/slave-trustlevel', 'r') as trustlevel_in:
             trustlevel = trustlevel_in.read().strip()
-        log.debug('trustlevel: %s', trustlevel)
+        log.info('trustlevel: %s', trustlevel)
         if trustlevel == 'try':
             _mount_point = JACUZZI_MOUNT_POINT
     except IOError:
         # IOError   => file does not exist
-        log.debug('/etc/slave-trustlevel does not exist')
+        log.info('/etc/slave-trustlevel does not exist')
     # test if device has enough space, if so mount the disk
     # in JACUZZI_MOUNT_POINT regardless the type of machine
     # assumption here: there's only one volume group
     if vg_size() >= REQ_BUILDS_SIZE:
-        log.debug('disk size: >= REQ_BUILDS_SIZE (%d GB)', REQ_BUILDS_SIZE)
+        log.info('disk size: >= REQ_BUILDS_SIZE (%d GB)', REQ_BUILDS_SIZE)
         _mount_point = JACUZZI_MOUNT_POINT
     else:
-        log.debug('disk size: < REQ_BUILDS_SIZE (%d GB)', REQ_BUILDS_SIZE)
-    log.debug('mount point: %s', _mount_point)
+        log.info('disk size: < REQ_BUILDS_SIZE (%d GB)', REQ_BUILDS_SIZE)
+    log.info('mount point: %s', _mount_point)
     return _mount_point
 
 
@@ -382,7 +382,7 @@ def umount(device):
 
 def disable_swap():
     """disable swap file"""
-    log.debug('disabling swap files')
+    log.info('disabling swap files')
     run_cmd(['swapoff', '-a'])
 
 

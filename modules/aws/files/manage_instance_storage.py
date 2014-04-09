@@ -72,7 +72,7 @@ def get_output_from_cmd(cmd, cwd=None, raise_on_error=True):
     retcode = proc.poll()
     if retcode and raise_on_error:
         log.debug('cmd: %s returned %s (%s)', cmd, retcode, err)
-        raise CalledProcessError(retcode, cmd, output)
+        raise CalledProcessError(retcode, cmd)
     return output
 
 

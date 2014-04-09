@@ -162,7 +162,7 @@ def query_vg_name(device=None):
     return _query_vgs(token='vg_name', device=device)
 
 
-def vg_size(device):
+def vg_size(device=None):
     """returns the size of device in GB, 0 in case of error"""
     raw_value = _query_vgs(token='vg_size', device=device)
     if not raw_value:
@@ -320,7 +320,7 @@ def get_builders_from(jacuzzi_metadata_file):
         return []
 
 
-def mount_point(device=None):
+def mount_point():
     """Checks if this machine is part of any jacuzzi pool"""
     # default mount point
     _mount_point = DEFAULT_MOUNT_POINT
@@ -342,7 +342,7 @@ def mount_point(device=None):
         log.debug('/etc/slave-trustlevel does not exist')
     # test if device has enough space, if so mount the disk
     # in JACUZZI_MOUNT_POINT regardless the type of machine
-    if vg_size(device) >= REQ_BUILDS_SIZE:
+    if vg_size() >= REQ_BUILDS_SIZE:
         log.debug('disk space: >= REQ_BUILDS_SIZE')
         _mount_point = JACUZZI_MOUNT_POINT
     else:

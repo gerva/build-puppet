@@ -164,7 +164,7 @@ def query_vg_name(device=None):
 
 def vg_size(device):
     """returns the size of device in GB, 0 in case of error"""
-    raw_value = _query_vgs(token='vgs_size', device=device)
+    raw_value = _query_vgs(token='vg_size', device=device)
     if not raw_value:
         return 0
     # raw_value: 79.98g to 80

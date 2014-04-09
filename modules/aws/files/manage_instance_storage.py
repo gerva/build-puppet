@@ -342,6 +342,7 @@ def mount_point():
         log.debug('/etc/slave-trustlevel does not exist')
     # test if device has enough space, if so mount the disk
     # in JACUZZI_MOUNT_POINT regardless the type of machine
+    # assumption here: there's only one volume group
     if vg_size() >= REQ_BUILDS_SIZE:
         log.debug('disk space: >= REQ_BUILDS_SIZE')
         _mount_point = JACUZZI_MOUNT_POINT
@@ -458,7 +459,7 @@ def main():
         log.info('found device: %s', device)
         format_device(device)
     log.info("Got %s", device)
-    update_fstab(device, mount_point(device))
+    update_fstab(device, mount_point())
     if not is_mounted(device):
         mount(device)
 

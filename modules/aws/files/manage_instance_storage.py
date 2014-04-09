@@ -31,8 +31,7 @@ def get_aws_metadata(key):
             return urllib2.urlopen(url, timeout=1).read()
         except urllib2.URLError:
             if _ < max_tries - 1:
-                log.debug("failed to fetch %s; sleeping and retrying",
-                          url, exc_info=True)
+                log.debug("failed to fetch %s; sleeping and retrying", url)
                 time.sleep(1)
                 continue
             return None
@@ -307,7 +306,7 @@ def get_builders_from(jacuzzi_metadata_file):
         return []
 
 
-def mount_point():
+def mount_point(device=None):
     """Checks if this machine is part of any jacuzzi pool"""
     # default mount point
     _mount_point = DEFAULT_MOUNT_POINT
@@ -412,7 +411,7 @@ def is_dev_in_fstab(path):
 
 def mount(device):
     """mounts device according to fstab"""
-    mount_p = mount_point()
+    mount_p = mount_point(device)
     if not os.path.exists(mount_p):
         log.debug('Creating directory %s', mount_p)
         os.makedirs(mount_p)
@@ -438,7 +437,7 @@ def main():
         log.info('found device: %s', device)
         format_device(device)
     log.info("Got %s", device)
-    update_fstab(device, mount_point())
+    update_fstab(device, mount_point(device))
     if not is_mounted(device):
         mount(device)
 

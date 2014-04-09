@@ -186,20 +186,35 @@ def remove_vg(vg_name):
     run_cmd(['vgremove', '-f', vg_name])
 
 
+def pvcreate(device):
+    """wrapper for pvcreate, determines if physical device needs intialization
+       and manages cases where a physical device is already mounted"""
+    if needs_pvcreate(device):
+        if is_mounted(device):
+            # switching from a single disk instance to multiple disks
+            # returns an error in pvcreate, let's umount the disk
+            umount(device)
+            remove_from_fstab(device)
+        log.info('running pvcreate on: %s', device)
+        log.debug('clearing the partition table for %s', device)
+        run_cmd(['dd', 'if=/dev/zero', 'of=%s' % device, 'bs=512', 'count=1'])
+        log.debug('creating a new physical volume for: %s', device)
+        run_cmd(['pvcreate', '-ff', '-y', device])
+
+
+def lvcreate(vg_name, lv_name, lv_path):
+    """lvcreate wrapper"""
+    lv_path = "/dev/mapper/%s-%s" % (vg_name, lv_name)
+    if not run_cmd(['lvdisplay', lv_path], raise_on_error=False):
+        log.info('creating a new logical volume')
+        run_cmd(['lvcreate', '-l', '100%VG', '--name', lv_name, vg_name])
+        format_device(lv_path)
+
+
 def lvmjoin(devices):
     "Creates a single lvm volume from a list of block devices"
     for device in devices:
-        if needs_pvcreate(device):
-            if is_mounted(device):
-                # switching from a single disk instance to multiple disks
-                # returns an error in pvcreate, let's umount the disk
-                umount(device)
-                remove_from_fstab(device)
-            log.info('clearing the partition table for %s', device)
-            run_cmd(['dd', 'if=/dev/zero', 'of=%s' % device,
-                     'bs=512', 'count=1'])
-            log.info('creating a new physical volume for: %s', device)
-            run_cmd(['pvcreate', '-ff', '-y', device])
+        pvcreate(device)
     # Volume Group
     vg_name = 'vg'
     lv_name = 'local'
@@ -220,13 +235,11 @@ def lvmjoin(devices):
     else:
         # a volume group with the same name already exists
         # ... there is nothing to do
-        pass
+        if is_mounted(fstab_entry):
+            umount(fstab_entry)
     # Logical Volume
     lv_path = "/dev/mapper/%s-%s" % (vg_name, lv_name)
-    if not run_cmd(['lvdisplay', lv_path], raise_on_error=False):
-        log.info('creating a new logical volume')
-        run_cmd(['lvcreate', '-l', '100%VG', '--name', lv_name, vg_name])
-        format_device(lv_path)
+    lvcreate(vg_name, lv_name, lv_path)
     return lv_path
 
 
@@ -460,8 +473,8 @@ def main():
     log.debug("Got %s", device)
     update_fstab(device, mount_point())
     # fstab might have been updated, umount the device and re-mount it
-    umount(device)
-    mount(device)
+    if not is_mounted(device):
+        mount(device)
 
 
 if __name__ == '__main__':

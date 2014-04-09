@@ -444,12 +444,11 @@ def is_dev_in_fstab(path):
     return None
 
 
-def mount(device):
+def mount(device, _mount_point):
     """mounts device according to fstab"""
-    mount_p = mount_point()
-    if not os.path.exists(mount_p):
-        log.debug('Creating directory %s', mount_p)
-        os.makedirs(mount_p)
+    if not os.path.exists(_mount_point):
+        log.debug('Creating directory %s', _mount_point)
+        os.makedirs(_mount_point)
     log.info('mounting %s', device)
     run_cmd(['mount', device])
 
@@ -472,10 +471,11 @@ def main():
         log.info('found device: %s', device)
         format_device(device)
     log.debug("Got %s", device)
-    update_fstab(device, mount_point())
+    _mount_point = mount_point()
+    update_fstab(device, _mount_point)
     # fstab might have been updated, umount the device and re-mount it
     if not is_mounted(device):
-        mount(device)
+        mount(device, _mount_point)
 
 
 if __name__ == '__main__':

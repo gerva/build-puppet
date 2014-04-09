@@ -19,6 +19,7 @@ DEFAULT_MOUNT_POINT = '/mnt/instance_storage'
 JACUZZI_MOUNT_POINT = '/builds/slave'
 JACUZZI_METADATA_FILE = '/etc/jacuzzi_metadata.json'
 ETC_FSTAB = '/etc/fstab'
+REQ_BUILDS_SIZE = '120'  # size in GB
 
 
 def get_aws_metadata(key):
@@ -159,6 +160,15 @@ def query_vg_name(device=None):
     """checks if vg already exists and returns its name.
        returns None if there are no vg"""
     return _query_vgs(token='vg_name', device=device)
+
+
+def vg_size(device):
+    """returns the size of device in GB, 0 in case of error"""
+    raw_value = _query_vgs(token='vgs_size', device=device)
+    if not raw_value:
+        return 0
+    # raw_value: 79.98g to 80
+    return int(round(float(raw_value.replace('g', ''))))
 
 
 def create_vg(vg_name, devices):
@@ -330,6 +340,13 @@ def mount_point(device=None):
     except IOError:
         # IOError   => file does not exist
         log.debug('/etc/slave-trustlevel does not exist')
+    # test if device has enough space, if so mount the disk
+    # in JACUZZI_MOUNT_POINT regardless the type of machine
+    if vg_size(device) >= REQ_BUILDS_SIZE:
+        log.debug('disk space: >= REQ_BUILDS_SIZE')
+        _mount_point = JACUZZI_MOUNT_POINT
+    else:
+        log.debug('disk space: < REQ_BUILDS_SIZE')
     log.debug('mount point: %s', _mount_point)
     return _mount_point
 

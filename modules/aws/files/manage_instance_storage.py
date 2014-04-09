@@ -357,7 +357,7 @@ def umount(device):
         return
     try:
         get_output_from_cmd(['umount', device])
-        log.debug('%s umounted', device)
+        log.debug('%s is unmounted', device)
     except CalledProcessError:
         # unable to umount, pass?
         pass

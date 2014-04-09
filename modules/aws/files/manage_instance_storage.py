@@ -289,7 +289,7 @@ def append_to_fstab(device, mount_location):
     new_fstab_line = get_fstab_line(device, mount_location)
     with open(ETC_FSTAB, 'a') as out_f:
         out_f.write(new_fstab_line)
-    log.info('added %s in %s', new_fstab_line, ETC_FSTAB)
+    log.info('added %s in %s', new_fstab_line.strip(), ETC_FSTAB)
 
 
 def get_fstab_line(device, mount_location):

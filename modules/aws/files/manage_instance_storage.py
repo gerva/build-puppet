@@ -375,12 +375,9 @@ def umount(device):
     if not device:
         log.debug('umount: device in None, returning')
         return
-    try:
-        get_output_from_cmd(['umount', device])
-        log.debug('%s is unmounted', device)
-    except CalledProcessError:
-        # unable to umount, pass?
-        pass
+    get_output_from_cmd(['umount', device], raise_on_error=False)
+    log.debug('%s is unmounted', device)
+    # manage umount errors?
 
 
 def disable_swap():

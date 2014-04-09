@@ -11,7 +11,7 @@ from subprocess import check_call, CalledProcessError, Popen, PIPE
 
 
 log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
+log.setLevel(logging.INFO)
 
 AWS_METADATA_URL = "http://169.254.169.254/latest/meta-data/"
 DEFAULT_MOUNT_POINT = '/mnt/instance_storage'
@@ -364,9 +364,9 @@ def is_mounted(device):
     for line in mount_out.splitlines():
         log.debug(line)
         if device in line:
-            log.debug('device: %s is mounted', device)
+            log.info('device: %s is mounted', device)
             return True
-    log.debug('device: %s is not mounted', device)
+    log.info('device: %s is not mounted', device)
     return False
 
 

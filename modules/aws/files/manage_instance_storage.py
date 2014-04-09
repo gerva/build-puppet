@@ -179,6 +179,10 @@ def lvmjoin(devices):
     "Creates a single lvm volume from a list of block devices"
     for device in devices:
         if needs_pvcreate(device):
+            if is_mounted(device):
+                # switching from a single disk instance to multiple disks
+                # returns an error in pvcreate, let's umount the disk
+                umount(device)
             log.info('clearing the partition table for %s', device)
             run_cmd(['dd', 'if=/dev/zero', 'of=%s' % device,
                      'bs=512', 'count=1'])

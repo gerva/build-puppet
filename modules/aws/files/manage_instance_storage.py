@@ -234,9 +234,9 @@ def lvmjoin(devices):
         create_vg(vg_name, devices)
     else:
         # a volume group with the same name already exists
-        # ... there is nothing to do
-        if is_mounted(fstab_entry):
-            umount(fstab_entry)
+        disable_swap()
+        umount(device)
+
     # Logical Volume
     lv_path = "/dev/mapper/%s-%s" % (vg_name, lv_name)
     lvcreate(vg_name, lv_name, lv_path)
@@ -424,7 +424,8 @@ def real_path(path):
 
 
 def is_dev_in_fstab(path):
-    """checks if a path is mounted
+    """checks if a path is in fstab and returns the first element of the line
+       in fstab. It returns None if the path is not present in fstab
         e.g. /dev/mapper/vg-local and /dev/vg/local are both links to /dev/dm-0
         but only /dev/mapper is in fstab
     """

@@ -18,7 +18,7 @@ DEFAULT_MOUNT_POINT = '/mnt/instance_storage'
 JACUZZI_MOUNT_POINT = '/builds/slave'
 JACUZZI_METADATA_FILE = '/etc/jacuzzi_metadata.json'
 ETC_FSTAB = '/etc/fstab'
-REQ_BUILDS_SIZE = '20'  # size in GB
+REQ_BUILDS_SIZE = 20  # size in GB
 
 
 def get_aws_metadata(key):

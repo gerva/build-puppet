@@ -345,10 +345,10 @@ def mount_point():
     # in JACUZZI_MOUNT_POINT regardless the type of machine
     # assumption here: there's only one volume group
     if vg_size() >= REQ_BUILDS_SIZE:
-        log.debug('disk space: >= REQ_BUILDS_SIZE')
+        log.debug('disk space: >= REQ_BUILDS_SIZE (%d GB)', REQ_BUILDS_SIZE)
         _mount_point = JACUZZI_MOUNT_POINT
     else:
-        log.debug('disk space: < REQ_BUILDS_SIZE')
+        log.debug('disk space: < REQ_BUILDS_SIZE (%d GB)', REQ_BUILDS_SIZE)
     log.debug('mount point: %s', _mount_point)
     return _mount_point
 

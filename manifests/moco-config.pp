@@ -12,6 +12,7 @@ class config inherits config::base {
 
     $builder_username = "cltbld"
     $install_google_api_key = true
+    $install_ceph_cfg = true
 
     # we use the sort_servers_by_group function to sort the list of servers, and then just use
     # the first as the primary server
@@ -192,7 +193,7 @@ class config inherits config::base {
     $releaserunner_ssh_username = "cltbld"
 
     $slaveapi_slavealloc_url = "http://slavealloc.build.mozilla.org/api/"
-    $slaveapi_inventory_url = "http://inventory.mozilla.org/en-US/tasty/v3/"
+    $slaveapi_inventory_url = "https://inventory.mozilla.org/en-US/tasty/v3/"
     $slaveapi_inventory_username = "releng-inventory-automation"
     $slaveapi_buildapi_url = "http://buildapi.pvt.build.mozilla.org/buildapi/"
     $slaveapi_bugzilla_username = "slaveapi@mozilla.releng.tld"

@@ -11,14 +11,13 @@ from subprocess import check_call, CalledProcessError, Popen, PIPE
 
 
 log = logging.getLogger(__name__)
-log.setLevel(logging.INFO)
 
 AWS_METADATA_URL = "http://169.254.169.254/latest/meta-data/"
 DEFAULT_MOUNT_POINT = '/mnt/instance_storage'
 JACUZZI_MOUNT_POINT = '/builds/slave'
 JACUZZI_METADATA_FILE = '/etc/jacuzzi_metadata.json'
 ETC_FSTAB = '/etc/fstab'
-REQ_BUILDS_SIZE = 20  # size in GB
+REQ_BUILDS_SIZE = 120  # size in GB
 
 
 def get_aws_metadata(key):
@@ -358,11 +357,14 @@ def mount_point():
     # test if device has enough space, if so mount the disk
     # in JACUZZI_MOUNT_POINT regardless the type of machine
     # assumption here: there's only one volume group
-    if vg_size() >= REQ_BUILDS_SIZE:
-        log.info('disk size: >= REQ_BUILDS_SIZE (%d GB)', REQ_BUILDS_SIZE)
+    device_size = vg_size()
+    if device_size >= REQ_BUILDS_SIZE:
+        log.info('disk size: %s GB >= REQ_BUILDS_SIZE (%d GB)',
+                 device_size, REQ_BUILDS_SIZE)
         _mount_point = JACUZZI_MOUNT_POINT
     else:
-        log.info('disk size: < REQ_BUILDS_SIZE (%d GB)', REQ_BUILDS_SIZE)
+        log.info('disk size: %s GB < REQ_BUILDS_SIZE (%d GB)',
+                 device_size, REQ_BUILDS_SIZE)
     log.info('mount point: %s', _mount_point)
     return _mount_point
 

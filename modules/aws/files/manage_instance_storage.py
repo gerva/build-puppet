@@ -217,6 +217,7 @@ def lvmjoin(devices):
     # Volume Group
     vg_name = 'vg'
     lv_name = 'local'
+    # old volume group
     old_vg = query_vg_name()
     if not old_vg:
         create_vg(vg_name, devices)
@@ -233,8 +234,9 @@ def lvmjoin(devices):
         create_vg(vg_name, devices)
     else:
         # a volume group with the same name already exists
+        # output of vgs -
         disable_swap()
-        umount(device)
+        umount(query_lv_path())
 
     # Logical Volume
     lv_path = "/dev/mapper/%s-%s" % (vg_name, lv_name)

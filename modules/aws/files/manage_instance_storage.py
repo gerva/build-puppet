@@ -295,7 +295,8 @@ def remove_from_fstab(device):
 def append_to_fstab(device, mount_location, file_system, options, dump_freq,
                     pass_num):
     """Append device to fstab"""
-    new_fstab_line = get_fstab_line(device, mount_location)
+    new_fstab_line = get_fstab_line(device, mount_location, file_system,
+                                    dump_freq, pass_num)
     with open(ETC_FSTAB, 'a') as out_f:
         out_f.write(new_fstab_line)
     log.info('added %s in %s', new_fstab_line.strip(), ETC_FSTAB)

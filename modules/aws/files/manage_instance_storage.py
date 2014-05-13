@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 """Manages the instance storage space for aws instances
-   For try, jacuzzi and instances with more then REQ_BUILDS_SIZE,
-   the instance storage space is mounted under SSD_MOUNT_POINT,
+   For try, jacuzzi and instances with more than REQ_BUILDS_SIZE,
+   the instance storage space is mounted under BUILDS_SLAVE_MNT,
    In any other case, the instance storage space is mounted under
-   DEFAULT_MOUNT_POINT.
+   INSTANCE_STORAGE_MNT.
+   CCACHE_DIR is always mounted on the instance storage
 """
 
 import urllib2
@@ -18,8 +19,8 @@ from subprocess import check_call, CalledProcessError, Popen, PIPE
 log = logging.getLogger(__name__)
 
 AWS_METADATA_URL = "http://169.254.169.254/latest/meta-data/"
-DEFAULT_MOUNT_POINT = '/mnt/instance_storage'
-SSD_MOUNT_POINT = '/builds/slave'
+INSTANCE_STORAGE_MNT = '/mnt/instance_storage'
+BUILDS_SLAVE_MNT = '/builds/slave'
 SSD_METADATA_FILE = '/etc/jacuzzi_metadata.json'
 CCACHE_DIR = '/builds/ccache'
 ETC_FSTAB = '/etc/fstab'
@@ -364,15 +365,15 @@ def mount_point():
        is part of a jacuzzi pool
        is a try slave,
        has enough disk space,
-       the instance storage space is mounted under SSD_MOUNT_POINT.
-       For any other machine the mount point is DEFAULT_MOUNT_POINT
+       the instance storage space is mounted under BUILDS_SLAVE_MNT.
+       For any other machine the mount point is INSTANCE_STORAGE_MNT
     """
     # default mount point
-    _mount_point = DEFAULT_MOUNT_POINT
+    _mount_point = INSTANCE_STORAGE_MNT
     if len(get_builders_from(SSD_METADATA_FILE)) in range(1, 4):
         # if there are 1, 2 or 3 builders: I am a Jacuzzi!
         log.info('jacuzzi:    yes')
-        _mount_point = SSD_MOUNT_POINT
+        _mount_point = BUILDS_SLAVE_MNT
     else:
         log.info('jacuzzi:    no')
     try:
@@ -380,18 +381,18 @@ def mount_point():
             trustlevel = trustlevel_in.read().strip()
         log.info('trustlevel: %s', trustlevel)
         if trustlevel == 'try':
-            _mount_point = SSD_MOUNT_POINT
+            _mount_point = BUILDS_SLAVE_MNT
     except IOError:
         # IOError   => file does not exist
         log.info('/etc/slave-trustlevel does not exist')
     # test if device has enough space, if so mount the disk
-    # in SSD_MOUNT_POINT regardless the type of machine
+    # in BUILDS_SLAVE_MNT regardless the type of machine
     # assumption here: there's only one volume group
     device_size = vg_size()
     if device_size >= REQ_BUILDS_SIZE:
         log.info('disk size: %s GB >= REQ_BUILDS_SIZE (%d GB)',
                  device_size, REQ_BUILDS_SIZE)
-        _mount_point = SSD_MOUNT_POINT
+        _mount_point = BUILDS_SLAVE_MNT
     else:
         log.info('disk size: %s GB < REQ_BUILDS_SIZE (%d GB)',
                  device_size, REQ_BUILDS_SIZE)

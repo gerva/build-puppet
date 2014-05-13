@@ -300,8 +300,8 @@ def append_to_fstab(device, mount_location):
     log.info('added %s in %s', new_fstab_line.strip(), ETC_FSTAB)
 
 
-def get_fstab_line(device, mount_location, file_system='ext4',
-                   options='defaults,noatime', dump_freq=0, pass_num=0):
+def get_fstab_line(device, mount_location, file_system, options, dump_freq,
+                   pass_num):
     """Returns an entry for fstab"""
     # no matter if the disk is ext3 or ext4, just mount it as ext4
     # ext4 manages ext3 disks too

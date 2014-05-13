@@ -292,7 +292,8 @@ def remove_from_fstab(device):
         log.debug('deleted temporary file: %s', temp_fstab.name)
 
 
-def append_to_fstab(device, mount_location):
+def append_to_fstab(device, mount_location, file_system, options, dump_freq,
+                    pass_num):
     """Append device to fstab"""
     new_fstab_line = get_fstab_line(device, mount_location)
     with open(ETC_FSTAB, 'a') as out_f:
@@ -325,13 +326,15 @@ def update_fstab(device, mount_location, file_system, options, dump_freq,
         return
     # needs to be added
     if not old_fstab_line:
-        append_to_fstab(device, mount_location)
+        append_to_fstab(device, mount_location, file_system, options,
+                        dump_freq, pass_num)
         return
     # just in case...
     # log fstab content before updating it
     log.debug(read_fstab())
     remove_from_fstab(device)
-    append_to_fstab(device, mount_location)
+    append_to_fstab(device, mount_location, file_system, options, dump_freq,
+                    pass_num)
 
 
 def get_builders_from(jacuzzi_metadata_file):

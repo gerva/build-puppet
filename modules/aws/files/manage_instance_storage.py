@@ -500,6 +500,11 @@ def main():
     # fstab might have been updated, umount the device and re-mount it
     if not is_mounted(device):
         mount(device, _mount_point)
+        try:
+            os.makedirs(ccache_dst)
+        except OSError, error:
+            log.debug('cannot create %s', ccache_dst)
+            log.debug(error)
         mount(ccache_dst, CCACHE_DIR)
 
 

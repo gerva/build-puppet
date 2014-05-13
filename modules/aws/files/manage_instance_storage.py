@@ -198,6 +198,8 @@ def pvcreate(device):
         if is_mounted(device):
             # switching from a single disk instance to multiple disks
             # returns an error in pvcreate, let's umount the disk
+            umount(CCACHE_DIR)
+            remove_from_fstab(CCACHE_DIR)
             umount(device)
             remove_from_fstab(device)
         log.info('running pvcreate on: %s', device)
@@ -234,6 +236,7 @@ def lvmjoin(devices):
         fstab_entry = is_dev_in_fstab(old_lv)
         if is_mounted(fstab_entry):
             disable_swap()
+            umount(CCACHE_DIR)
             umount(fstab_entry)
         remove_from_fstab(old_vg)
         remove_vg(old_vg)
@@ -242,6 +245,7 @@ def lvmjoin(devices):
         # a volume group with the same name already exists
         # output of vgs -
         disable_swap()
+        umount(CCACHE_DIR)
         umount(query_lv_path())
 
     # Logical Volume

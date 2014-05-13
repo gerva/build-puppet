@@ -22,7 +22,6 @@ DEFAULT_MOUNT_POINT = '/mnt/instance_storage'
 SSD_MOUNT_POINT = '/builds/slave'
 SSD_METADATA_FILE = '/etc/jacuzzi_metadata.json'
 CCACHE_DIR = '/builds/ccache'
-CCACHE_DST = os.path.join(SSD_MOUNT_POINT, 'ccache')
 ETC_FSTAB = '/etc/fstab'
 REQ_BUILDS_SIZE = 120  # size in GB
 
@@ -488,14 +487,15 @@ def main():
         format_device(device)
     log.debug("Got %s", device)
     _mount_point = mount_point()
+    ccache_dst = os.path.join(_mount_point, 'ccache')
     update_fstab(device, _mount_point, file_system='ext4',
                  options='defaults,noatime', dump_freq=0, pass_num=0)
-    update_fstab(CCACHE_DIR, CCACHE_DST, file_system='none',
+    update_fstab(CCACHE_DIR, ccache_dst, file_system='none',
                  options='bind,noatime', dump_freq=0, pass_num=0)
     # fstab might have been updated, umount the device and re-mount it
     if not is_mounted(device):
         mount(device, _mount_point)
-        mount(CCACHE_DIR, CCACHE_DST)
+        mount(CCACHE_DIR, ccache_dst)
 
 
 if __name__ == '__main__':

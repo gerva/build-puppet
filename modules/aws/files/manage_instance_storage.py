@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Manages the instance storage space for aws instances
    For try, jacuzzi and instances with more then REQ_BUILDS_SIZE,
-   the instance storage space is mounted under JACUZZI_MOUNT_POINT,
+   the instance storage space is mounted under SSD_MOUNT_POINT,
    In any other case, the instance storage space is mounted under
    DEFAULT_MOUNT_POINT.
 """
@@ -19,8 +19,10 @@ log = logging.getLogger(__name__)
 
 AWS_METADATA_URL = "http://169.254.169.254/latest/meta-data/"
 DEFAULT_MOUNT_POINT = '/mnt/instance_storage'
-JACUZZI_MOUNT_POINT = '/builds/slave'
-JACUZZI_METADATA_FILE = '/etc/jacuzzi_metadata.json'
+SSD_MOUNT_POINT = '/builds/slave'
+SSD_METADATA_FILE = '/etc/jacuzzi_metadata.json'
+CCACHE_DIR = '/builds/ccache'
+CCACHE_DST = os.path.join(SSD_MOUNT_POINT, 'ccache')
 ETC_FSTAB = '/etc/fstab'
 REQ_BUILDS_SIZE = 120  # size in GB
 
@@ -298,18 +300,24 @@ def append_to_fstab(device, mount_location):
     log.info('added %s in %s', new_fstab_line.strip(), ETC_FSTAB)
 
 
-def get_fstab_line(device, mount_location):
+def get_fstab_line(device, mount_location, file_system='ext4',
+                   options='defaults,noatime', dump_freq=0, pass_num=0):
     """Returns an entry for fstab"""
     # no matter if the disk is ext3 or ext4, just mount it as ext4
     # ext4 manages ext3 disks too
-    return '%s %s ext4 defaults,noatime 0 0\n' % (device, mount_location)
+    # /dev/sda / ext4 defaults,noatime  1 1
+    return '%s %s %s %s %d %d\n' % (device, mount_location, file_system,
+                                    options, dump_freq, pass_num)
 
 
-def update_fstab(device, mount_location):
+def update_fstab(device, mount_location, file_system, options, dump_freq,
+                 pass_num):
     """Updates /etc/fstab if needed"""
     # example:
     # /dev/sda / ext4 defaults,noatime  1 1
-    new_fstab_line = get_fstab_line(device, mount_location)
+    #mount -o bind,noatime /builds/slave/ccache /builds/ccache/
+    new_fstab_line = get_fstab_line(device, mount_location, file_system,
+                                    options, dump_freq, pass_num)
     old_fstab_line = fstab_line(device)
     if old_fstab_line == new_fstab_line:
         # nothing to do..
@@ -349,15 +357,15 @@ def mount_point():
        is part of a jacuzzi pool
        is a try slave,
        has enough disk space,
-       the instance storage space is mounted under JACUZZI_MOUNT_POINT.
+       the instance storage space is mounted under SSD_MOUNT_POINT.
        For any other machine the mount point is DEFAULT_MOUNT_POINT
     """
     # default mount point
     _mount_point = DEFAULT_MOUNT_POINT
-    if len(get_builders_from(JACUZZI_METADATA_FILE)) in range(1, 4):
+    if len(get_builders_from(SSD_METADATA_FILE)) in range(1, 4):
         # if there are 1, 2 or 3 builders: I am a Jacuzzi!
         log.info('jacuzzi:    yes')
-        _mount_point = JACUZZI_MOUNT_POINT
+        _mount_point = SSD_MOUNT_POINT
     else:
         log.info('jacuzzi:    no')
     try:
@@ -365,18 +373,18 @@ def mount_point():
             trustlevel = trustlevel_in.read().strip()
         log.info('trustlevel: %s', trustlevel)
         if trustlevel == 'try':
-            _mount_point = JACUZZI_MOUNT_POINT
+            _mount_point = SSD_MOUNT_POINT
     except IOError:
         # IOError   => file does not exist
         log.info('/etc/slave-trustlevel does not exist')
     # test if device has enough space, if so mount the disk
-    # in JACUZZI_MOUNT_POINT regardless the type of machine
+    # in SSD_MOUNT_POINT regardless the type of machine
     # assumption here: there's only one volume group
     device_size = vg_size()
     if device_size >= REQ_BUILDS_SIZE:
         log.info('disk size: %s GB >= REQ_BUILDS_SIZE (%d GB)',
                  device_size, REQ_BUILDS_SIZE)
-        _mount_point = JACUZZI_MOUNT_POINT
+        _mount_point = SSD_MOUNT_POINT
     else:
         log.info('disk size: %s GB < REQ_BUILDS_SIZE (%d GB)',
                  device_size, REQ_BUILDS_SIZE)
@@ -476,10 +484,14 @@ def main():
         format_device(device)
     log.debug("Got %s", device)
     _mount_point = mount_point()
-    update_fstab(device, _mount_point)
+    update_fstab(device, _mount_point, file_system='ext4',
+                 options='defaults,noatime', dump_freq=0, pass_num=0)
+    update_fstab(CCACHE_DIR, CCACHE_DST, file_system='none',
+                 options='bind,noatime', dump_freq=0, pass_num=0)
     # fstab might have been updated, umount the device and re-mount it
     if not is_mounted(device):
         mount(device, _mount_point)
+        mount(CCACHE_DIR, CCACHE_DST)
 
 
 if __name__ == '__main__':

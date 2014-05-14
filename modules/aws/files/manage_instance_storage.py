@@ -7,12 +7,13 @@
    CCACHE_DIR is always mounted on the instance storage
 """
 
+import errno
+import logging
+import json
+import os
 import urllib2
 import urlparse
 import time
-import logging
-import os
-import json
 from subprocess import check_call, CalledProcessError, Popen, PIPE
 
 
@@ -320,8 +321,8 @@ def update_fstab(device, mount_location, file_system, options, dump_freq,
                  pass_num):
     """Updates /etc/fstab if needed"""
     # example:
-    # /dev/sda / ext4 defaults,noatime  1 1
-    #mount -o bind,noatime /builds/slave/ccache /builds/ccache/
+    # /dev/sda / ext4 defaults,noatime  0 0
+    # /builds/slave/ccache /builds/ccache/ none bind,noatime 0 0
     new_fstab_line = get_fstab_line(device, mount_location, file_system,
                                     options, dump_freq, pass_num)
     old_fstab_line = fstab_line(device)
@@ -473,6 +474,19 @@ def mount(device, _mount_point):
     run_cmd(['mount', device])
 
 
+def mkdir_p(dst_dir, exist_ok=True):
+    """same as os.makedirs(path, exist_ok=True) in python > 3.2"""
+    try:
+        os.makedirs(dst_dir)
+        log.debug('created %s', dst_dir)
+    except OSError, error:
+        if error.errno == errno.EEXIST and os.path.isdir(dst_dir) and exist_ok:
+            pass
+        else:
+            log.error('cannot create %s, %s', dst_dir, error)
+            raise
+
+
 def main():
     """Prepares the ephemeral devices"""
     logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
@@ -501,13 +515,12 @@ def main():
     if not is_mounted(device):
         mount(device, _mount_point)
 
-    if not os.path.exists(ccache_dst):
-        try:
-            os.makedirs(ccache_dst)
-            log.debug('created %s', ccache_dst)
-        except OSError, error:
-            log.debug('cannot create %s: %s', ccache_dst, error)
-    mount(ccache_dst, CCACHE_DIR)
+    try:
+        mkdir_p(ccache_dst)
+        mount(ccache_dst, CCACHE_DIR)
+    except OSError:
+        # mkdir failed, CCACHE_DIR not mounted
+        log.error('%s is not mounted', ccache_dst)
 
 
 if __name__ == '__main__':

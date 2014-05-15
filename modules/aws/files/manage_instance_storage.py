@@ -203,6 +203,8 @@ def pvcreate(device):
             # returns an error in pvcreate, let's umount the disk
             umount(CCACHE_DIR)
             remove_from_fstab(CCACHE_DIR)
+            umount(MOCK_DIR)
+            remove_from_fstab(MOCK_DIR)
             umount(device)
             remove_from_fstab(device)
         log.info('running pvcreate on: %s', device)
@@ -240,6 +242,7 @@ def lvmjoin(devices):
         if is_mounted(fstab_entry):
             disable_swap()
             umount(CCACHE_DIR)
+            umount(MOCK_DIR)
             umount(fstab_entry)
         remove_from_fstab(old_vg)
         remove_vg(old_vg)
@@ -249,6 +252,7 @@ def lvmjoin(devices):
         # output of vgs -
         disable_swap()
         umount(CCACHE_DIR)
+        umount(MOCK_DIR)
         umount(query_lv_path())
 
     # Logical Volume
@@ -527,10 +531,10 @@ def main():
         mount(ccache_dst, CCACHE_DIR)
         # mount mock_mozilla dir
         mkdir_p(mock_dst)
-        mount(ccache_dst, MOCK_DIR)
+        mount(mock_dst, MOCK_DIR)
     except OSError:
         # mkdir failed, CCACHE_DIR not mounted
-        log.error('%s is not mounted', ccache_dst)
+        log.error('ccache and/or mock_mozilla not mounted')
 
 
 if __name__ == '__main__':

@@ -522,8 +522,12 @@ def main():
         mount(device, _mount_point)
 
     try:
+        # mount ccache dir
         mkdir_p(ccache_dst)
         mount(ccache_dst, CCACHE_DIR)
+        # mount mock_mozilla dir
+        mkdir_p(mock_dst)
+        mount(ccache_dst, MOCK_DIR)
     except OSError:
         # mkdir failed, CCACHE_DIR not mounted
         log.error('%s is not mounted', ccache_dst)

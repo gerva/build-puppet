@@ -24,6 +24,7 @@ INSTANCE_STORAGE_MNT = '/mnt/instance_storage'
 BUILDS_SLAVE_MNT = '/builds/slave'
 SSD_METADATA_FILE = '/etc/jacuzzi_metadata.json'
 CCACHE_DIR = '/builds/ccache'
+MOCK_DIR = '/builds/mock_mozilla'
 ETC_FSTAB = '/etc/fstab'
 REQ_BUILDS_SIZE = 120  # size in GB
 
@@ -507,9 +508,14 @@ def main():
     log.debug("Got %s", device)
     _mount_point = mount_point()
     ccache_dst = os.path.join(_mount_point, 'ccache')
+    mock_dst = os.path.join(_mount_point, 'mock_mozilla')
     update_fstab(device, _mount_point, file_system='ext4',
                  options='defaults,noatime', dump_freq=0, pass_num=0)
+    remove_from_fstab(CCACHE_DIR)
     update_fstab(ccache_dst, CCACHE_DIR, file_system='none',
+                 options='bind,noatime', dump_freq=0, pass_num=0)
+    remove_from_fstab(MOCK_DIR)
+    update_fstab(mock_dst, MOCK_DIR, file_system='none',
                  options='bind,noatime', dump_freq=0, pass_num=0)
     # fstab might have been updated, umount the device and re-mount it
     if not is_mounted(device):

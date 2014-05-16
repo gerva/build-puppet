@@ -543,7 +543,7 @@ def main():
         # Make sure that the mount point are writable by cltbld
         for directory in (_mount_point, CCACHE_DIR):
             chown(directory, user='cltbld', group='cltbld')
-        chown(directory, user='root', group='mozilla_mock')
+        chown(MOCK_DIR, user='root', group='mock_mozilla')
     except OSError, error:
         # mkdir failed, CCACHE_DIR not mounted
         log.error(error)

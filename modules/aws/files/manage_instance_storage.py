@@ -535,7 +535,6 @@ def main():
     except OSError:
         # mkdir failed, CCACHE_DIR not mounted
         log.error('%s is not mounted', ccache_dst)
-        return
 
 
 if __name__ == '__main__':

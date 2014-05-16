@@ -5,7 +5,7 @@
 class config inherits config::base {
     $org = "qa"
 
-    $puppet_notif_email = "hskupin@mozilla.com"
+    $puppet_notif_email = "qa-auto@mozilla.com"
     $puppet_server_reports = "tagmail"
     $builder_username = "qabld"
     $grouped_puppet_servers = {
@@ -19,7 +19,7 @@ class config inherits config::base {
     $data_server = $puppet_server
 
     $distinguished_puppetmaster = "puppetmaster1.qa.scl3.mozilla.com"
-    $puppet_again_repo = "https://hg.mozilla.org/build/puppet/"
+    $puppet_again_repo = "https://hg.mozilla.org/qa/puppet/"
 
     $puppetmaster_upstream_rsync_source = 'rsync://puppetagain.pub.build.mozilla.org/data/'
     $puppetmaster_public_mirror_hosts = [ ]
@@ -34,13 +34,15 @@ class config inherits config::base {
     $vmwaretools_md5 = "4a2d230828919048c0c3ae8420f8edfe"
 
     $admin_users = [
-        "dmitchell",
-        "hskupin",
-        "dhunt",
-        "rwood",
-        "ctalbert",
         "cknowles",
+        "dmitchell",
         "gcox",
+
+        # Admins of the QA org
+        "aeftimie",
+        "amatei",
+        "ctalbert",
+        "hskupin"
     ]
 }
 

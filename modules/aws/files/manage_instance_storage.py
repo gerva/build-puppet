@@ -11,7 +11,6 @@ import errno
 import logging
 import json
 import os
-import pwd
 import urllib2
 import urlparse
 import time
@@ -490,24 +489,9 @@ def mkdir_p(dst_dir, exist_ok=True):
             raise
 
 
-def get_uid(user):
-    """returns the uid for user, None if user does not exist"""
-    try:
-        uid = pwd.getpwnam(user)[2]
-        log.debug('%s, uid: %s', user, uid)
-        return uid
-    except KeyError:
-        log.debug('%s is not a vaild user', user)
-
-
-def get_gid(group):
-    """returns the uid for group, None if group does not exist"""
-    try:
-        gid = pwd.getpwnam(group)[3]
-        log.debug('%s, gid: %s', group, gid)
-        return gid
-    except KeyError:
-        log.debug('%s is not a vaild group', group)
+def chown(path, user, group):
+    user_group_str = '%s:%s' % (user, group)
+    run_cmd(['chown', user_group_str, path])
 
 
 def main():
@@ -532,11 +516,6 @@ def main():
     ccache_dst = os.path.join(_mount_point, 'ccache')
     update_fstab(device, _mount_point, file_system='ext4',
                  options='defaults,noatime', dump_freq=0, pass_num=0)
-    uid = get_uid(FS_USER)
-    gid = get_gid(FS_GROUP)
-    # forcing owner of /builds/slave and CCACHE_DIR to cltbld:cltbld
-    os.chown(_mount_point, uid, gid)
-    os.chown(CCACHE_DIR, uid, gid)
 
     # prepare bind shares
     remove_from_fstab(CCACHE_DIR)
@@ -549,12 +528,14 @@ def main():
 
     try:
         mkdir_p(ccache_dst)
-        # update owner/group for this dir
-        os.chown(ccache_dst, uid, gid)
-        mount(ccache_dst, CCACHE_DIR)
     except OSError:
         # mkdir failed, CCACHE_DIR not mounted
         log.error('%s is not mounted', ccache_dst)
+
+    mount(ccache_dst, CCACHE_DIR)
+    # Make sure that the mount point are writable by cltbld
+    for directory in (_mount_point, CCACHE_DIR):
+        chown(directory, user='cltbld', group='cltbld')
 
 
 if __name__ == '__main__':

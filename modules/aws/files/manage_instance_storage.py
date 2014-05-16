@@ -531,7 +531,9 @@ def main():
         log.error('%s is not mounted', ccache_dst)
         return
 
-    mount(ccache_dst, CCACHE_DIR)
+    if not is_mounted(ccache_dst):
+        # avoid multiple mounts of the same share/directory/...
+        mount(ccache_dst, CCACHE_DIR)
     # Make sure that the mount point are writable by cltbld
     for directory in (_mount_point, CCACHE_DIR):
         chown(directory, user='cltbld', group='cltbld')

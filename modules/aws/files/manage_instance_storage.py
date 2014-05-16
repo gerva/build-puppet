@@ -540,9 +540,8 @@ def main():
 
     # prepare bind shares
     remove_from_fstab(CCACHE_DIR)
-    options = 'bind,noatime,uid=%s,gid=%s' % (FS_USER, FS_GROUP)
-    update_fstab(ccache_dst, CCACHE_DIR, file_system='none', options=options,
-                 dump_freq=0, pass_num=0)
+    update_fstab(ccache_dst, CCACHE_DIR, file_system='none',
+                 options='bind,noatime', dump_freq=0, pass_num=0)
     # fstab might have been updated, umount the device and re-mount it
     if not is_mounted(device):
         # mount the main share so we can create the ccache dir

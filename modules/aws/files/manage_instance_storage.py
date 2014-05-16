@@ -11,6 +11,7 @@ import errno
 import logging
 import json
 import os
+import pwd
 import urllib2
 import urlparse
 import time
@@ -26,6 +27,8 @@ SSD_METADATA_FILE = '/etc/jacuzzi_metadata.json'
 CCACHE_DIR = '/builds/ccache'
 ETC_FSTAB = '/etc/fstab'
 REQ_BUILDS_SIZE = 120  # size in GB
+INSTANCE_STORAGE_USER = 'cltbld'
+INSTANCE_STORAGE_GROUP = 'cltbld'
 
 
 def get_aws_metadata(key):
@@ -487,6 +490,26 @@ def mkdir_p(dst_dir, exist_ok=True):
             raise
 
 
+def get_uid(user):
+    """returns the uid for user, None if user does not exist"""
+    try:
+        uid = pwd.getpwnam(user)[2]
+        log.debug('%s, uid: %s', user, uid)
+        return uid
+    except KeyError:
+        log.debug('%s is not a vaild user', user)
+
+
+def get_gid(group):
+    """returns the uid for group, None if group does not exist"""
+    try:
+        gid = pwd.getpwnam(group)[3]
+        log.debug('%s, gid: %s', group, gid)
+        return gid
+    except KeyError:
+        log.debug('%s is not a vaild group', group)
+
+
 def main():
     """Prepares the ephemeral devices"""
     logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
@@ -519,8 +542,10 @@ def main():
         mount(device, _mount_point)
 
     try:
+        uid = get_uid(INSTANCE_STORAGE_USER)
+        gid = get_gid(INSTANCE_STORAGE_GROUP)
         mkdir_p(ccache_dst)
-        os.chown(ccache_dst, uid='cltbld', gid='cltbld')
+        os.chown(ccache_dst, uid, gid)
         mount(ccache_dst, CCACHE_DIR)
     except OSError:
         # mkdir failed, CCACHE_DIR not mounted

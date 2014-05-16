@@ -532,18 +532,24 @@ def main():
     ccache_dst = os.path.join(_mount_point, 'ccache')
     update_fstab(device, _mount_point, file_system='ext4',
                  options='defaults,noatime', dump_freq=0, pass_num=0)
+    uid = get_uid(FS_USER)
+    gid = get_gid(FS_GROUP)
+    # forcing /builds/slave owner to cltbld:cltbld
+    os.chown(_mount_point, uid, gid)
+
+    # prepare bind shares
     remove_from_fstab(CCACHE_DIR)
     options = 'bind,noatime,uid=%s,gid=%s' % (FS_USER, FS_GROUP)
     update_fstab(ccache_dst, CCACHE_DIR, file_system='none', options=options,
                  dump_freq=0, pass_num=0)
     # fstab might have been updated, umount the device and re-mount it
     if not is_mounted(device):
+        # mount the main share so we can create the ccache dir
         mount(device, _mount_point)
 
     try:
-        uid = get_uid(FS_USER)
-        gid = get_gid(FS_GROUP)
         mkdir_p(ccache_dst)
+        # update owner/group for this dir
         os.chown(ccache_dst, uid, gid)
         mount(ccache_dst, CCACHE_DIR)
     except OSError:

@@ -520,6 +520,7 @@ def main():
 
     try:
         mkdir_p(ccache_dst)
+        os.chown(ccache_dst, uid='cltbld', gid='cltbld')
         mount(ccache_dst, CCACHE_DIR)
     except OSError:
         # mkdir failed, CCACHE_DIR not mounted

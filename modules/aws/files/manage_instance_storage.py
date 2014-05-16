@@ -533,7 +533,7 @@ def main():
     update_fstab(device, _mount_point, file_system='ext4',
                  options='defaults,noatime', dump_freq=0, pass_num=0)
     remove_from_fstab(CCACHE_DIR)
-    options = 'bind,noatime,uid=%s,gid=%s', FS_USER, FS_GROUP
+    options = 'bind,noatime,uid=%s,gid=%s' % (FS_USER, FS_GROUP)
     update_fstab(ccache_dst, CCACHE_DIR, file_system='none', options=options,
                  dump_freq=0, pass_num=0)
     # fstab might have been updated, umount the device and re-mount it

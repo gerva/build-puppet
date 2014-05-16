@@ -534,8 +534,9 @@ def main():
                  options='defaults,noatime', dump_freq=0, pass_num=0)
     uid = get_uid(FS_USER)
     gid = get_gid(FS_GROUP)
-    # forcing /builds/slave owner to cltbld:cltbld
+    # forcing owner of /builds/slave and CCACHE_DIR to cltbld:cltbld
     os.chown(_mount_point, uid, gid)
+    os.chown(CCACHE_DIR, uid, gid)
 
     # prepare bind shares
     remove_from_fstab(CCACHE_DIR)

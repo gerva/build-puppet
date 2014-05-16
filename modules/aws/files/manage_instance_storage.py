@@ -22,12 +22,10 @@ log = logging.getLogger(__name__)
 AWS_METADATA_URL = "http://169.254.169.254/latest/meta-data/"
 INSTANCE_STORAGE_MNT = '/mnt/instance_storage'
 BUILDS_SLAVE_MNT = '/builds/slave'
-SSD_METADATA_FILE = '/etc/jacuzzi_metadata.json'
+JACUZZI_METADATA_JSON = '/etc/jacuzzi_metadata.json'
 CCACHE_DIR = '/builds/ccache'
 ETC_FSTAB = '/etc/fstab'
 REQ_BUILDS_SIZE = 120  # size in GB
-FS_USER = 'cltbld'
-FS_GROUP = 'cltbld'
 
 
 def get_aws_metadata(key):
@@ -373,7 +371,7 @@ def mount_point():
     """
     # default mount point
     _mount_point = INSTANCE_STORAGE_MNT
-    if len(get_builders_from(SSD_METADATA_FILE)) in range(1, 4):
+    if len(get_builders_from(JACUZZI_METADATA_JSON)) in range(1, 4):
         # if there are 1, 2 or 3 builders: I am a Jacuzzi!
         log.info('jacuzzi:    yes')
         _mount_point = BUILDS_SLAVE_MNT
@@ -531,6 +529,7 @@ def main():
     except OSError:
         # mkdir failed, CCACHE_DIR not mounted
         log.error('%s is not mounted', ccache_dst)
+        return
 
     mount(ccache_dst, CCACHE_DIR)
     # Make sure that the mount point are writable by cltbld

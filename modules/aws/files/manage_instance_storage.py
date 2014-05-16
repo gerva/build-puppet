@@ -508,9 +508,11 @@ def main():
     _mount_point = mount_point()
     ccache_dst = os.path.join(_mount_point, 'ccache')
     update_fstab(device, _mount_point, file_system='ext4',
-                 options='defaults,noatime', dump_freq=0, pass_num=0)
+                 options='defaults,noatime,uid=cltbld,gid=cltbld', dump_freq=0,
+                 pass_num=0)
     update_fstab(ccache_dst, CCACHE_DIR, file_system='none',
-                 options='bind,noatime', dump_freq=0, pass_num=0)
+                 options='bind,noatime,uid=cltbld,gid=cltbld', dump_freq=0,
+                 pass_num=0)
     # fstab might have been updated, umount the device and re-mount it
     if not is_mounted(device):
         mount(device, _mount_point)

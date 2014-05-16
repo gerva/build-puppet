@@ -27,8 +27,8 @@ SSD_METADATA_FILE = '/etc/jacuzzi_metadata.json'
 CCACHE_DIR = '/builds/ccache'
 ETC_FSTAB = '/etc/fstab'
 REQ_BUILDS_SIZE = 120  # size in GB
-INSTANCE_STORAGE_USER = 'cltbld'
-INSTANCE_STORAGE_GROUP = 'cltbld'
+FS_USER = 'cltbld'
+FS_GROUP = 'cltbld'
 
 
 def get_aws_metadata(key):
@@ -531,19 +531,18 @@ def main():
     _mount_point = mount_point()
     ccache_dst = os.path.join(_mount_point, 'ccache')
     update_fstab(device, _mount_point, file_system='ext4',
-                 options='defaults,noatime', dump_freq=0,
-                 pass_num=0)
+                 options='defaults,noatime', dump_freq=0, pass_num=0)
     remove_from_fstab(CCACHE_DIR)
-    update_fstab(ccache_dst, CCACHE_DIR, file_system='none',
-                 options='bind,noatime,uid=cltbld,gid=cltbld', dump_freq=0,
-                 pass_num=0)
+    options = 'bind,noatime,uid=%s,gid=%s', FS_USER, FS_GROUP
+    update_fstab(ccache_dst, CCACHE_DIR, file_system='none', options=options,
+                 dump_freq=0, pass_num=0)
     # fstab might have been updated, umount the device and re-mount it
     if not is_mounted(device):
         mount(device, _mount_point)
 
     try:
-        uid = get_uid(INSTANCE_STORAGE_USER)
-        gid = get_gid(INSTANCE_STORAGE_GROUP)
+        uid = get_uid(FS_USER)
+        gid = get_gid(FS_GROUP)
         mkdir_p(ccache_dst)
         os.chown(ccache_dst, uid, gid)
         mount(ccache_dst, CCACHE_DIR)

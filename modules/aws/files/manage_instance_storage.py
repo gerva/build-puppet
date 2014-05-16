@@ -20,15 +20,18 @@ from subprocess import check_call, CalledProcessError, Popen, PIPE
 
 log = logging.getLogger(__name__)
 
+REQ_BUILDS_SIZE = 120  # size in GB
+ETC_FSTAB = '/etc/fstab'
+SSD_METADATA_FILE = '/etc/jacuzzi_metadata.json'
 AWS_METADATA_URL = "http://169.254.169.254/latest/meta-data/"
 INSTANCE_STORAGE_MNT = '/mnt/instance_storage'
 BUILDS_SLAVE_MNT = '/builds/slave'
-SSD_METADATA_FILE = '/etc/jacuzzi_metadata.json'
 CCACHE_DIR = '/builds/ccache'
-ETC_FSTAB = '/etc/fstab'
-REQ_BUILDS_SIZE = 120  # size in GB
-FS_USER = 'cltbld'
-FS_GROUP = 'cltbld'
+CCACHE_USER = 'cltbld'
+CCACHE_GROUP = 'cltbld'
+MOCK_DIR = '/builds/mock_mozilla'
+MOCK_USER = 'root'
+MOCK_GROUP = 'mock_mozilla'
 
 
 def get_aws_metadata(key):
@@ -203,8 +206,9 @@ def pvcreate(device):
         if is_mounted(device):
             # switching from a single disk instance to multiple disks
             # returns an error in pvcreate, let's umount the disk
-            umount(CCACHE_DIR)
-            remove_from_fstab(CCACHE_DIR)
+            for directory in CCACHE_DIR, MOCK_DIR:
+                umount(directory)
+                remove_from_fstab(directory)
             umount(device)
             remove_from_fstab(device)
         log.info('running pvcreate on: %s', device)
@@ -530,17 +534,26 @@ def main():
     log.debug("Got %s", device)
     _mount_point = mount_point()
     ccache_dst = os.path.join(_mount_point, 'ccache')
+    mock_dst = os.path.join(_mount_point, 'mock_mozilla')
     update_fstab(device, _mount_point, file_system='ext4',
                  options='defaults,noatime', dump_freq=0, pass_num=0)
-    uid = get_uid(FS_USER)
-    gid = get_gid(FS_GROUP)
+    uid = get_uid(CCACHE_USER)
+    gid = get_gid(CCACHE_GROUP)
     # forcing owner of /builds/slave and CCACHE_DIR to cltbld:cltbld
     os.chown(_mount_point, uid, gid)
     os.chown(CCACHE_DIR, uid, gid)
 
+    # mock_mozilla and ccache have different users/groups
+    mock_uid = get_uid(MOCK_USER)
+    mock_gid = get_gid(MOCK_GROUP)
+    os.chown(MOCK_DIR, mock_uid, mock_gid)
+
     # prepare bind shares
     remove_from_fstab(CCACHE_DIR)
+    remove_from_fstab(MOCK_DIR)
     update_fstab(ccache_dst, CCACHE_DIR, file_system='none',
+                 options='bind,noatime', dump_freq=0, pass_num=0)
+    update_fstab(mock_dst, MOCK_DIR, file_system='none',
                  options='bind,noatime', dump_freq=0, pass_num=0)
     # fstab might have been updated, umount the device and re-mount it
     if not is_mounted(device):
@@ -548,13 +561,19 @@ def main():
         mount(device, _mount_point)
 
     try:
-        mkdir_p(ccache_dst)
         # update owner/group for this dir
-        os.chown(ccache_dst, uid, gid)
-        mount(ccache_dst, CCACHE_DIR)
-    except OSError:
+        mkdir_p(ccache_dst)
+        mkdir_p(mock_dst)
+    except OSError, error:
         # mkdir failed, CCACHE_DIR not mounted
-        log.error('%s is not mounted', ccache_dst)
+        log.error('failed to create ccache/mock dirs')
+        log.error('ccache and mock_mozilla are not mounted')
+        log.error(error)
+    os.chown(ccache_dst, uid, gid)
+    mount(ccache_dst, CCACHE_DIR)
+
+    os.chown(mock_dst, mock_uid, mock_gid)
+    mount(mock_dst, MOCK_DIR)
 
 
 if __name__ == '__main__':

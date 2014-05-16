@@ -536,9 +536,10 @@ def main():
     try:
         mkdir_p(ccache_dst)
         mkdir_p(mock_dst)
+        # avoid multiple mounts of the same share/directory/...
         if not is_mounted(ccache_dst):
-            # avoid multiple mounts of the same share/directory/...
             mount(ccache_dst, CCACHE_DIR)
+        if not is_mounted(mock_dst):
             mount(mock_dst, MOCK_DIR)
         # Make sure that the mount point are writable by cltbld
         for directory in (_mount_point, CCACHE_DIR):

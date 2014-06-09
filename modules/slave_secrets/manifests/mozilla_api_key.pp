@@ -10,7 +10,7 @@ class slave_secrets::mozilla_api_key($ensure=present) {
         file {
             "/builds/mozilla-api.key":
                 content => secret("mozilla_api_key"),
-                mode    => 0644,
+                mode    => 0600,
                 show_diff => false;
         }
     } else {

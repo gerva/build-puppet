@@ -10,7 +10,7 @@ class slave_secrets::bing_api_key($ensure=present) {
         file {
             "/builds/bing-api.key":
                 content => secret("bing_api_key"),
-                mode    => 0644,
+                mode    => 0600,
                 show_diff => false;
         }
     } else {

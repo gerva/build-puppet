@@ -155,6 +155,8 @@ class config::base {
     $install_ceph_cfg = false
     # true if secret("mozilla_api_key") should be installed at /builds/mozilla-api.key
     $install_mozilla_api_key = false
+    # true if secret("bing_api_key") should be installed at /builds/bing-api.key
+    $install_mozilla_api_key = false
 
     # signingserver
 

@@ -73,4 +73,17 @@ class slave_secrets($ensure=present, $slave_type) {
                 ensure => absent;
         }
     }
+
+    # only install the bing API key on build slaves
+    if ($slave_type == 'build') {
+        class {
+            'slave_secrets::bing_api_key':
+                ensure => $ensure;
+        }
+    } else {
+        class {
+            'slave_secrets::bing_api_key':
+                ensure => absent;
+        }
+    }
 }

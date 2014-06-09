@@ -4,12 +4,15 @@
 
 class slave_secrets::mozilla_api_key($ensure=present) {
     include config
+    include users::builder
     include dirs::builds
 
     if ($ensure == 'present' and $config::install_mozilla_api_key) {
         file {
             "/builds/mozilla-api.key":
                 content => secret("mozilla_api_key"),
+                owner  => $::users::builder::username,
+                group  => $::users::builder::group,
                 mode    => 0600,
                 show_diff => false;
         }
